@@ -1,0 +1,2 @@
+# Notes
+Random CS notes
