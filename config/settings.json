@@ -1,0 +1,14 @@
+{
+    "editor.fontFamily": "Fira Code",
+    "editor.fontLigatures": true,
+    "workbench.colorTheme": "Dracula",
+    "python.pythonPath": "C:\\Anaconda3\\python.exe",
+    "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
+    "terminal.integrated.fontFamily": "monospace",
+    "workbench.iconTheme": "material-icon-theme",
+    "liveServer.settings.donotShowInfoMsg": true,
+    "editor.fontSize": 14,
+    "workbench.editor.scrollToSwitchTabs": true,
+    "explorer.confirmDelete": false,
+    
+}
