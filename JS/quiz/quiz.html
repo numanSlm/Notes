@@ -1,0 +1,107 @@
+<html lang="en">
+<head >
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <title>Quiz</title>
+</head>
+<body>
+    
+
+    <!--Top-->
+    <div class="intro py-1 bg-white text-center"></div>
+        <div class="container">
+            <h2 class="text-primary text-center display-3 my-3 font-weight-bold">Pirate QUIZ</h2>
+        </div>
+
+    <!-- Result Section -->
+
+        <div class="result py-4 d-none bg-light text-center">
+            <div class="container lead">
+                <p>You are <span class="text-primary display-4 py-3">0%</span> Pirate</p>
+            </div>
+        </div>
+
+
+
+    <!-- Quiz Section -->
+    <div class="quiz py-4 bg-primary text-white">
+        <div class="container">
+            <h2 class="my-5 text-white px-5">On with the Questions...</h2>
+        </div>        
+    </div>
+
+    <form class="quiz-form ">
+        <!-- q1 -->
+        <div class="my-5 bg-secondary px-5"> 
+            <p class="lead font-weight-normal">1.Who is the 1st king of Pirates?</p>
+            
+            <div class="form-check my-2 text-white-50"> <!-- option-A -->
+                <input type="radio" name='q1' value="A">
+                <label class="form-check-normal">Smol D. Roger </label>
+            </div>
+
+            <div class="form-check my-2 text-white-50"> <!-- option-B -->
+                <input type="radio" name='q1' value="B">
+                <label class="form-check-normal">Gol D. Roger </label>
+            </div>
+        
+        </div>
+
+        <!-- q2 -->
+        <div class="my-5 bg-secondary px-5"> 
+            <p class="lead font-weight-normal">2.What power does Luffy have?</p>
+            
+            <div class="form-check my-2 text-white-50"> <!-- option-A -->
+                <input type="radio" name='q2' value="A">
+                <label class="form-check-normal">Rubber man </label>
+            </div>
+
+            <div class="form-check my-2 text-white-50"> <!-- option-B -->
+                <input type="radio" name='q2' value="B">
+                <label class="form-check-normal">Fire-fist </label>
+            </div>
+        
+        </div>
+        <!-- q3 -->
+        <div class="my-5 bg-secondary px-5"> 
+            <p class="lead font-weight-normal">1.Who is the greatest Swordsman</p>
+            
+            <div class="form-check my-2 text-white-50"> <!-- option-A -->
+                <input type="radio" name='q3' value="A">
+                <label class="form-check-normal">Mike Hawk</label>
+            </div>
+
+            <div class="form-check my-2 text-white-50"> <!-- option-B -->
+                <input type="radio" name='q3' value="B">
+                <label class="form-check-normal">Roronoa Zoro</label>
+            </div>
+        
+        </div>
+
+        <!-- q4 -->
+        <div class="my-5 bg-secondary px-5"> 
+            <p class="lead font-weight-normal">4.How many types of Devil Fruits exist ?</p>
+            
+            <div class="form-check my-2 text-white-50"> <!-- option-A -->
+                <input type="radio" name='q4' value="A">
+                <label class="form-check-normal">Two </label>
+            </div>
+
+            <div class="form-check my-2 text-white-50"> <!-- option-B -->
+                <input type="radio" name='q4' value="B">
+                <label class="form-check-normal">Three</label>
+            </div>
+        
+        </div>
+
+        <!--Submit Btn-->>
+        <div class="text-center">
+            <input type="Submit" class="btn btn-dark">
+        </div>
+    </form>
+
+
+</body>
+<script src="quiz.js"></script>
+</html>
