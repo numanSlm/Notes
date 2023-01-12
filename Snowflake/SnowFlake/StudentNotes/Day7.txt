@@ -1,0 +1,82 @@
+select count(*) from "SNOWFLAKE_SAMPLE_DATA"."TPCDS_SF100TCL"."STORE_SALES"  where ss_store_sk=1042 ;  
+
+
+use role sysadmin;
+use ltidb;
+use schema public;
+
+--table 1
+create or replace table cdc_tbl (
+  empno int	,
+  ename  varchar,
+  sal   int	
+);
+
+insert into cdc_tbl values 
+  (1,'aaa',9000),
+  (2,'bbb',8000),
+  (3,'ccc',7000);
+  
+select * from cdc_tbl;
+select * from final_aktbl;
+  
+
+create or replace table final_aktbl (
+  empno int	,
+  ename  varchar ,
+  sal   int
+);
+
+-- 1st time data load from cdc_table to final table, we can assume history load or onetime load
+
+insert into final_aktbl select * from cdc_tbl;
+
+
+create or replace stream 
+ak_stream on table cdc_tbl;
+
+show streams;
+
+select * from ak_stream;
+insert into cdc_tbl values 
+  (7,'dtt',9000),
+  (5,'eee',8000),
+  (6,'fff',7000);
+  
+update cdc_tbl set sal =1111 where empno=7;
+update cdc_tbl set sal =1001 where empno=2;
+delete from cdc_tbl where empno=1;
+
+
+--
+
+create or replace task cdc_task
+    warehouse = compute_wh 
+    schedule  = '1 minute'
+  when
+    system$stream_has_data('ak_stream')
+  as
+    insert into final_aktbl select empno,ename,sal from ak_stream;
+    
+show tasks;
+desc task cdc_task;
+ 
+ 
+ use role accountadmin;
+ alter task cdc_task resume;
+ alter task cdc_task suspend;
+ 
+select * from table(information_schema.task_history())  
+order by scheduled_time;
+-- you can see only the schedule items
+select * from table(information_schema.task_history())  
+where state ='SCHEDULED' 
+order by scheduled_time;
+  
+  
+grant role taskadmin to role sysadmin;  
+  
+grant execute task on account to sysadmin;
+
+
+

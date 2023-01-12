@@ -1,0 +1,62 @@
+create database infyni_db;
+use infyni_db;
+create schema infy_schema ;
+
+create table inventory (product_id integer, price float,desc varchar);
+create or replace materialized view wholesale_mv as
+  select product_id, price from inventory;
+ 
+insert into inventory (product_id, price, desc) values
+  (1, 1.00, 'JD');
+  
+insert into inventory (product_id, price, desc) values
+  (2, 3.00, 'MH');
+
+select * from inventory;
+drop table inventory;
+update inventory set price =33.0 where product_id=1;
+select * from wholesale_mv;
+
+create table sales (product_id integer, quantity integer, price float);
+ 
+insert into sales (product_id, quantity, price) values 
+   (1,  1, 1.99);
+ 
+create or replace view profits as
+  select m.product_id, sum(ifnull(s.quantity, 0)) as quantity,
+      sum(ifnull(quantity * (s.price - m.price), 0)) as profit
+    from wholesale_mv as m left outer join sales as s on s.product_id = m.product_id
+    group by m.product_id;
+
+select * from profits;
+
+
+grant create materialized view on schema infy_schema to role sysadmin;
+
+alter materialized view wholesale_mv suspend;
+alter materialized view wholesale_mv resume;
+    
+insert into inventory (product_id, price, desc) values 
+    (2, 2.00, 'sprocket');
+
+insert into sales (product_id, quantity, price) values 
+   (2, 10, 2.99),
+   (2,  1, 2.99);
+   
+Select * from wholesale_mv;
+
+select * from profits order by product_id;
+
+SHOW MATERIALIZED VIEWS;
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,73 @@
+put file:///home/ak/datsets/emp.csv into @st_lti_int;
+
+put file:///media/num/Hub/LTI/Training/SnowFlake/datasets/employee.csv @st_lti_int;
+----------------------------------------------------------------------------
+
+create table "LTIDB"."LTISCHEMA".lineitem as select * from "SNOWFLAKE_SAMPLE_DATA"."TPCH_SF1".lineitem ;
+
+alter table lineitem cluster by (l_linenumber); 
+show tables like 'lineitem';
+
+# added by Snowflake SnowSQL installer
+export PATH=/home/ak/bin:$PATH
+
+--windows 
+put file://C:\Users\ak\Downloads\emp.csv @st_lti_int;
+
+--linux
+
+put file:///home/ak/datsets/emp.csv  @st_lti_int;
+
+--query stage files
+
+select $1 ,$2 from @st_lti_int;
+
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @st_lti_int  FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"' ON_ERROR = 'ABORT_STATEMENT' PURGE = TRUE;
+
+ALTER FILE FORMAT "LTIDB"."LTISCHEMA".CSVFILEFORMAT SET COMPRESSION = 'AUTO' FIELD_DELIMITER = ',' RECORD_DELIMITER = '\n' SKIP_HEADER = 1 FIELD_OPTIONALLY_ENCLOSED_BY = 'NONE' TRIM_SPACE = FALSE ERROR_ON_COLUMN_COUNT_MISMATCH = TRUE ESCAPE = 'NONE' ESCAPE_UNENCLOSED_FIELD = '\134' DATE_FORMAT = 'AUTO' TIMESTAMP_FORMAT = 'AUTO' NULL_IF = ('\\N');
+---ABORT ON ERROR
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @st_lti_int/EMPLOYEE.CSV.GZ  FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"' ON_ERROR = 'ABORT_STATEMENT' PURGE = FALSE; 
+
+--CONTINUE ON ERROR
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @st_lti_int/employee.csv.gz   FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"' ON_ERROR = 'CONTINUE' PURGE = FALSE;
+
+
+----------------------------------------------------------------------------------
+
+snowsql
+use LTIDB;
+show TABLES;
+
+use SCHEMA LTISCHEMA;
+show TABLES;
+
+SELECT * FROM EMP;
+show STAGES;
+list @st_lti_int;
+put file:///media/num/Hub/LTI/Training/SnowFlake/datasets/emp.csv @st_lti_int;
+list @st_lti_int;
+SELECT $1,$2 from @st_lti_int;
+SELECT * from emp;
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @st_lti_int  FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"' ON_ERROR = 'ABORT_STATEMENT' PURGE = TRUE;
+
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @~  FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"' ON_ERROR = 'ABORT_STATEMENT' PURGE = TRUE;
+
+SELECT * from emp;
+list @st_lti_int;
+------------------------------------------------
+put file:///media/num/Hub/LTI/Training/SnowFlake/datasets/employee.csv @st_lti_int;
+
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @st_lti_int/EMPLOYEE.CSV.GZ  FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"' ON_ERROR ='ABORT_STATEMENT' PURGE = FALSE;
+                                 
+SELECT * from emp;
+show stages;
+
+list @st_lti_int;
+remove @st_lti_int/employee.csv.gz;
+
+
+
+
+
+
+

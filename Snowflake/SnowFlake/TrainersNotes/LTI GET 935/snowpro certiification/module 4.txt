@@ -1,0 +1,287 @@
+SESSION 4 ----------------------------------------------------------------------------------------
+
+Views:
+a)Standard
+Cannot alter view definition have to recreate the view
+Views are read only cannot perform any DML operations on the view
+
+Update the data is not possible
+
+Definition also cannot be updated
+Adding another col is not possible so we have to recreate the view
+We cannot add or drop col in the view definition.
+
+b)Materialized-Run the view once and use multiple times
+It contains data and consumes storage and holds data
+
+If have a very big query if one portion of query is ised multiple types take a portion and run once and accessed multiple times.
+
+It saves the computation.
+If a query returns small number of rows can use 
+If multiple aggregations so all that can be created in a materialized view and used multiple times.[Prevent unnecessary computations]
+
+
+
+If the base table changes then the Snowflake will automatically update the materialized table.
+No worries to update Materialized view if the base table is updated automatically
+
+1 table only 1 materialized view and it cannot access another materialized views
+
+Remember use materialized view when do not need frequent updations.[base table will not change frequently]
+
+Using joins normal tables can connect with materialized views
+Cannot use functions or materialized view inside a materialized view.
+
+
+c)Secure
+
+If do not want to view the underlying view definition then go for materialized view
+Use the Secure Keyword with the create statement{extra privacy and confidentiality}
+
+
+For an object to be eligible for data sharing it should be a secure view.
+
+More level of privacy
+
+IF a view is secure SF will bypass all optimizations thus impacting the performance.
+
+We can make standard and materialized view secure
+
+Logic within the view will not be available like cols or tables within the view or joins or predicates within the view will be hidden in secure view.
+
+------Stages-where we will store data in the form of files
+
+Table stage = @%mytable
+Named stage = @stage_name{DATABASE OBJECT}
+User stage = @~
+
+a)Table stage[@%tablename]
+It is a staging area for a table
+Default option which snowflake gives
+Have the same name as table
+Cannot be altered or dropped
+Do not support setting file format options
+It is not a seperate database object
+Not appropriate if u want to copy the files into multiple tables
+It is the storage layer
+[Many to one ]
+
+b)User stage[List @~]
+User stage cannot be altered or dropped
+User stages do not support file format options.
+User stages are referenced using @~
+Not appropriate when multiple users require access to the files.
+Not applicable when multiple users want to copy files to multiple tables because specific to a single user.
+
+Data Sharing is a feature in snowflake wherein we can share data with other teams or other company
+
+Data Sharing notes:
+1)No data copy and no data movement anywhere.
+2)The sharing feature is achieved by using global service layer and metadata layer,hence the operation does not cost even a single penny.
+3)Storage in producers account,compute(VWH) in consumer's account.
+4)Once shared object is created , one or more consumer can be added.
+5.)Reader account is an alternative to share data if consumer does not have snowflake account.
+6.)No hard limits on the number of shares you can create or the number of accounts you add to a share.
+7.)Traditional Data Sharing(asking advantage of snowflake over traditional approach)
+a.Email-easy but 25mb limit
+b.FTP-easy but administration and deconstruct
+c.ETL-mature but time taking and complex/costly,build for specific purpose.
+d.API-okay for small data but issue for large data
+e.Cloud Storage - Lot of service available but do not support DML operation , less performance when query data.
+
+Named Stages[@]
+------------
+Type kinds:
+Internal-Stage within snowflake environment
+
+External-Stage external out of snowflake
+
+Provide greatest degree of flexibility
+Users with the appropriate privileges on this stage can load data into any table
+When u use copy command it is imperative to use named stages
+
+
+Zero-Copy Data CLoning--Metadata only operation[Not copying data]
+-------------------------
+
+Instant data cloning operations
+Databases,schema,tables etc
+Metadata-only operation-Micropartitions [Actual storage is shared by physical table]
+
+Modified data stored as new blocks
+Unmodified data stored only once
+No data copying required,no cost
+
+Instant dev/test environments
+Test code in your entire production dataset
+Swap tables into production when ready
+
+The original table and the clone table are mutually exclusive[point in time snapshot]
+A cloned object does not retain any granted privileges on the source object itself (i.e. clones do not automatically have the same 
+privileges as their sources). A system administrator or the owner of the cloned object must explicitly grant any required privileges
+ to the newly-created clone.
+
+However, if the source object is a database or schema, for child objects contained in the source, the clone replicates all granted
+ privileges on the corresponding child objects:
+
+For databases, contained objects include schemas, tables, views, etc.
+For schemas, contained objects include tables, views, etc.
+Snowflake SQL UDFs can return either Scalar or Tabular results.
+TO CLONE A TABLE YOU NEED THE SELECT PRIVILEGES AND TO CLONE A DATABASE YOU NEED A USAGE PRIVILEGES
+The cloning copy structure, data and certain other attributes but doesn't copy the load metadata,
+ therefore files that have already been processed for the source table can be re-processed into a cloned table.
+
+Yes 
+Database
+schema
+Tables
+Table stages
+Stream
+Stages
+File Format
+Sequence
+Task
+Pipes
+Stream
+
+
+
+NO:
+Internal named stage
+External tables
+
+Q1)What are true about Micro partitioning?
+a)Largest size of MP is 16MB(50MB-500MB uncompressed)or (10-100MB compressed)
+b)MP is immutable
+c)Other 2 option is irrevelant(Ans should be a and b)
+
+Q2)Not a type of View in Snowflake
+a)Secure
+b)Standard
+c)Materialized 
+d)None of the above(Ans is d)
+
+Q3)Standard view stores data
+a)True
+b)False[Ans is false only materialized view stores data]
+
+Q4)Standard View will not allow Joins
+a)True
+b)False[Ans is False]
+
+Q5)There can only be only one view on a table
+a)True 
+b)False(Ans is false)
+
+Q6)View cannot be used in a sub-query
+a)True
+b)False[Ans is false]
+
+Q7)Definition of a view cannot be updated
+a)True
+b)False[Ans is true]
+
+Q8)DML is allowed on a view
+a)True
+b)False[Ans is False]
+
+Q9)Views are read only
+a)True
+b)False[Ans is true]
+
+Q10)Materialized view store data
+a)True
+b)False[Ans is true]
+
+Q11)Materialized view behave more like a table
+a)True
+b)False[Ans is True]
+
+Q12)Materialized views will be charged for Storage and Compute
+a)True
+b)False[Ans is True]
+
+Q13)Use case for a materialized view
+a)Modular Code
+b)Query containing huge computations[Ans is b because they help in improving performance]
+
+Q14)Materialized view are for improved performance
+a)True
+b)False[Ans is true]
+
+Q15)Materialized view can query multiple tables
+a)True
+b)False[Ans is False]
+
+Q16)All aggregate functions are allowed in Materialized views
+a)True
+b)False[Ans is False]
+
+Q17)Use case for scale up
+a)Complex large data processing query
+b)Concurrency issue[Ans is a]
+
+Q18)Use case for scale out.
+a)Complex large data processing query
+b)Concurrency issue[Ans is b]
+
+Q19)Secure Views are used for performance
+a)True
+b)False[Ans is False]
+
+Q20)Cloning is Metadata only operation
+a)True
+b)False[Ans is True]
+
+Q21)Cloning involves physical movement of data
+a)True
+b)False [Ans is False]
+
+Q22)Internal Named stages can be cloned 
+a)True
+b)False[Ans is False]
+
+Q23)Table stages can be cloned
+a)True
+b)False[Ans is True]
+
+Q24)Cloned object will have all privileges of source object
+a)True
+b)False[Ans is False]Cloned object will not inherit any privileges of the source object
+Cloned all tables and privileges of the schema will be cloned[Of the tables ] but if u clone of a table then no change in privileges
+
+Q25)Cloning is a costly operation as it involves compute
+a)True
+b)False[Ans is false]because just meta data and not compute 
+
+Q26)Which of the following is eligible for data sharing
+a)Secure View
+b)View
+c)Secure Materialised View
+d)Materialised {ans is a and c that is secure view and secure materialized view]
+
+Q27)A named definition of a query
+a)View
+b)Secure View
+c)Materialized View[Ans is View]
+
+Q28)Secure View will bypass certain optimizations.
+a)True
+b)False[Ans is True]
+
+Q29)There is a need to create a view on a table which contains confidential data.Users should not be explosed to underlying data objects.
+WHich is the right fit?
+a)View
+b)Secure View
+c)Materialised view[Ans is b]
+
+Q30)There is a need to improve performace on a table.Base table does not vary much.Which is the right fit?
+a)View
+b)Secure View
+c)Materialized View[ANs is c]
+
+Q31)There is a need to imrpove code readability. Base table data will be updated frequently.
+a)View
+b)Secure View
+c)Materialised View[Ans is a]It is a standard View
+

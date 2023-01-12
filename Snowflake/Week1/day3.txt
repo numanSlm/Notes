@@ -1,0 +1,11 @@
+JOINS Day -3
+
+joins used when two table are used 
+
+select e.id , e.name, d.id,d.dname
+from emp e inner join dept d
+on e.id= d.id
+where
+group by
+having 
+order by

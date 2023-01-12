@@ -1,0 +1,1926 @@
+Although Snowlflake uses Shared Nothing and Shared disk in their architecture 
+,Multi-cluster shared data(MCSD) is the right option as S3 is not a disk
+
+ANSI 1999 supported platform and hence supports SQL and has certain extensions supported for SQL
+
+Within the region data sharing and across the region data replication.
+Micropartitions can overlap with each other in their range of values.This can help reduce skew in partition sizes.
+Account and region == one to one mapping
+select last_query_id()-to find the query of the last executed query
+pre-purchase storage capacity which will generally be of lower price compared to on demand pricing which is as per your usage
+
+Organization and account == No global account for usage so organziation will help
+
+a)A customer can have as many accounts as possible
+
+b)Each account has its own URL-name of the account
+c)Customers can request a vanity address like "https://toppertips.snowflakecomputing.com"
+
+d)Each account is deployed on a single cloud provider(AWS,GCP,Azure)
+
+e)Each account exists in a single geographical region
+f)Each account exists with single Snowflake Edition(Buisness Critical or VPS,Standard , Enterprise)
+g)A trial account can be converted into a paid account
+h)When an account has just the account name , followed by "snowflakecomputing.com" we know the cloud provider is AWS and the region is us-west-2
+i)All the other accounts have accountname,region and cloud provider name in it example	 
+	https://xy12345.east-us-2azure.snowflakecomputing.com
+	
+j)Most accounts start with 2 letters followed by 5 numbers(unless it is AWS/US-WEST-2 region or vanity-url)
+k)By looking at snowflake account URL u cannot make it if the snowflake edition is enterprise or standard or buisness critical
+   a)Standard edition does not support multi-cluster warehouse , 90 days time-travel and secure views(few more)so if ur account does not have the feature enabled it means standard edition
+   b)You can request snowflake to upgrade your account however its not possible via WebUI or any other means
+l)Snowflake staged release process for new releases, Enterprise and other editions account types are applied updates the LAST. 
+ Storage Costs are calculated based on:
+ A)Compressed SIZE
+ B)Amount Stored-Daily Average
+  
+
+field=col
+row=tuple, record
+relation=table
+attributes= keys
+
+vvimp---->Database.Schema= Namespace
+
+Q)In a Snowflake account named MX43210, 
+you need to set a user's default namespace to a database
+called MYDB and the PUBLIC schema. Which of the following commands would you use? 
+ANS: set default_namespace = mydb.public
+
+Q)Each Snowflake account comes with two shared databases. 
+One is a set of sample data and the other contains Account Usage information. 
+Check all true statements about these shared databases. 
+
+a)SNOWFLAKE_SAMPLE_DATA contains a schema called ACCOUNT_USAGE
+b)SNOWFLAKE contains a table called ACCOUNT_USAGE
+c)SNOWFLAKE contains a schema called ACCOUNT_USAGE
+d)SNOWFLAKE_SAMPLE_DATA contains several schemas from TPC (tpc.org)
+e)ACCOUNT_USAGE is a schema filled with external tables
+f)ACCOUNT USAGE is a schema filled with secure views
+
+ANS:	c,d,f
+
+Accounts Contain Databases:
+---------------------------
+a)Each database belongs to a single Snowflake account
+b)Databases can be replicated to other accounts but they cannot SPAN multiple accounts
+
+Snowflake allows you to bypass the schema during the drill-down process, making it seem as if tables and other objects are not within a schema, but they are. 
+
+Databases contain Schemas:
+------------------------- 
+
+a)Each Schema belongs to a Single Snowflake database,in a single account.
+b)Schemas can be replicated to other accounts or databases , but they cannot SPAN accounts or databases
+
+Schemas Contain Other Objects:
+------------------------------
+a)Objects inlude tables,views,file formats,sequences,UDFS and stored procs
+b)Objects belong to a single schema,in a single database in a single account.
+
+Object Hierarchy in Snowflake
+------------------------------
+
+Account level:
+User
+Role
+Warehouse
+Resource Monitor
+Integrations
+Database - Schema-......
+
+2 by default DB
+a)Demo_Db
+b)Util_DB
+Sample Shared data
+
+Other Objects:
+1)Shared objects
+2)Cloned objects
+3)Network policies
+4)Reader Account
+5)Masking Policy Objects
+6)Account level Parameters
+
+Information SCHEMA
+-------------------------
+1)Snowflake("Information Schema")aka Data dictionary consists of a set of system defined views and table functions that provide extensive
+metadata information about the objects created in your account
+2)The Snowflake Information Schema is based on SQL-92 ANSI INFORMATION SCHEMA but with the addition of views and functions that are specific
+to Snowflake.
+3)Each database created in your account automatically includes a built-in,read-only schema named INFORMATION SCHEMA.
+4)The schema contains the following objects:
+a)Views for all databases in the account 
+b)Tables
+
+
+2 DB :
+util DB and DemoDB
+
+
+Account usage Database(Snowflake)
+---------------------------------
+1)Snowflake also shares a database called snowflake(Only seen by ACCOUNTADMIN)
+2)Snowflake is a system defined,read only shared database.
+3)The Snowflake database is automatically imported into every account from a share named Account_usage[Account level]
+4)The snowflake schema contains two schemas(also read only)
+ACCOUNT_USAGE: Views that display object metadata and usage metrics for your account
+READER_ACCOUNT_USAGE:Views that display object metadata and usage metrics for all the reader accounts that have been created for your account.
+Information schema is a part of every database and will automatically come here
+5)By default only the Accountadmin can access the Snowflake database.
+6)When an account has just the account name, followed by “snowflakecomputing.com”, we know the cloud provider is AWSand the region is us-west-2.
+
+Difference 												Account Usage								Information SCHEMA
+Includes dropped objects                                Yes                                          No
+Latency of data 				    45 mins to 3   hours                           None
+Retention of historical data                            1 Year                                       7 days to 6 months
+
+
+
+A)Micropartitions once staged never changed or micropartitions are immutable ?
+a)True
+b)False
+
+TRUE == Micropartitions are immutable :: underlying blob storage is immutable.
+
+B)Snowflake releases are deployed ::: Weekly == Do all customers get releases at the same time -Early access some get after 24 hours -- Enterprise
+
+ Once deployed is deployed for all cannot opt out of a release
+
+
+SnowSQL = Micro and mini {CLIENT SNOWFLAKE--SnowSQL-Autoupdates and NOT SNOWFLAKE}
+
+C)What are true about Micro Partitioning?
+a)Largest Size of MP is 16MB(50Mb - 500Mb uncompressed )or (10-100Mb compressed)
+b)MP is immutable
+c)Other 2 option is irrelevant [ here a and b]
+
+d)which are all buttons you can view in UI main ribbon?
+a)Databases
+b)Warehouses
+c)Users
+d)Shares  [Accountadmin==History/Account] here a,b and d
+
+Q)What happens to running query when user logout from account?
+a)Running queries will be terminated and virtual warehouses billing will stop
+b)Query will keep running
+c)Query will stop running and will be resumed once user login back
+d)Query will stop running and user need to resumed once user login back. here d is ans  because virtual warehouse is shared between number of users and his session will end
+
+Q)Snowflake db objects are owned by ?
+a)users
+b)Roles -- ans role based access account
+c)Accountadmin
+d)Sysadmin
+
+Q)High priority to which tab in WebUI?[which can be used shared by accessed only by one specific role]--if ur not accountadmin role what all tabs can u see
+a)Account
+b)Databases -- 
+c)Shares --- 
+d)Worksheets--Common to all [ ans a because unless ur not accountadmin u cannot see other tabs hence high priority]
+
+Q)If all of your servers are provisioned then only the VWH will start executing queries?
+a)Yes
+b)No [Ans is YES]
+
+L W = 8 nodes so 2 came up 
+
+partial if only 4 nodes are up then start running
+
+When u login into snowflake the first minute is charged by default
+No Autoscale mode all cores have to be up 4XXL= 128 virtual machines query will be put in queue
+
+An account can contain one or many virtual warehouses and within a virtual warehouse it can contain one or more clusters within cluster 1 or 128 nodes
+
+
+---------------------------------------------------------------------------------------------------SESSION 2------------------------------------------------------------------------------
+No users concepts in Snowflake its only roles 
+We have liberty to choose virtual warehouses
+In every database we have 2 schemas by default:PUBLIC SCHEMA(COMES BY DEFAULT) and INFORMATION SCHEMA(all metadata of tables,views) MYSCHEMA : CUSTOM SCHEMA
+
+Storage,Virtual Processing and Metadata
+
+Nodes will share data but virtual warehouse will not share data
+
+Virtual Warehouse
+-----------------
+Can cosist of 1 or more clusters
+
+Multi-cluster warehouse is supported by Enterprise,Enterprise+-Buisness critical and VPS-Virtual Private Snowflake(Check docs)
+
+Unique identifier Account-> Virtual Warehouse(No limit)-> compute consisting of clusters [each cluster of same size] 
+suspend to hibernate[warehouse] autoresume 
+
+Scaling policy[policy for startup and shutdownof clusters]
+
+1 credit = 4 dollars[in enterprise]
+octa core processor 200gb hardisk and 20GB ram -  
+
+Snowflake Architecture uses a Top down Approach -- Sending signals to Virtual Warehouse
+
+
+Snowflake supports ACID properties
+Snapshot , MVCC {Concurrency Control} Locks ===== 
+
+Metadata{Global services},Processing,Storage
+Snowflake enforces null constraint all the other constraints like Primary key , Foreign key are not enforced but it supports them.
+
+Objects at Account Level:
+Users
+Role
+Warehouse
+Shared Objects
+Network Policies
+Reader Account
+Masking Policy Objects
+Account Level parameters
+Integration Objects
+
+Snowflake supports read committed isolation.[ISOLATION LEVEL SUPPORTED IN SNOWFLAKE] - others not supported are dirty read not supported yet
+You will only read committed data 
+
+Q1)Which best describes snowflake table?
+a)Conceptual instance in the storage layer
+b)Logical objects in the storage layer
+c)Cluster key used for optimizing query performance
+d)Logical grouping of columns and rows - underlying physical data [Ans is d]
+
+
+Q2)SF Architecture is designed for which of the following?
+a)Hadoop
+b)Hive
+c)Cloud [Ans is cloud]
+
+Q3)WHat best describes SF?
+a)Concurrent
+b)Performant
+c)Simplicity
+d)All of the above [Ans is d]
+
+Q4)Data migration is not applicable on ?
+a)Databases
+b)SCHEMA
+c)Indexes
+d)Build data pipelines Ans is [INDEXES](because snowflake doesnt support indexes)
+Oracle to snowflake
+
+Q5)What is the largest size of micropartitions?
+a)16MB compressed
+b)32MB compressed
+c)48MB compressed
+d)64MB compressed [Ans is a]
+uncompressed is between 50 to 500 MB
+
+Q6)Warehouse can be resized when warehouse is running?
+a)True
+b)False [ Ans is true]Existing query cannot take any advantage
+
+Q7)Can warehouse be stopped when resizing?
+a)True
+b)False [ans is true]
+
+Q8)Can schema be part of multiple database objects?
+a)true
+b)False[ans is true]
+
+Q9)By what factor does the number of servers increase when scaling up?
+a)1
+b)2
+c)4
+d)8[ans is 2]
+
+Q10)Changing the warehouse size from small to large will help in ?
+a)Concurrency
+b)Performance(Ans is b) [increase the size is performance -- scale up and increase the cluster the scale out --- concurrency]
+
+Remember increase the warehouse size is scale up increasing the warehouse performance and number of cluster is concurrency scale out
+Increase the throughput create bigger clusters[Increase the performance basically][increase the number of actions per time]
+Increase the response time increase the number of clusters [Response time] [concurrency][increase the response time]
+Concurrency = Throughput * latency
+Scale up = Increase size =  Increase throughput = increase query performance[fast] = Increase number of actions per time.
+Scale out = Increase number of clusters = Increase latency = increase response time  = Decrease queueing = Increase concurrency
+
+
+Scale up for performance[Throughput single query will benefit]
+-------------------------
+Scaling up to Add - CPU,RAM,SSD
+- Scale for larger data volumes and complex queries
+- Wont help concurrency
+- Availability of parallel files necessary for parrallelism
+- Match query profile with warehouse size
+
+Scale out for concurrency -[Small small multiple queries]
+- Add multiple compute cluster for concurrency min 1 to max 10
+-Auto scale out and scale in
+- Queries distributed among the clusters
+
+Queue = problem with the concurrency[Multiple users are firing multiple queries]--Solution
+
+
+Q11)WHich of the following cannot be recovered with Time Travel?
+a)Databases
+b)Tables
+c)Schemas
+d)Stages [Ans is stages]
+
+Q12)JDBC and ODBC are drivers present. DO you still need to connect a Snowflake driver to connect to Snowflake?
+a)True
+b)False [Ans is False]
+
+Q13)Virtual warehouse is a part of which layer?
+a)Storage layer
+b)Compute layer
+c)Cloud services layer
+d)Database layer 
+[Ans  is Compute]
+
+Q14)The global services layer has access to all the metadata and statistics stored in it?
+a)True
+b)False
+ [Ans is true]
+ 
+Q15)Hierarchy of tables
+a)Account>>Database>>Schema>>Tables
+b)Database>>Schema>>Table>>Account
+c)Schema>>Database>>Table>>Account
+d)Account>>Schema>>Database>>Table[Ans is a]
+
+Q16)Which of the following are multi-tenant services?
+a)Metadata
+b)Query processing
+c)Storage[Ans is a and c because these services are spread across multiple users]All the customers will have the data in cloud storage or S3.storage and metadata are shared but
+virtual warehosue is not shared
+
+Q17)Which of the following services are ephemeral?[Not long lasting]
+a)Metadata
+b)Query Processing
+c)Storage[Ans is b query processsing u cannot auto suspend storage and metadata but virtual warehouse can be suspended opposite of above question]
+
+
+Q18)Snowflake is a packaged software that can be installed by a user?
+a)True
+b)False[Ans is False]
+
+Q19)A snowflake account can be spanned across multiple regions
+a)True
+b)False[ANs is false]
+
+Q20)A snowflake account can be spanned across multiple cloud vendors
+a)True
+b)False[Ans is False]
+
+Q21)Query Processing happens in Metadata layer
+a)True
+b)False[Ans is False]
+
+Q22)Virtual warehouse share resources among each other
+a)True
+b)False[Ans is false]
+
+Q23)Storage is tightly coupled with Compute in Snowflake
+a)True
+b)False[Ans is false]
+
+Q24)Query parsing and optimization occurs in which layer.
+a)metadata
+b)Virtual Processing
+c)storage[Ans is metadata]
+
+Q25Micro partitions can be accessed directly by the customer(without SQL)
+a)True
+b)False[Ans is False]
+
+MICRO PARTITIONS is a physical files in S3 bucket
+--------------------------------------------------------------------------------SESSION 3--------------------------------------------------------------------------------------------
+Snowflake Web UI consists of Ribbon layer consists of databases,shares,marketplace,warehouse,worksheet,History
+
+5 default roles are created by Snowflake:
+a)Accountadmin
+b)SECURITYADMIN
+c)Systemadmin
+d)Public
+e)Customroles
+f)User admin 
+
+1 user for an account gets Sysadmin role
+
+Context : ROle being used , Db , Schema
+
+The user administrator (USERADMIN) role includes the privileges to create and manage users and roles (assuming ownership of those roles or users has not been transferred to another role).
+
+The security administrator (i.e users with the SECURITYADMIN system role) role includes the global MANAGE GRANTS privilege to grant or revoke privileges on objects in the account. 
+The USERADMIN role is a child of this role in the default access control hierarchy.
+
+The system administrator (SYSADMIN) role includes the privileges to create warehouses, databases, and all database objects (schemas, tables, etc.).
+
+By default, when your account is provisioned, the first user is assigned the ACCOUNTADMIN role. This user should then create one or more
+Additional users who are assigned the USERADMIN role. All remaining users should be created by the user(s) with the USERADMIN role.
+
+Can create custom roles
+1)Accountadmin
+2)Securityadmin
+3)Sysadmin
+
+
+
+Snowflake storage
+Account 
+Database
+Schema can have multiple objects
+
+
+Apart from micropartitions snowflake stores the following contents in the table:
+METADATA CACHE[CLOUD SERVICES LAYER]-Help in Query Optimization
+---------------------------------------------------------------
+1)Number of Micropartitions
+2)Max-Minvalue of each Micropartitions-Zone maps
+3)Number of rows
+4)Cardinality of each columns
+5)Number of Null values
+
+Pruning means cutting unwanted stuff
+Horizontal Pruning -- WHERE CLAUSE(Slicing)
+------------------
+which micropartitioning satisfying the query[where condition or predicate]
+The processing of reading the micropartitions satisfying the query is called as Horizontal Pruning
+[ELiminatiing the micropartitions not satisfying the queries is known as Horizontal Pruning]
+
+NO specific distribution keys but can sort while using copy into command 
+
+Vertical Pruning -- (SELECT (Slicing))
+-----------------
+This Pruning happens inside a micropartition
+
+Snowflake stores data in columnar fashion so its not row oriented 
+Process of getting only cols required for the query like (select statement inside partition)
+
+
+In a row oriented row level lot of overhead through each row.
+
+Q1)Does Snowflake store any other type of data apart from the warehouse data?
+a)True
+b)False[Ans is false]Metadata is also stored moslty in cloud services layer
+
+What micropartitions need to be picked up is done through the metadata cache----vvvimp
+
+Storage
+--------
+reorganizes data in internal,columnar,compressed format storing in cloud storage.
+
+SF manages all aspects of how data is stored:
+the organization
+file structure
+size,compression,metadata,statistics
+
+a)Micropartitions are immutable
+b)Compressed size 16MB(uncompressed range from 50-500mb)
+c)Data at rest is encrypted
+d)Storage cost - $23/TB/Month in compressed data[Depemds on accoun ttype like on demand or no]
+e)Horizontal pruning - Micro Partitions
+f)Continuous availability - 99.99% data availability and 99.99999999% durability
+
+Snowflake Storage
+------------------
+
+Tables ------ 
+a)Permanent Tables - Time travel = 0/90{defa or fail safe is for a week[7 days] -- enterprise but 0/1 timetravel[Retention period]For permanent tables fail safe is 7 days irrespective of any edition
+
+b)Temporary Tables-Session oriented-time travel{0/1} and no fail safe-can be used for moving permanent data from one permanent tableto another with some transformation within the table-No storage costs 
+c)Transient Tables-Permanent type -timetravel{0/1} no FailSafe for transient(Comprehensive Data Protection)
+d)External Tables-No time travel and fail safe- stored in external stages-are read only and great for semi-structured type-no cloning
+					DDL:SQL works : select,agregations,Joins
+			  
+Views --------- a)Standard Views
+				b)Secure Views
+				c)Materialized Views
+				
+Stages -------- a)Table stage
+		b)User Stage
+		c)Named Stage   - named Internal stage
+				- named External stage
+	
+CDP -Comprehensive Data Protection
+----------------------------------
+How well we have our data protected
+Features
+a)Time-Travel-Enables instant rollback to any point in time during chosen retention window.
+Snowflake stores snapshot of data in the table 
+(select * from table_name at(timestamp=> "Mon :: timestamp_tz)
+select * from table_name at(offset=> 60*5)[seconds]
+select * from table_name before(statement=> "sdopsodpspspsp")---Every query has a statement identifier.
+
+Default time travel for any table is 1.
+
+How much can we go back is called Data retention period.
+								 ------------------------
+Higher the retention cost higher the cost so it consumes more time.
+
+PIPE--> Stage --> Table
+								 
+Permanent Enterprise account = 90 days(3 months)--Time travel
+Here max is 90 and it can vary from table to tables.
+Here u can define when you create the tables.
+Standard account = 1 day								 
+								 
+								 
+b)FailSafe	{Used in case of disaster}
+Only snowflake can do it users cannot do manually employers will do for us				
+-Protection against infrastructure and failures
+-Protection against corruption and user errors
+-Long-term data protection
+				
+File Formats
+
+Sequences
+
+Stored Procedure
+
+user defined functions
+
+Streams 
+
+tasks								  
+
+Q 1)All data in Snowflake tables is automatically divided into micro-partitions
+a)TRUE
+b)FALSE(Ans is true)
+
+Q 2)Micro partitions are mutually exclusive--(Non contiguous)//they are related to each other 
+a)TRUE
+b)FALSE(Ans is False)
+
+Q 3)Data at rest is encrypted in snowflake
+a)True
+b)False(Ans is true)
+
+Q 4)Default time travel retention period in Snowflake
+a)1
+b)0
+c)7
+d)90(Ans is 1)
+
+Q 5)Maximum time travel retention period in snowflake for a standard edition
+a)1
+b)0
+c)7
+d)90(Ans is 1)
+
+Q 6)Horizontal Pruning is achieved by
+a)Caching
+b)Micro partitions
+c)l
+d)Clustering[Ans is Micro Partitions]
+
+Q 7)Vertical Pruning is achieved by
+a)Caching
+b)Micro Parttions
+c)Columnar fashioned data
+d)Clustering[Ans is columnar fashioned data]
+
+Q 8)Accidental update on a table can be recovered by fail safe
+a)True
+b)False[Ans is False] Meant only for disaster management can be recovered through time travel
+
+Q 9)Snowflake users can set Fail Safe to 0
+a)True
+b)False[Ans is False]
+
+Q 10)Fail safe can be disabled
+a)True
+b)False[Ans is False]
+
+Q 11)Fail safe can be performed by
+a)Users
+b)Snowflake employees
+c)None of the above[Ans is Snowflake Employees]
+
+Q 12)Metadata cache is maintained in which layer
+a) Storage layer
+b) Query processing layer
+c) None of the above[Ans is none of the above]
+
+Q 13)Caching is intended to improve the performance of the query
+a)True
+b)False[Ans is True]
+
+Q 14)Default table type in Snowflake
+a)Permanent
+b)Transient
+c)Persistent
+d)Temporary[Ans is Permanent]
+
+Q 15)There is need to store ETL or transitory data which needs to be stored outside a session.Which table type is recommended
+a)permanent
+b)Transient
+c)Persistent
+d)Temporary[Ans is Transient]//since outside the session
+
+Q 16)Temporary tables - Which of the following are true
+a) Valid for a session
+b)Default time travel is 1
+c)Fit for storing tempoarary data
+d)All of the above[Ans is all of the above]
+
+Q 17)Temporary tables can be changed to transient if required
+a)True
+b)False[Ans is false]Same for other table types
+
+Q 18)Not a type of View in SNowflake
+a)Secure
+b)Standard
+c)Materialised
+d)None of the above[Ans is d]
+
+------------------------------------------------------------------------------------SESSION 4 ----------------------------------------------------------------------------------------
+
+Views:
+a)Standard
+Cannot alter view definition have to recreate the view
+Views are read only cannot perform any DML operations on the view
+
+Update the data is not possible
+
+Definition also cannot be updated
+Adding another col is not possible so we have to recreate the view
+We cannot add or drop col in the view definition.
+
+b)Materialized-Run the view once and use multiple times
+It contains data and consumes storage and holds data
+
+If have a very big query if one portion of query is ised multiple types take a portion and run once and accessed multiple times.
+
+It saves the computation.
+If a query returns small number of rows can use 
+If multiple aggregations so all that can be created in a materialized view and used multiple times.[Prevent unnecessary computations]
+
+
+
+If the base table changes then the Snowflake will automatically update the materialized table.
+No worries to update Materialized view if the base table is updated automatically
+
+1 table only 1 materialized view and it cannot access another materialized views
+
+Remember use materialized view when do not need frequent updations.[base table will not change frequently]
+
+Using joins normal tables can connect with materialized views
+Cannot use functions or materialized view inside a materialized view.
+
+
+c)Secure
+
+If do not want to view the underlying view definition then go for materialized view
+Use the Secure Keyword with the create statement{extra privacy and confidentiality}
+
+
+For an object to be eligible for data sharing it should be a secure view.
+
+More level of privacy
+
+IF a view is secure SF will bypass all optimizations thus impacting the performance.
+
+We can make standard and materialized view secure
+
+Logic within the view will not be available like cols or tables within the view or joins or predicates within the view will be hidden in secure view.
+
+------Stages-where we will store data in the form of files
+
+Table stage = @%mytable
+Named stage = @stage_name{DATABASE OBJECT}
+User stage = @~
+
+a)Table stage[@%tablename]
+It is a staging area for a table
+Default option which snowflake gives
+Have the same name as table
+Cannot be altered or dropped
+Do not support setting file format options
+It is not a seperate database object
+Not appropriate if u want to copy the files into multiple tables
+It is the storage layer
+[Many to one ]
+
+b)User stage[List @~]
+User stage cannot be altered or dropped
+User stages do not support file format options.
+User stages are referenced using @~
+Not appropriate when multiple users require access to the files.
+Not applicable when multiple users want to copy files to multiple tables because specific to a single user.
+
+Data Sharing is a feature in snowflake wherein we can share data with other teams or other company
+
+Data Sharing notes:
+1)No data copy and no data movement anywhere.
+2)The sharing feature is achieved by using global service layer and metadata layer,hence the operation does not cost even a single penny.
+3)Storage in producers account,compute(VWH) in consumer's account.
+4)Once shared object is created , one or more consumer can be added.
+5.)Reader account is an alternative to share data if consumer does not have snowflake account.
+6.)No hard limits on the number of shares you can create or the number of accounts you add to a share.
+7.)Traditional Data Sharing(asking advantage of snowflake over traditional approach)
+a.Email-easy but 25mb limit
+b.FTP-easy but administration and deconstruct
+c.ETL-mature but time taking and complex/costly,build for specific purpose.
+d.API-okay for small data but issue for large data
+e.Cloud Storage - Lot of service available but do not support DML operation , less performance when query data.
+
+Named Stages[@]
+------------
+Type kinds:
+Internal-Stage within snowflake environment
+
+External-Stage external out of snowflake
+
+Provide greatest degree of flexibility
+Users with the appropriate privileges on this stage can load data into any table
+When u use copy command it is imperative to use named stages
+
+
+Zero-Copy Data CLoning--Metadata only operation[Not copying data]
+-------------------------
+
+Instant data cloning operations
+Databases,schema,tables etc
+Metadata-only operation-Micropartitions [Actual storage is shared by physical table]
+
+Modified data stored as new blocks
+Unmodified data stored only once
+No data copying required,no cost
+
+Instant dev/test environments
+Test code in your entire production dataset
+Swap tables into production when ready
+
+The original table and the clone table are mutually exclusive[point in time snapshot]
+A cloned object does not retain any granted privileges on the source object itself (i.e. clones do not automatically have the same 
+privileges as their sources). A system administrator or the owner of the cloned object must explicitly grant any required privileges
+ to the newly-created clone.
+
+However, if the source object is a database or schema, for child objects contained in the source, the clone replicates all granted
+ privileges on the corresponding child objects:
+
+For databases, contained objects include schemas, tables, views, etc.
+For schemas, contained objects include tables, views, etc.
+Snowflake SQL UDFs can return either Scalar or Tabular results.
+TO CLONE A TABLE YOU NEED THE SELECT PRIVILEGES AND TO CLONE A DATABASE YOU NEED A USAGE PRIVILEGES
+The cloning copy structure, data and certain other attributes but doesn't copy the load metadata,
+ therefore files that have already been processed for the source table can be re-processed into a cloned table.
+
+Yes 
+Database
+schema
+Tables
+Table stages
+Stream
+Stages(all except named internal)
+File Format
+Sequence
+Task
+Pipes (only external)
+Stream
+
+
+
+NO:
+Internal named stage
+External tables
+---------------------------------------------------------------------------
+Q1)What are true about Micro partitioning?
+a)Largest size of MP is 16MB(50MB-500MB uncompressed)or (10-100MB compressed)
+b)MP is immutable
+c)Other 2 option is irrevelant(Ans should be a and b)
+
+Q2)Not a type of View in Snowflake
+a)Secure
+b)Standard
+c)Materialized 
+d)None of the above(Ans is d)
+
+Q3)Standard view stores data
+a)True
+b)False[Ans is false only materialized view stores data]
+
+Q4)Standard View will not allow Joins
+a)True
+b)False[Ans is False]
+
+Q5)There can only be only one view on a table
+a)True 
+b)False(Ans is false)
+
+Q6)View cannot be used in a sub-query
+a)True
+b)False[Ans is false]
+
+Q7)Definition of a view cannot be updated
+a)True
+b)False[Ans is true]
+
+Q8)DML is allowed on a view
+a)True
+b)False[Ans is False]
+
+Q9)Views are read only
+a)True
+b)False[Ans is true]
+
+Q10)Materialized view store data
+a)True
+b)False[Ans is true]
+
+Q11)Materialized view behave more like a table
+a)True
+b)False[Ans is True]
+
+Q12)Materialized views will be charged for Storage and Compute
+a)True
+b)False[Ans is True]
+
+Q13)Use case for a materialized view
+a)Modular Code
+b)Query containing huge computations[Ans is b because they help in improving performance]
+
+Q14)Materialized view are for improved performance
+a)True
+b)False[Ans is true]
+
+Q15)Materialized view can query multiple tables
+a)True
+b)False[Ans is False]
+
+Q16)All aggregate functions are allowed in Materialized views
+a)True
+b)False[Ans is False]
+
+Q17)Use case for scale up
+a)Complex large data processing query
+b)Concurrency issue[Ans is a]
+
+Q18)Use case for scale out.
+a)Complex large data processing query
+b)Concurrency issue[Ans is b]
+
+Q19)Secure Views are used for performance
+a)True
+b)False[Ans is False]
+
+Q20)Cloning is Metadata only operation
+a)True
+b)False[Ans is True]
+
+Q21)Cloning involves physical movement of data
+a)True
+b)False [Ans is False]
+
+Q22)Internal Named stages can be cloned 
+a)True
+b)False[Ans is False]
+
+Q23)Table stages can be cloned
+a)True
+b)False[Ans is True]
+
+Q24)Cloned object will have all privileges of source object
+a)True
+b)False[Ans is False]Cloned object will not inherit any privileges of the source object
+Cloned all tables and privileges of the schema will be cloned[Of the tables ] but if u clone of a table then no change in privileges
+
+Q25)Cloning is a costly operation as it involves compute
+a)True
+b)False[Ans is false]because just meta data and not compute 
+
+Q26)Which of the following is eligible for data sharing
+a)Secure View
+b)View
+c)Secure Materialised View
+d)Materialised {ans is a and c that is secure view and secure materialized view]
+
+Q27)A named definition of a query
+a)View
+b)Secure View
+c)Materialized View[Ans is View]
+
+Q28)Secure View will bypass certain optimizations.
+a)True
+b)False[Ans is True]
+
+Q29)There is a need to create a view on a table which contains confidential data.Users should not be explosed to underlying data objects.
+WHich is the right fit?
+a)View
+b)Secure View
+c)Materialised view[Ans is b]
+
+Q30)There is a need to improve performace on a table.Base table does not vary much.Which is the right fit?
+a)View
+b)Secure View
+c)Materialized View[ANs is c]
+
+Q31)There is a need to imrpove code readability. Base table data will be updated frequently.
+a)View
+b)Secure View
+c)Materialised View[Ans is a]It is a standard View
+
+------------------------------------------------SESSION 5---------------------------------------------------------------------------------------------------------
+
+Virtual warehouses :
+Load on one virtual warehouse doesnt impact other virtual warehouses
+
+Access to shared data : ALl the virtual warehouses can access the shared data
+Individually managed : Each virtual warehouse can be sized according to the need . They can be suspended and resumed when needed.
+
+
+A virtual warehouse is a temporary computing machine which provides the required resources such as CPU,memory and temporary storage to perform following operation in a snowflake session.
+
+Executing SQL select statements that require compute resources
+
+Performing DML operations  such as 
+a)Updating rows in tables(DELETE,INSERT,UPDATE)
+b)Loading data into tables(COPY into<table>)
+c)Unloading data from tables(COPY into<location>)
+
+Note: VALIDATION_MODE does not support COPY statements that transform data during a load. If the parameter is specified, the COPY statement returns an error.
+To perform all the above warehouse must be running and in use for the session.While a warehouse is running it consumes Snowflake credits.
+
+
+Impact on data loading
+data loadin max time 24 hrs
+vwh max time 48 hrs
+Increase on the size of warehouse does not always impact data loading performance
+Data loading performance is influenced more by the number of files being loaded (and the size of each file) than the size pf warehouse
+
+
+Impact on query processing:
+
+The size of the warehouse can impact the amount of time required to execute queries submitted to the warehouse the larger the more complex queries.
+In general query performance scales linearly because additional resources are provisioned with each size increase.
+
+If queries processed by warehouse are running slowly , warewhihouse can be resized to provision more servers
+
+The additional servers do not impact any queries that are aldready running , but they are available to use by any queries that are queued or newly submitted.
+
+cost  = time * size of warehouse
+[when u increase the size the duration of query running will change]
+
+When u double the size of warehouse and query runs at the same speed[same]  then cost might increase
+but if query runs in half the time cost will remain same.
+
+
+Auto-suspemsion and auto-resumption
+------------------------------------
+
+A warehouse can be set to automaticallyresume or suspend based on activity
+
+It ensures that a warehouse is not left running and consuming credits when there is no incoming queries.
+Auto resume ensures that the warehouse start up again as it is needed
+
+Auto resume and auto suspend apply to the entire warehouse and not to clusters 
+
+Query processing and concurrency
+------------------------------------
+
+The numer of queries that a warehouse can concurrently process is determined by the size and complexity of each query.
+If the warehouse does not have enough remaining resources to process a query , the query is queued , pending resources that become available as other running queries 
+complete.
+
+
+Maximized vs Auto Scale
+------------------------
+
+Maximized : This mode is enabled by specifying the same value for both maximum and minimum clusters
+Auto-scale : This mode is enabled by specifying different values for moth maximum and minimum clusters
+
+Scaling Policy : eWhen automatically starting or shutting down additional clusters
+
+Recommended:
+
+Auto scale mode: Minimum of 1 and maximum of 2-3 clusters to begin with
+
+Multi-cluster warehouses are best utilized for scaling resoources to improve concurrency for user/queries.Not beneficial for improving performance of queries or 
+data loading.Resizing the warehouse will help.
+----------------------------------------------
+Auto suspend will override all the scaling policies like when no query and when auto suspend for 5 mins will run
+2 policies:
+a)Standard: Starts new cluster immediately when queueing takes place. shutdown check after 2-3 mins
+(More emphasis on performance)
+
+b)Economy : Making sure that all the warehouses are loaded rather than starting new clusters. Shutdown check for 5-6 mins of new cluster when added(More emphasis on cost)
+
+Impact of Warehouse Caches on Queries[Storage layer]
+---------------------------------------
+
+Size of the cache is determined by number of servers in the warehouse and therefore larger the size of the cache(with the number of servers like x-large and so on)
+Cache is dropped when the warehouse is suspended which may result in slower initial performance for some queries after the warehouse is resumed.
+Consider the trade-off between saving credits by suspending a warehouse vresus maintaing a cache of data from prev queries to help in performance.
+
+Storage Costs :
+--------
+
+Persistent data stored in permanent tables.
+Data retained to enable data recovery(time travel and fail safe)
+
+Metadata and cache results are not storage costs they are considered under cloud service cost
+
+3 kinds of caching:
+
+Metadata cache:(cloud services layer)
+No of micropartitions in the tables and count of rows in the table.(Min and max values for each partition, cardinality of each column)
+
+Data cache-Disk Cache-Warehouse Cache-SSD:(Storage layer)
+1.Query results are cached in Virtual warehouse memory as well
+2.Only available within the virtual warehouse
+3.Data is partially fed from the cache if not present entirely in the VH Cache.The other part can be retreived from the storage layer.
+4.WH cache gets dropped if the VH is suspended.
+5.VH cache contains the data for the selected MicroPartitions /selected columns 
+Size of the cache is determined by the number of servers in the warehouse
+
+Query results cache:Result cache(Cloud services layer):
+---Stored in S3 but accessed through cloud services layer
+Persisted for 24 hours
+Every time the ccache is used , 24-hour window is reset for a max of 31 days.
+
+
+---Result cache is resused if foll conditions are met
+1.Query syntax is same as pervious cached query
+2.Data in the underlying table has not changed
+3.Results cache is still available (gets purged after 24 hours of no usage)
+4.Role accessing the cached results has the required privileges.
+5.Query doesnt use dynamic values such as CURRENT_TIMESTAMP()
+
+
+--Use of Results cache can be overridden by using USE_CACHED_RESULTS parameter
+
+[even if suspend the same machine is provisioned so cache be returned]
+incrementing the same machine
+                                   
+What happens when query is submitted
+
+After syntax check
+1)Check for result cache(of query)
+2)Check for metadata cache
+3)Check for SSD cache in warehouse
+4)Hit the storage
+
+The query result cache is purged after 24 hours unless another query 
+is run which makes use of the cache. The query result cache is retained for a maximum of 31 days after being generated 
+
+Creating a warehouse for similiar set of tables and queries will benefit from warehouse cache.
+
+Q1)Small warehouse: When do you scaleup
+a)Multiple queries
+b)Concurrent queries
+c)No of users
+d)Complex queries[Ans is d] because others will result in queuing 
+
+Q2)Virtual warehouse features
+a)Auto resume
+b)Auto suspend
+c)Auto shutdown
+d)Auto trigger(Ans is a and b)//U can check in UI								   
+								   
+Q3)What multi-cluster will do?
+a)Scale down when query load is low
+b)Add cluster when load increases
+c)All of the above[Ans is c]
+
+Q4)Will there be any time gap in provisioning servers between 4X Large WH size and x-small warehouse?
+a)True
+b)False[Ans is a]becuause 4X will contain more number of servers so it will contain some time gap
+
+Q5)We need a warehouse to load(fetch data) RESULT CACHE?
+a)True
+b)False[Ans is False]because the main reason of cache is to avoid using compute resources 
+
+Q6)Metadata Cache help to fetch information without Warehouse?
+a)True
+b)False[Ans is true]
+
+Q7)What is the parameter to set the warehouse in a SUSPENDED state?
+a)alter warehouse demo_wh SUSPEND;
+b)alter warehouse demo_wh RESUME if suspended;
+c)alter warehouse demo_wh RESUME IF shutdown;
+d)alter warehouse demo_wh RESUME shutdown;[Ans is a]
+[if auto resume is set then when a query is fired it will automatically resume running]
+if not then we have start a warehouse explicity
+
+
+Q8)Are we allowed to change a warehouse while it is running?
+a)True
+b)False[ans is true]
+
+Q9)which of the following is true for changing the warehouse size from medium to large?
+a)Add to higher storage cost
+b)DOubles the number of servers
+c)More concurrency[Ans is b]In snowflake storage is decoupled from compute so a is ruled out so ans is back
+
+Q10)Warehouse can be resize when a query is running
+a)True
+b)False(Ans is a)
+
+Q11)Cache which is valid for 24 hours?
+a)Metadata
+b)SSD
+c)None of the above[Ans is c]//result
+
+Q12)Query result cache needs warehouse to fetch the results.
+a)True
+b)False[Ans is b]
+
+Q13)select max(salary) from employee table which type of cache is used for the query.
+a)data
+b)warehouse
+c)Query result {Ans is None of the above as max(salary) u will get from metadata cache}//Remember cardinality and min-max from metadata///VVVIIIII---------------------------------
+
+
+Q14)Which cache requires a warehouse?
+a)Data
+b)Metadata
+c)Query Result[Ans is a]//for b and c will have data in cloud services layer
+
+
+Q15)Which type of cache can be increased by increasing the warehouse size?
+a)Data
+b)Metadata
+c)Query Result[Ans is a]
+
+Q16)SELECT NAME FROM EMPLOYEE;
+SELECT NAME AS EMPLOYEE_NAME FROM EMPLOYEE;
+query result cache can be used for second query?
+a)True
+b)False[Ans is False]Query should be exaclty the same here alias name and hence query will be treated as different 
+
+Q17)Which type of cache contains data from micropartitions?
+a)Warehouse
+b)Metadata
+c)Query result [ans is a]{if data about micropartitions ans would have been b}
+
+Q18)Warehouse cache invalidates when
+a)Warehouse is shut down
+b)Underlying data changes
+c)After 24 hours {only for results cache}
+d)All of the above[Ans is a and b]VVVIIIII
+
+Q19)When choosing a geographic deployment region, what factors might an enrollee consider?
+ans:
+Number of availability zones within a region
+Proximity to the point of service
+
+Q20)The following questions have to do cloud platforms. Mark all the statements that are true. 
+
+A company can use more than one cloud infrastructure provider by setting up several Snowflake accounts.
+A company can have its data stored in more than one geographical region by setting up several Snowflake accounts
+A company can use a combination of data sharing and replication to distribute data to various regions and cloud platforms
+A company can use availability zones to distribute data to various regions and cloud platforms
+
+ans: abc
+------------------------------------------------------------------SESSION 6---------------------------------------------------------------------------------------
+
+Clustering(Horizontal Pruning)--where -- Micropartitions--to enable horizontal pruning effeciently
+----------
+Logical grouping of Physical data to fetch only required micropartitions
+
+-For micropartitions we have to do a cluster by(col) data of the col will be kept in one micropartition--based on 
+key identifies-Physical moment of data
+
+We need clustering for efficient pruning of micropartitioning
+
+Fetching off only the micropartitions that are required 
+
+Each update is like an insert because micropartitions are immutable
+DML operations results in recluster the data(autoclustering)
+
+1)nO CONTROL on cluters
+2)SHOW TABLES;to check clustering
+3)Snowflake will decide the clustering only if beneficial (It will charge appropriately)
+show clustering --
+
+Eligibility for clustering
+
+1)Query performance
+2)multi-terabyte range table
+3)Clustering depth for table is large
+
+
+Depth = number of micropartitions to read (Data spread across all micropartitions so depth will be high)
+(number of micropartitions should always be low that is low cardinality)
+
+METADATA LAYER	  output
+						^	
+						|
+VP LAYER		  M1,M2,M3,M4		
+						^
+						|
+S3 LAYER - T1     M1,M2,M3,M4
+
+(here depth is high)
+
+IF reclustering takes place delinking of micropartitions with the table will take place and linking of new micropartitions will take place with 
+the table . Can retrieve the old partitions through fail safe and later 
+
+First time travel-1 day or 30 days(permanent) failsafe period automatically older micropartitions will get purged.
+
+If the table size is in TB then only clustering is beneficial or else smaller tables not needed
+
+Groupby should be done on the cols coming in the where condition or filter predicates
+
+Clustering keys can be done on composite keys(3-4 columns)
+
+If composite one with medium  cardinality
+
+Clustering key will decide the ingestion order
+
+Constant micropartitions means table is well clustered and hence query only one micropartition.
+
+If multiple DML operations occur then the order is disturbed and then the updated row is spread across multiple micropartitions
+
+Command:
+
+Alter table name cluster by |options|
+
+
+SUSPEND:
+ 
+ alter table name suspend recluster;
+ 
+ Drop cluster:
+ 
+ alter table name drop clustering by
+ 
+ Clustering information:
+ 
+ systemclustering_information('<table_name>','col')
+ systemclustering_depth('<table_name>','col')
+ 
+ Clustering has both compute and storage cost
+ 
+ PERFORMANCE
+ ---------------
+ 
+ Snowflake recommends to segregate workloads to maximise throughput and minimise latency
+ -Snowflake has high elasticity and scalability 
+ -Creation of dedicated warehouses will allow optimal parameter for Auto resume and Auto suspend
+ -Discreate warehouses on the basis of Buisness domain and functionality.
+ 
+ 
+ In ETL auto resume and auto suspend is beneficial because small amount of time
+ but in buisness queries caching will be more beneficial
+ Justified use of secure Views
+ 
+ Q1)Clustering must be enabled for all tables.
+ a)True
+ b)False[ans is false]
+ 
+ Q2)What determines if a table needs to be clustered?
+ a)Clustering Depth
+ b)Warehouse performance
+ c)Query performance[ANs is a and c ]---snowflake decouples compute and storage and hence no relation for improving query performance.
+ 
+ Q3)Maximum number of cols allowed as a cluster key is 1?
+ a)True
+ b)False[Ans is False]//Max number is 3-4
+ 
+ Q4)Basing on cardinality which of the following makes a decent cluster Key?
+ a)Primary Key Column
+ b)Timestamp with seconds
+ c)Gender
+ d)None of the above[Ans is d]In gender cardinality is minimum which shoudnt be the case
+ 
+ Q5)Clustering happens on a weekly basis.
+ a)True
+ b)False[Ans is false]
+ 
+ Q6)User have to spin up a warehouse for clustering process(AS IT IS AUTOMATIC RECLUSTERING)
+ a)True
+ b)False[Ans is false]
+ 
+ Q7)Order of cardinality snowflake recommends for a cluster key.
+ a)Maximum-minimum
+ b)Minimum-Maximum
+ c)Only Maximum
+ d)Only Minimum[Ans is b]left-right
+ 
+--------------------------------------------------------------SESSION 7-----------------------------------------------------------------------
+File loading
+//////////////////VVVIIIII
+Data loading will be impacted by file size and number of files rather than the warehouse size
+
+vvimp
+data loading transformation only supports selecting data from user stages and named stages 
+
+a)External Stages
+
+b)Internal Stages
+--User
+--Table
+--Named
+
+c)Bulk vs Continuous loading
+
+Operations in stage
+
+1)Simple transformation During a load
+2)Column reordering
+3)COlumn omission
+4)Casts
+5)Truncating the stings that exceed length
+The "load metadata" (which maintains which files have already been loaded) for a table expires after 64 days
+
+
+Every data file will be compressed and encrypted
+
+File Sizing
+
+100-250 MB
+Trade off between number of files and performance
+Organizing data by path
+
+1)Creating a stage:
+create stage name url = 's3://' credentials = (aws_key_id = '' aws_secret_key = '')
+
+2)Staging a file:
+put file:///odkod/path{location}
+
+3)Bulk loading data from file
+copy into t1 from @%t1/path
+
+4)/Specific file names
+copy into t1 from @%t1/path/foldername/
+files = ('mydata1.csv','mydata.csv')
+
+5)PATTERN SEARCH
+copy into t1 from @%t1/unitedstates/california/2016/06/01/11/
+pattern = '.mydata[^[0-9]{1,3}$$].csv';
+[LOADED]////////////////////
+Structured -- Delimited(CSV,TSV,etc)
+Semi-Structured - (JSON,Avro,ORC,Parquet,XML) 
+
+create pipe mypipe_s3
+auto_ingest = true
+aws_sns_topic = 'arn:aws:sns:us-west-2:dkdofd:s' as
+copy into snowpipe_db.public.tablename
+from @snowpipe_db.public.mystage
+file_format=(type='JSON');
+
+In snowpipe no active warehouse is needed but normal active warehouse is needed
+Snowpipe can be used for streaming data
+
+
+PIPE_USAGE_HISTORY in Account_usage schema and Information Schema.
+Credits for Snowpipe depend on file size and staging frequency(complexity of select statement in stage)
+[UNLOADED]//////////////////
+For data unloading,
+
+
+Q)Snowflake supports landing data into:
+Internal stage on cloud storage platform- True
+External stage on cloud storage platform-T
+Internal stage on your local system-F
+
+Q)The compute resource used by Snowflake for data loading jobs can be provided by:
+User-managed virtual warehouse-True
+Hardware provisioned by user directly from cloud providers-False
+Snowflake-managed serverless compute-T
+
+
+Structured : delimited files (CSV,TSV,etc)
+Semi-Structured : JSON,Parquet (ORC and some other file formats are not supported)
+
+----READ THIS FROM NOTES-------------------------QUERYING DATA FROM STAGED FILES-------------------------------
+
+
+Semi-structured data will be in the form of variant col 
+
+
+Q1)Bulk loading is done by 
+a)Insert into
+b)copy into
+c)cluster into
+d)alter into
+Ans is b)
+
+Q2)Files can be uploaded into
+a)User stage
+b)Table stage
+c)Internal Stage
+d)All of the above(Ans is d)
+
+Q3)Continuous loading is done by
+a)Snow pipe
+b)Snow stage
+c)Snow meta
+d)All of the above(Ans is a)
+
+Q4)Which of the following types can be loaded?
+a)JSON
+b)Avro
+c)pdf
+d)All of the above(Ans is a and b)
+
+Q5)Which of the following types can be unloaded?
+a)JSON
+b)Avro
+c)Pdf
+d)All of the above(Ans is a )
+
+Q6)Source system produces frequent incremental data in small batches . Which one would you recommend?
+a)Bulk loading
+b)Snow pipe 
+c)Snow meta
+d)All of the above[Ans is snowpipe]
+
+Q7)Snowpipe needs a user created virtual warehouse
+a)True
+b)False
+[Ans is False]
+
+Q8)Data loading will always increase if we scale up the warehouse.
+a)True
+b)False[Ans is False]
+ 
+Q9)Ideal file size for data loading
+a)1GB
+b)100-250mb
+c)500MB
+d)None of the above[Ans is b]
+
+Q10)Data can be queried in staged file without loading
+a)True
+b)False[Ans is True]
+
+Q11)External stages can be used for data loading
+a)True
+b)False[Ans is true]
+
+Q12)Files can be purged in internal stage after loading is completed
+a)True
+b)False[Ans is a:True]
+
+------------------------------------------SESSION 8-----------------------------------------------------------------------------------------
+
+Authentication -  Access Snowflake via WebUI or connector - (NATIVE/JDBC/ODBC)
+--------------
+Embedded Multi-factor Authentication, Federated authentication available
+
+Access Control: - Database/Schema/Tables/View/Sequences/FileFormats/Snowpipe/UDF's
+--------------
+Role based access control model
+Granular privileges on all objects and actions
+
+Data encryption:Data at rest/Motion data/Loading/Unloading/Storage
+---------------
+All data encrypted always , end-to-end
+Encyrption keys managed automatically
+
+External validation Network/Policy/Firewall/Password policy/Masking etc
+-------------------
+certified against enterprise client requirements
+
+
+MFA-can be implemented to increase Security
+MFA is provided by Duo Security services.
+Once MFA is installed ,Duo app to be installed by user.
+Each user must enable MFA by themself.
+All user with accountAdmin role should have MFA enabled.
+SSO(SAML 2.0)allows user to access via federated services(IDP identity provider like single sign on)
+As long as IPD session is active,they can access Snowflake
+SSO/IDP is availale enterprise edition +
+MFA can be disabled by Account Admin/Security Admin
+MFA
+a)IT is self enrolled process can not be done for others.
+b)IT can be disabled temporarily or permanently by account admin/Securityadmin.
+c)DISABLE_MFA = true,MINS_TO_BYPASS_MFA = 5(alter command)
+d)Connector also need MFA is enabled by user.
+e)--mfa-password<string>
+f)some-jdbc-url&passcode=<string>
+g)Different user can utilize single number for MFA , but vice versa isnt possible
+
+OBJECT SECURITY
+-----------------
+1.All the objects (warehouse/db/schema/table) can be controlled by DAC/RBAC
+a)DAC-Discretionary Access Control
+b)RBAC - Role based Access control
+2.Snowflake implements hybrid model DAC & RBAC
+3.DAC handles the ownership , each object has a owner and owner has full access to a object.
+4.RBAC - Handle all other access except ownership like object privilege and role access.
+Object privilege assign to role which are intern assign to users.
+
+Authorization Access Control
+-----------------------------
+1.Roles based authorization and not user based authorization.
+2.Authorization for all database objects including future objects.
+3.Authorization for operations in snowflake like create,stop/start virtual warehouse.
+
+Data Security,Access Log & Encryption:
+--------------------------------------
+a.All data is encrypted uses AES-256 strong Encryption.
+b.All files stored in stage area is automatically Encrypted using AES-256 or +
+c.Special edition of SD allowes periodic re-key and customer manage encryption.
+
+2.Connectivity SECURITY
+---------------------
+a.All communication over internet is via HTTPS.
+b.All communication is secure and encrypted via TLS 1.2 or higher.
+
+3.Application Activity Log
+  
+a.History tab provide all historical commands.
+b.All details including session id etc can be viewed.
+c.Each query has query id which helps for troubleshooting(no access to data to even SF users)
+
+4.User Access Audit Log
+a)Login_history family of table function can be used to query login attempts.
+
+5.Query History:
+Query History is available for 14 days , it can be stored in SF table or external system.
+
+6.Infrastructure Monitoring:
+Sf users Threat Stack and sumo logic to monitor production Infrastructure.
+
+
+Network SECURITY
+----------------
+1)Network policy helps to control the SF access.
+2)IP whitelisting-policy can be created to allow or disallow IP's.
+3)Private link - private tunnel between customer and cloud provider(ESD or VPS customer)
+4.)Private Communication between SF & your VPC(Azure link or AWS link)
+5)Only Accountadmin/Securityadmin can create/alter/drop network policy.
+6)Snowflake supports is specifying ranges of IP Address using CIDR notation.
+7)create network policy my_network BLOCKED_IP_LIST=('1.1.1.1','1.1.1.2')BLOCKED_IP_LIST=('1.1.1.3') comment='my policy'
+8)It is possible to temporarily bypass network policy for a set number of minutes by configuring the user object property MINS_TO_BYPASS_NETWORK_POLICY
+9)User-level network policies take precedence over account-level network policies and the user level network policy management can be peformed using SQL.
+10)Network policy to be enaled once created.
+
+Network Security - Network Policies
+^
+|
+Authentication : MFA
+^
+|
+Object Security - RBAC,DAC
+^
+|
+Data Security
+^
+|
+
+
+AccountAdmin will create Network Policies
+
+create network policy mypolicy2 allowed_ip_list = ('','');
+
+desc network policy mypolicy2;
+
+what is the significance of blocked network 
+
+Authentication : MFA-DUO
+
+ Security - Object Access
+
+RBAC -- Every object in Snowflake will be accessed by roles 
+
+DAC - Every object in Snowflake should have an individual owner
+
+All Schema object should have an owner in Discretionay Access Control
+
+SECURITY
+--------
+Data SECURITY
+
+1)All data automatically encryted using AES 256 strong encryption
+2)All files stored in stages for data loading/unloading are automatically encrypted using either AES 128 standard or 256 strong encryption
+3)Periodic rekeying of encrypted data
+4)Support for encrypted data using customer managed keys
+
+Security Validations
+---------------------
+
+1)Soc 1 Type 2 compliance-All
+2)Soc 2 Type 2 compliance-All
+3)Support for HIPAA compliance-Health insurance , portability-Buisness Critical Edition or higher
+4)PCI DISS compliance- Buisness Critical Edition or higher 
+5)HITRUST (CSF compliance) - Buisness Critical Edition or higher 
+ 
+ 
+ACID
+-----
+Atomic
+
+Consistent
+
+Isolation
+1)Read committed isolation:
+
+A statement only sees data that was committed before the statement began.It never sees uncommitted data
+Ensures there are no dirty reads
+
+
+
+2)Resource Looking:
+
+Update,delete and merge statements hold locks that generally prevent them from running in parallel with other UPDATE,DELETE and MERGE
+statements  
+Durable
+ 
+ DDL operations are auto commit but DML operations we can choose
+DML operations will get locked and after commit lock will be released to prevent dirty reads.
+Accountadmin can check for locks in the system and he modify/abort the transactions manually.
+
+
+
+Data Sharing in Snowflake:
+---------------------------------------
+It is a metadata only operation 
+
+Database,schema,tables and secure views can be shared 
+
+Legacy data sharing workflow:
+Extract
+Encrypt
+transmit
+Receive 
+Decrypt [Decompress]
+Load
+
+a)Databases
+b)Schemas
+c)TABLES
+d)Secure Views
+e)UDF's
+Database, Schemas, Tables, Secure views & Secure UDFs can be shared.
+Data sharing will have 2 parties producer and consumer
+
+Producer:Storage Cost
+1)Produces data
+2)A data provider is any Snowflake account that creates shares and makes them available to other snowflake accounts to consume.
+3)Will pay for storage of the data
+4)Can share data from Multiple databases in an account
+
+
+Consumers:Compute Cost
+1)Consumes data
+2)A data consumer is any Snowflake account that chooses to create a database from a share made available by a data provider.
+3)Will pay for compute resources used for querying the shared data. 
+4)Role based access.
+5)Shared data can be used in Complex Queries.
+
+Reader account is the one who doesnt have snowflake account and wants to perform read so seperate account and access for that person
+
+How to create a share ?
+
+1)Use create share to create a share.At this step, the share is simply a container waiting for objects and accounts to be added.
+2)Use the GRANT <privilege> .... TO SHARE command to add a database (and objects in the database) to the share.
+3)Use the ALTER SHARE command to add accounts to the share.
+
+Commands:
+[Producer creates it]
+use role accountadmin;
+
+create share sales_s;
+grant usage on database sales_db to share sales_s;
+grant usage on schema sales_db.aggregates_eula to share sales_s;
+grant select on table sales_db.aggregates_eula.aggregate_1 to share sales_s;
+
+show grants to share sales_s;
+
+alter share sales_s add account=xyz12345,yz12345
+
+show grants of share sales_s;
+
+can drop and revoke any time u want 
+
+If producer makes any changes in the database in the share then automatically it gets reflected for the consumer.
+
+1 share can have only one database
+Shares can have n number of accounts
+Shares cannot be cloned
+
+Can use revoke command to revoke all the grants 
+Compliance Security:
+--------------------
+1.)HIPAA
+2.)PCI(Payment card for Industry for data Security)
+3.)NIST 800-53
+4.)Soc
+5.)Soc-2 type II
+6.)SIG Lite(SIG Assessment)(Standardized Information Gathering-SIG Questionnaire Tools allow org to build,customize , analyze and 
+store vendor questionnaires)
+
+
+1.)Network/site access - Site Access is controlled through IP whitelisting and blacklisting,managed through network policies- All snowflake editions
+2.)Network/site access - Private/direct communication between Snowflake and other VPCs through AWS privateLink - Buisness Critical/ESD
+3.)Account/User authentication - MFA for increased security for account access by users - All
+4.)Account/User authentication - SSO though federated authentication - Enterprise and higher
+5.)Object Security - Controlled access to all objects through account(users,warehouse,db,etc) through a hybrid model of DAC & RBAC - all
+6.)Data Security - All data automatically encryted using AES 256 - All
+7.)Data Security - All data stored in stages automatically encryted using(AES-128 or 256) -All
+8.)Data Security - Periodic rekeying of encrypted data  - Enterprise (and higher)
+9.)Data Security - Support for encrypting data using customer managed keys - ESD
+10.)Security Validations - SOC 2 Type II compliance - All
+11.)Security Validations - Support for HIPAA compliance - Buisness Critical Edition /ESD
+12.)Security Validations - PCI DSS compliance - Buisness Critical Edition /ESD
+13.)TriSecret Key - Buisness Critical Edition
+14.)FedRAMP
+
+KEY ROTATION:
+4 keys
+Root Key
+Account Master Key(auto rotate> 30 days old)
+Table Master Key
+File Keys
+
+Task:
+----
+Tasks when created are suspended state and need ALTER to enter running state.
+When a task tree is created it cannot span multiple schemas and all the task in the task tree must be in the same schema
+
+To execute a task, the role being used must have the global EXECUTE TASK privilege on the Account.
+Additionally, all the privileges that the SQL statement in the task requires must be available to the role.
+
+Stream:
+offset when DML operations are performed
+3 types:
+Standard
+Append only
+Insert only(only this mode for External warehouses)
+
+Resource Monitor
+----------------
+
+Doesnt work for snowflake created warehouses like automatic reclustering and Snowpipes
+Resource monitors can be used to impose limits on the number of credits that are consumed by:
+1)User managed virtual warehouses
+2)Virtual warehouses used by cloud services
+3)Resource monitors can be created by account administrators
+
+Resource monitor support the following actions:
+1)Notify & suspend:send notification to all account admin and suspend all warehouses after all statements executed 
+2)Notify & suspend immediately : send notification to all account admin and suspend all warehouses immediately 
+3)Notify : Perform no action but send an alert notification to all account admin
+
+Each resource monitor can have the following actions:
+1)One suspend action
+2)One suspend immediately action
+3)Up to five notify actions
+
+resource monitor credit tracking points
+-By default, credit usage tracking resets back to 0 at the beginning of each calendar month, matching the Snowflake billing cycle.
+-By default, a resource monitor starts tracking assigned warehouses as soon as it is created, at the current timestamp.
+-The schedule of a resource monitor can be customized to reset at an interval (such as daily, weekly, or annually) relative to a designated start date.
+
+Resource Monitors have no control over Snowpipe warehouse (credit usage for snowflake provided warehouses like Snowpipe warehouse)
+SnowPipe can be used to load data from external as well as internal stages. 
+The REST API which is used to trigger a SnowPipe applies to SnowPipe created over external stages as well as internal stages.
+Snowpipe doesnt guarantee that the files will be loaded in the same order they arrived in the stage.
+
+Snowpipe uses a server less compute due to which the billing is based on the actual data processed,
+COPY command uses virtual warehouse resources therefore the billing is based on how long the virtual warehouse was active
+
+
+Resource Monitors can be assigned to account level and resource monitors can be assigned to warehouses 
+
+0)Which of the following Snowflake Editions encrypt all data transmitted
+over the network within a Virtual Private Cloud (VPC)?
+ans: Business Critical
+
+1)which blocking list takes more precedence?
+a)Allowed IP List
+b)Blocked IP List (Ans is b)
+
+2)MFA is not suggested for AccountAdmin
+1)True
+2)False(Ans is False)
+
+3)Users own objects in snowflake
+1)True
+2)False(Ans is False)Roles own objects in snowflake
+
+4)Data at rest is always encryted on Snowflake
+1)True
+2)False(ANs is true that is by default)
+
+5)Producers are charged for compute
+1)True
+2)False(Ans is False storage)
+
+6)Consumers are charged for compute
+1)True
+2)False(Ans is True)
+
+7)Snowflake account is a mandate for reader account
+1)True
+2)False(Ans is False)
+
+8)You can revoke privileges on Shared objects
+1)True
+2)False(Ans is True)
+
+9)Data sharing involves physical movement of data
+1)True
+2)False(Ans is False)
+
+10)Account admin /roles having required privileges can act on resource monitors
+1)True
+2)False(Ans is True)
+
+11)One warehouse can be assigned to many monitors
+1)True
+2)False(Ans is False)
+
+12)One monitor can be assigned to many warehouses
+1)True
+2)False(Ans is True)
+
+13)Which two must be done for resource monitor notifications to be received by account administrators?
+ANS:
+Each account administrator must provide and verify their email address.
+Account administrators must enable notifications in the web interface preferences.
+
+14)Which three objects did we explicitly refer to using the COPY INTO command to load data on using external stages?
+ans:
+
+table
+file format
+stage
+
+15)When configuring a Warehouse using a Snowflake edition that has Elastic Data Warehousing enabled, what facets or components will you need to configure that are not needed in accounts where Elastic Data Warehousing is not enabled. (Choose two)
+(A) Scaling Policy
+(B) Minimum and Maximum Servers
+(C) Minimum and Maximum Clusters
+(D) Auto-Resume
+(E) Auto-Suspend
+ans:a,c
+it already has auto res, n sus since its elasstic
+
+16)Contrast Snowflake Warehouses from traditional data marts. Choose all correct statements.
+(A) Both Data Marts and Snowflake Warehouses can be assigned to a business' departments for their specific needs.
+	(B) Data Marts have access to all of a company's data at all times.
+	(C) Snowflake Warehouses have access to all of a company's data at all times.
+	(D) Data Marts can improve efficiency but can lead to inaccuracies due to replication.
+	(E) Snowflake Warehouses can improve efficiency but lead to inaccuracies due to replication.
+	(F) Snowflake Warehouses can be called Data Marts because they are so similar in design and purpose.
+ans:
+a,c,d
+
+17)The following statements have to do with warehousing metaphors. Check all true statements.
+	(A) Real-world warehouses have goods and workers.
+	(B) Traditional data warehouses have data and servers.
+	(C) Goods = Data = Storage
+	(D) Workers = Servers = Compute Power
+ans: all
+
+18)Which of the following options would result in a column named MY_VALUE being sandwiched between two percent signs? (Check all that apply)
+	(A) '%'||MY_VALUE||'%'                 ----
+	(B) CONCATN('%',MY_VALUE,'%')
+	(C) MERGESTRING('%',MY_VALUE,'%')
+	(D) CONCAT('%',CONCAT(MY_VALUE,'%'))   ----
+ans:  a,d
+
+19)Which of the following is the correct syntax for the REPLACE FUNCTION?
+1. REPLACE(<subject>, <pattern>[,<replacement>])
+2. REPLACE(<where>, <what>[,<why>])
+3. REPLACE(<column>, <to_be_replaced>[,<frequency>])
+
+ans:a 
+
+20)If we chose to use DOUBLE QUOTES as the enclosing character in a file, and in our Snowflake file format definition, which of the following values would cause an error during loading?
+	(A) Rumble, Goss, & McSure Esq.
+	(B) Lydia's Lizard Emporium
+	(C) Clark "Superman" Kent
+ans: C
+
+21)Which default roles have access to the ACCOUNT option in the ribbon? (Check two)
+(A) SYSADMIN
+	(B) PUBLIC
+	(C) DISPLAYUSER
+	(D) SECURITYADMIN
+	(E) ACCOUNTADMIN
+	(F) ADMINISTRATOR
+ans: E,F
+
+22)Snowflake adds four roles to each new account. Check the four default roles.
+	(A) SYSADMIN
+	(B) PUBLIC
+	(C) DISPLAYUSER
+	(D) SECURITYADMIN
+	(E) ACCOUNTADMIN
+	(F) ADMINISTRATOR
+	(G) USERADMIN
+ans:a,b,d,e,(g)
+
+23)Match a SQL word with an EXTRACT, TRANSFORM or LOAD label. The relationships were called out during the lab portion of this lesson and were highlighted using comments in the script you loaded as part of the lab.
+
+. FROM is to ______________ EXTRACT
+. TRANSFORM is to ___________ REPLACE
+. LOAD is to _____________ INSERT	
+
+24)Match the logical data concepts to their data storage counterparts (Table, Column Heading, Row Contents).
+a. Attribute is to _______________ COl heading
+b. Entity is to _______________table
+c. Value is to _______________row 
+
+field=col
+row=tuple, record,val
+relation=table,entity
+attributes= keys
+
+25)Snowflake instances in different regions require separate accounts?- True
+26)There are cases where separate accounts are required such as different editions or regions?-True
+
+--------------------------------------------------------------------------------------------------------------------------------------------

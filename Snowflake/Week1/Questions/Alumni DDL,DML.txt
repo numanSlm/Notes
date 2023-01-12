@@ -1,0 +1,323 @@
+CREATE  TABLE  role   (
+    id   BIGINT(20) NOT NULL  ,
+    name   VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (  id  ) )
+  ;
+
+CREATE  TABLE IF NOT EXISTS skill   (
+    id   number(20) NOT NULL AUTO_INCREMENT ,
+    description   VARCHAR2(255) NULL DEFAULT NULL ,
+    name   VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (  id  ) )
+  ;
+
+CREATE  TABLE IF NOT EXISTS  post_type   (
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+    name   VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (  id  ) )
+  ;
+
+CREATE  TABLE IF NOT EXISTS department   (
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+    name   VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (  id  ) )
+  ;
+
+
+CREATE  TABLE IF NOT EXISTS degree   (
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+    department_id   BIGINT(20) NOT NULL ,
+    name   VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (  id  ) ,
+   FOREIGN KEY(department_id) references department(id))
+  ;
+
+CREATE  TABLE IF NOT EXISTS profile   (
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+    address   VARCHAR(255) NOT NULL ,
+    batch   VARCHAR(255) NOT NULL ,
+    degree_id   BIGINT(20) NOT NULL ,
+    designation   VARCHAR(255) NULL DEFAULT NULL ,
+    gender   VARCHAR(255) NOT NULL ,
+    PRIMARY KEY (  id  ) ,
+   FOREIGN KEY(degree_id) references degree(id) )
+  ;
+
+CREATE  TABLE IF NOT EXISTS experience   (
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+    company_name   VARCHAR(255) NOT NULL ,
+    current   BIT(1) NOT NULL ,
+    end   DATETIME NULL DEFAULT NULL ,
+    start   DATETIME NOT NULL ,
+    profile_id   BIGINT(20) NOT NULL ,
+  PRIMARY KEY (  id  ) ,
+  FOREIGN KEY(profile_id) references profile(id) )
+  ;
+
+CREATE  TABLE IF NOT EXISTS project   (
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+    name   VARCHAR(255) NOT NULL ,
+    number_of_members   INT(11) NOT NULL ,
+    profile_id   BIGINT(20) NOT NULL ,
+    short_description   VARCHAR(255) NULL DEFAULT NULL ,
+  PRIMARY KEY (  id  ) ,
+  FOREIGN KEY(profile_id) references profile(id) )
+  ;
+
+CREATE  TABLE IF NOT EXISTS profile_skills   (
+    skill_id   BIGINT(20) NOT NULL ,
+    profile_id   BIGINT(20) NOT NULL ,
+  PRIMARY KEY (  profile_id  ,   skill_id  ) ,
+ FOREIGN KEY(profile_id) references profile(id),
+  FOREIGN KEY(skill_id) references skill(id) )
+  ;
+
+CREATE  TABLE IF NOT EXISTS user   (
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+    emailid   VARCHAR(255) NOT NULL ,
+    name   VARCHAR(255) NOT NULL ,
+    password   VARCHAR(255) NOT NULL ,
+    phonenumber   VARCHAR(255) NOT NULL ,
+    profile_id   BIGINT(20) NULL DEFAULT NULL ,
+    role_id   BIGINT(20) NOT NULL ,
+    username   VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (  id  ) ,
+  FOREIGN KEY(profile_id) references profile(id),
+  FOREIGN KEY(role_id) references role(id) )
+  ;
+
+CREATE  TABLE IF NOT EXISTS query   (
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+    content   VARCHAR(255) NOT NULL ,
+    date   DATETIME NOT NULL ,
+    parent_id   BIGINT(20) NULL DEFAULT NULL ,
+    user_id   BIGINT(20) NOT NULL ,
+  PRIMARY KEY (  id  ) ,
+  FOREIGN KEY(user_id) references user(id),
+  FOREIGN KEY(parent_id) references query(id) )
+  ;
+
+CREATE  TABLE IF NOT EXISTS event   (
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+    date   DATETIME NOT NULL ,
+    description   VARCHAR(255) NULL DEFAULT NULL ,
+    invitation   VARCHAR(255) NOT NULL ,
+    name   VARCHAR(255) NOT NULL ,
+    organiser_id   BIGINT(20) NOT NULL ,
+  PRIMARY KEY (  id  ) ,
+   FOREIGN KEY(organiser_id) references user(id) )
+  ;
+
+CREATE  TABLE IF NOT EXISTS  post   (
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+    content   VARCHAR(255) NOT NULL ,
+    date   DATETIME NOT NULL ,
+    type_id   BIGINT(20) NOT NULL ,
+    user_id   BIGINT(20) NOT NULL ,
+  PRIMARY KEY (  id  ) ,
+   FOREIGN KEY(type_id) references post_type(id),
+  FOREIGN KEY(user_id) references user(id) )
+  ;
+
+
+insert into role(name) values('Admin');
+insert into role(name) values('Student');
+insert into role(name) values('Alumni');
+insert into role(name) values('Faculty');
+insert into role(name) values('Alumni Coordinator');
+insert into role(name) values('Management');
+insert into role(name) values('Guest');
+
+insert into skill(name, description) values('Programming', 'C/C++/Java');
+insert into skill(name, description) values('Verilog', 'Hardware Description Language');
+insert into skill(name) values('CAD');
+insert into skill(name) values('CATIA');
+insert into skill(name) values('Web Design');
+insert into skill(name, description) values('SQL', 'Query Language');
+insert into skill(name) values('MATLAB');
+insert into skill(name) values('J2EE');
+insert into skill(name) values('ProE');
+
+
+insert into department(name) values('IT');
+insert into department(name) values('CSE');
+insert into department(name) values('ECE');
+insert into department(name) values('EEE');
+insert into department(name) values('Applied Sciences');
+insert into department(name) values('MECH');
+insert into department(name) values('CIVIL');
+insert into department(name) values('Textile Engg');
+
+insert into degree(department_id, name) values(2, 'BE_CSE');
+insert into degree(department_id, name) values(2, 'ME_CSE');
+insert into degree(department_id, name) values(2, 'BE_SE');
+insert into degree(department_id, name) values(5, 'BSC_CT');
+insert into degree(department_id, name) values(1, 'BTECH_IT');
+insert into degree(department_id, name) values(1, 'MTECH_IT');
+insert into degree(department_id, name) values(5, 'BSC_IT');
+insert into degree(department_id, name) values(3, 'BE_ECE');
+insert into degree(department_id, name) values(3, 'ME_ECE');
+insert into degree(department_id, name) values(3, 'ME_VLSI');
+insert into degree(department_id, name) values(4, 'BE_EEE');
+insert into degree(department_id, name) values(4, 'ME_EEE');
+insert into degree(department_id, name) values(6, 'BE_MECH');
+insert into degree(department_id, name) values(6, 'ME_EnggDesign');
+insert into degree(department_id, name) values(7, 'ME_AppliedMech');
+
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'Project Manager', '2008', '1, AMC, PN Palayam, Coimbatore-37', 1);
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'Project Manager', '2008', '8, LMC, KK Pudhur, Coimbatore-48', 2);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Project Manager', '2005', '88, 1st cross, MG Road, Bangalore-57', 3);
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'Project Leader', '2000', '98, 1st cross, Annai Theresa Road, Kolkata-77', 3);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Software Engineer', '2012', '100, 11st cross, Gandhi Nagar, Chennai-77', 4);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Trainee Engineer', '2013', '81, 9th cross lane, Gangothri, Mysore-77', 8);
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'VLSI Engineer', '2008', '99, KK Street, Amphi Nagar, Chennai-28', 9);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Senior Software Engineer', '2012', '1, AMC, PN Palayam, Coimbatore-37', 1);
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'Project Manager', '2009', '8, MMC, PK Pudhur, Coimbatore-48', 2);
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'Project Leader', '2008', '76, 11th Street, Lakshmi Nagar, Trichy-57', 3);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Project Manager', '2002', '8, AMC, PN Palayam, Coimbatore-37', 1);
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'Project Manager', '2004', '18, LMC, KK Pudhur, Coimbatore-48', 5);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Project Manager', '2008', '48, 1st cross, MG Road, Bangalore-57', 4);
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'Project Leader', '2008', '78, 1st cross, Annai Theresa Road, Kolkata-77', 3);
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'Software Engineer', '2013', '105, 11st cross, Gandhi Nagar, Chennai-77', 4);
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'Trainee Engineer', '2013', '11, 9th cross lane, Gangothri, Mysore-77', 5);
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'VLSI Engineer', '2011', '98, KK Street, Amphi Nagar, Chennai-28', 10);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Senior Software Engineer', '2010', '101, AMC, PN Palayam, Coimbatore-37', 1);
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'Project Manager', '2009', '80, MMC, PK Pudhur, Coimbatore-48', 2);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Project Leader', '2002', '761, 11th Street, Lakshmi Nagar, Trichy-57', 3);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Senior Software Engineer', '2008', '19, AMC, PN Palayam, Coimbatore-37', 1);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Project Manager', '2008', '61, AMC, PN Palayam, Coimbatore-37', 4);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Project Manager', '1999', '610, AMC, PNP Nagar, Coimbatore-37', 1);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Senior CAD Engineer', '2008', '24, AMC, PN Palayam, Coimbatore-37', 13);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Site Engineer', '2010', '25, AMC, PN Palayam, Coimbatore-37', 14);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'Regional Manager', '1999', '26, AMC, PNP Nagar, Coimbatore-37', 15);
+insert into profile(gender, designation, batch, address, degree_id) values ('Male', 'System Manager', '2008', '27, AMC, PNP Nagar, Coimbatore-37', 4);
+insert into profile(gender, designation, batch, address, degree_id) values ('Female', 'Secretary', '1998', '28, AMC, PNP Nagar, Coimbatore-37', 4);
+
+
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Ram', 'user101', 'amphi1123', '1987023456', 'ram@yahoo.in',3,5); 
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Ramaa', 'user102', 'amphi1231', '1887023456', 'rama@hotmail.com',3,4); 
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Samuel', 'user103', 'amphi1321', '1234569800', 'sam@gmail.com',3,3); 
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Kavithaa', 'user104', 'amphi1567', '1111193459', 'kavitha@lycos.com',3,2); 
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Anithaa', 'user105', 'amphi1777', '1708912345', 'anitha@gmail.com',3,1); 
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Jaya', 'user106', 'amphi1482', '1887023451', 'jayaa@yahoo.in',3,10); 
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Priyaa', 'user107', 'amphi1111', '1234561234', 'priya123@gmail.com',3,9);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Jeyan', 'user108', 'amphi1489', '1887023451', 'jayan@yahoo.in',3,8);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Jeyanthi', 'user109', 'amphi19', '1887023451', 'jayanthi@yahoo.in',3,7);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Manian', 'user110', 'amphi110', '1883423451', 'mani@gmail.com',3,6);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Navin', 'user111', 'amphi111', '1113423451', 'naveen@gmail.com',3,20);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Oviiya', 'user112', 'amphi112', '1123423451', 'oviya@gmail.com',3,19);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Pratheep', 'user113', 'amphi113', '1133423451', 'pradeep@gmail.com',3,18);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Reeta', 'user114', 'amphi114', '1143423451', 'rita@gmail.com',3,17);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Siindhu', 'user115', 'amphi115', '1153423451', 'sindhu@gmail.com',3,16);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Teena', 'user116', 'amphi116', '1163423451', 'tina@gmail.com',3,15);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Umaa', 'user117', 'amphi117', '1173423451', 'uma@gmail.com',3,14);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Vineth', 'user118', 'amphi118', '1183423451', 'vinith@gmail.com',3,13);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Veenaa', 'user119', 'amphi119', '1193423451', 'veena@gmail.com',3,12);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Yasar', 'user120', 'amphi120', '1203423451', 'yazar@gmail.com',3,11);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Baalaji', 'user121', 'amphi121', '1213423451', 'balaji@gmail.com',3,26);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Clinton', 'user122', 'amphi122', '1223423451', 'clinton@gmail.com',3,25);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Deepan', 'user123', 'amphi123', '1233423451', 'dheepan@gmail.com',3,24);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Loganath', 'user124', 'amphi124', '1243423451', 'balaji@gmail.com',3,23);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Pravin', 'user125', 'amphi125', '1253423451', 'praveen@gmail.com',3,22);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Rameesh', 'user126', 'amphi126', '1263423451', 'ramesh@gmail.com',3,21);
+insert into user(name, username, password, phonenumber, emailid, role_id) values('Rathesh', 'user127', 'amphi127', '1273423451', 'rathish@gmail.com',2);
+insert into user(name, username, password, phonenumber, emailid, role_id) values('Radhaa', 'user128', 'amphi128', '1283423451', 'balaji@gmail.com',2);
+insert into user(name, username, password, phonenumber, emailid, role_id) values('Thaamarai', 'user129', 'amphi129', '1293423451', 'thamarai@gmail.com',1);
+insert into user(name, username, password, phonenumber, emailid, role_id) values('Vegnesh', 'user130', 'amphi130', '1233423451', 'vignesh@gmail.com',4);
+insert into user(name, username, password, phonenumber, emailid, role_id) values('Yokesh', 'user131', 'amphi131', '1313423451', 'yogesh@gmail.com',4);
+insert into user(name, username, password, phonenumber, emailid, role_id) values('Premaa', 'user132', 'amphi132', '1323423451', 'prema@gmail.com',4);
+insert into user(name, username, password, phonenumber, emailid, role_id) values('Ramyaa', 'user133', 'amphi133', '1333423451', 'ramya@gmail.com',5);
+insert into user(name, username, password, phonenumber, emailid, role_id) values('Pravithaa', 'user134', 'amphi134', '1343423451', 'pravitha@gmail.com',5);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Mala', 'user135', 'amphi135', '1353423451', 'malini@gmail.com',6,28);
+insert into user(name, username, password, phonenumber, emailid, role_id, profile_id) values('Sendhil', 'user136', 'amphi136', '1363423451', 'senthil@gmail.com',1,27);
+
+ 
+
+
+insert into experience(company_name, current, end, start, profile_id) values ('TCS', 0, '2012-05-01 00:00:00', '2010-07-01 00:00:00', 1);
+insert into experience(company_name, current, start, profile_id) values ('CTS', 1, '2012-05-10 00:00:00', 1);
+insert into experience(company_name, current, end, start, profile_id) values ('CTS', 0, '2012-05-01 00:00:00', '2010-07-01 00:00:00', 2);
+insert into experience(company_name, current, start, profile_id) values ('TCS', 1, '2012-05-10 00:00:00', 2);
+insert into experience(company_name, current, end, start, profile_id) values ('IBM', 0, '2008-06-01 00:00:00', '2007-07-01 00:00:00', 3);
+insert into experience(company_name, current, end, start, profile_id) values ('MPhasis', 0, '2010-05-01 00:00:00', '2008-07-01 00:00:00', 3);
+insert into experience(company_name, current, start, profile_id) values ('Amphisoft', 1, '2010-05-10 00:00:00', 3);
+insert into experience(company_name, current, end, start, profile_id) values ('Wipro', 0, '2008-05-01 00:00:00', '2002-07-01 00:00:00', 4);
+insert into experience(company_name, current, start, profile_id) values ('HCL', 1, '2008-05-10 00:00:00', 4);
+insert into experience(company_name, current, start, profile_id) values ('HCL', 1, '2013-05-10 00:00:00', 5);
+insert into experience(company_name, current, start, profile_id) values ('Payoda Technologies', 1, '2013-07-10 00:00:00', 6);
+insert into experience(company_name, current, start, profile_id) values ('Texas Instruments', 1, '2010-07-10 00:00:00', 7);
+insert into experience(company_name, current, start, profile_id) values ('Hexaware Technologies', 1, '2012-07-10 00:00:00', 8);
+insert into experience(company_name, current, start, profile_id) values ('iGate Solutions', 1, '2009-07-10 00:00:00', 9);
+insert into experience(company_name, current, end, start, profile_id) values ('Seimens', 0, '2009-05-01 00:00:00', '2006-07-01 00:00:00', 10);
+insert into experience(company_name, current, start, profile_id) values ('Google', 1, '2009-07-10 00:00:00', 10);
+insert into experience(company_name, current, end, start, profile_id) values ('TCS', 0, '2008-06-01 00:00:00', '2004-07-01 00:00:00', 11);
+insert into experience(company_name, current, end, start, profile_id) values ('IBM', 0, '2010-05-01 00:00:00', '2008-07-01 00:00:00',11);
+insert into experience(company_name, current, start, profile_id) values ('Amphisoft', 1, '2010-05-10 00:00:00', 11);
+insert into experience(company_name, current, end, start, profile_id) values ('Accenture', 0, '2008-06-01 00:00:00', '2004-07-01 00:00:00', 12);
+insert into experience(company_name, current, end, start, profile_id) values ('Wipro', 0, '2011-05-01 00:00:00', '2008-07-01 00:00:00', 12);
+insert into experience(company_name, current, start, profile_id) values ('Infosys', 1, '2011-05-10 00:00:00', 12);
+insert into experience(company_name, current, end, start, profile_id) values ('Infosys', 0, '2011-05-01 00:00:00', '2006-07-01 00:00:00', 13);
+insert into experience(company_name, current, start, profile_id) values ('Wipro', 1, '2011-05-10 00:00:00', 13);
+insert into experience(company_name, current, end, start, profile_id) values ('TCS', 0, '2011-05-01 00:00:00', '2008-07-01 00:00:00', 14);
+insert into experience(company_name, current, start, profile_id) values ('Amphisoft', 1, '2011-05-10 00:00:00', 14);
+insert into experience(company_name, current, start, profile_id) values ('CTS', 1, '2013-07-10 00:00:00', 15);
+insert into experience(company_name, current, start, profile_id) values ('CTS', 1, '2013-07-10 00:00:00', 16);
+insert into experience(company_name, current, start, profile_id) values ('CTS', 1, '2010-07-10 00:00:00', 18);
+insert into experience(company_name, current, end, start, profile_id) values ('TCS', 0, '2010-06-01 00:00:00', '2009-07-01 00:00:00', 19);
+insert into experience(company_name, current, end, start, profile_id) values ('CTS', 0, '2011-05-01 00:00:00', '2010-07-01 00:00:00',19);
+insert into experience(company_name, current, end, start, profile_id) values ('Infosys', 0, '2013-05-01 00:00:00', '2011-07-01 00:00:00',19);
+insert into experience(company_name, current, start, profile_id) values ('IBM', 1, '2013-05-10 00:00:00', 19);
+insert into experience(company_name, current, end, start, profile_id) values ('IBM', 0, '2011-05-01 00:00:00', '2004-07-01 00:00:00',20);
+insert into experience(company_name, current, end, start, profile_id) values ('TCS', 0, '2013-05-01 00:00:00', '2011-07-01 00:00:00',20);
+insert into experience(company_name, current, start, profile_id) values ('CTS', 1, '2013-05-10 00:00:00', 20);
+insert into experience(company_name, current, start, profile_id) values ('CTS', 1, '2010-05-10 00:00:00', 21);
+insert into experience(company_name, current, start, profile_id) values ('Infosys', 1, '2010-07-10 00:00:00', 22);
+insert into experience(company_name, current, start, profile_id) values ('TCS', 1, '2001-05-10 00:00:00', 23);
+insert into experience(company_name, current, start, profile_id) values ('TCS', 1, '2010-07-01 00:00:00', 24);
+insert into experience(company_name, current, start, profile_id) values ('ABT', 1, '2012-07-10 00:00:00', 25);
+insert into experience(company_name, current, start, profile_id) values ('TCS', 1, '2005-07-10 00:00:00', 26);
+
+
+
+insert into post_type(name) values ('Oppurtunities');
+insert into post_type(name) values ('Higher Studies');
+insert into post_type(name) values ('Sharing Experiences');
+insert into post_type(name) values ('Personal Accomplishments');
+insert into post_type(name) values ('Technology');
+
+insert into event(name, invitation, date, organiser_id) values ('Alumni Meet 2008', 'All are Welcome', '2008-05-01 17:00:00', 34);
+insert into event(name, invitation, date, organiser_id) values ('Alumni Meet 2009', 'All are Welcome', '2009-05-01 17:00:00', 34);
+insert into event(name, invitation, date, organiser_id) values ('Alumni Meet 2010', 'All are Welcome', '2010-05-01 17:00:00', 34);
+insert into event(name, invitation, date, organiser_id) values ('Alumni Meet 2011', 'All are Welcome', '2011-05-01 17:00:00', 34);
+insert into event(name, invitation, date, organiser_id) values ('Alumni Meet 2012', 'All are Welcome', '2012-05-01 17:00:00', 34);
+insert into event(name, invitation, date, organiser_id) values ('Alumni Meet 2013', 'All are Welcome', '2013-05-01 17:00:00', 33);
+insert into event(name, invitation, date, organiser_id) values ('Alumni Meet 2014', 'All are Welcome', '2014-01-27 17:00:00', 33);
+insert into event(name, invitation, date, organiser_id) values ('ICSIP 2008', 'All are Welcome', '2008-06-01 09:00:00', 31);
+insert into event(name, invitation, date, organiser_id) values ('ICSIP 2010', 'All are Welcome', '2010-06-01 09:00:00', 31);
+insert into event(name, invitation, date, organiser_id) values ('ICSIP 2012', 'All are Welcome', '2012-06-01 09:00:00', 32);
+insert into event(name, invitation, date, organiser_id) values ('ACM ICPC 2013', 'Inter-Collegiate Programming Contest', '2013-12-05 09:00:00', 1);
+insert into event(name, invitation, date, organiser_id) values ('Entrepreneurship Development Programme', 'All are Welcome', '2014-01-27 15:00:00', 32);
+insert into event(name, invitation, date, organiser_id) values ('Freshers Induction Programme', 'All are Welcome', '2013-08-27 15:00:00', 35);
+insert into event(name, invitation, date, organiser_id) values ('Literary Meet', 'All are Welcome', '2014-01-27 16:00:00', 5);
+
+INSERT INTO query(content, date, user_id) values ('What are the options after MS?', '2012-01-05 01:00:00', 1);
+INSERT INTO query(content, date, user_id) values ('Any one working on PHP?', '2013-06-01 09:00:00', 2);
+INSERT INTO query(content, date, user_id) values ('Is there any one working in TCS?', '2014-01-02 04:00:00', 3);
+INSERT INTO query(content, date, user_id) values ('Any one working on Grails?', '2013-09-10 13:00:00', 2);
+INSERT INTO query(content, date, user_id) values ('After MS you can opt for PhD or you can apply for research organisations', '2012-01-05 14:00:00', 5);
+INSERT INTO query(content, date, user_id, parent_id) values ('I am working in PHP domain for the past 3 years.  How can I help you?', '2013-06-01 19:00:00', 5, 2);
+INSERT INTO query(content, date, user_id, parent_id) values ('I am currently working in TCS. What can I do for you?', '2014-01-02 14:00:00', 2,3);
+INSERT INTO query(content, date, user_id) values ('Any one working on Ruby on Rails?', '2014-09-10 13:00:00', 2);
+INSERT INTO query(content, date, user_id, parent_id) values ('I am working in PHP domain for the past 4 years.  How can I help you?', '2013-06-02 04:30:00', 8, 2);
+
+
+
+INSERT INTO post(content, date, user_id, type_id) values ('Openings for MS graduates in Computer Science', '2013-01-05 00:00:01', 1,1);
+INSERT INTO post(content, date, user_id, type_id) values ('New Features in PHP', '2012-06-01 00:00:09', 2,5);
+INSERT INTO post(content, date, user_id, type_id) values ('Attention - TCS Ex-Employees', '2014-01-02 00:00:04', 3,1);
+INSERT INTO post(content, date, user_id, type_id) values ('Grails - Technology for the future', '2013-09-10 00:00:13', 2,5);
+INSERT INTO post(content, date, user_id, type_id) values ('Research Grants - Automobile Engineering', '2012-01-05 00:00:14', 5,5);
+INSERT INTO post(content, date, user_id, type_id) values ('Happy to announce that I have been honoured with the the Outstanding Indian Employee Award', '2013-06-01 00:00:19', 5, 4);
+INSERT INTO post(content, date, user_id, type_id) values ('New Year Greetings', '2014-01-01 00:00:14', 3,4);
+INSERT INTO post(content, date, user_id, type_id) values ('Good Coding Practices', '2013-09-10 00:00:13', 2,5);
+INSERT INTO post(content, date, user_id, type_id) values ('Attention - TCS Ex-Employees...cont', '2014-01-02 00:00:07', 3,1);

@@ -1,0 +1,238 @@
+SESSION 5---------------------------------------------------------------------------------------------------------
+
+Virtual warehouses :
+Load on one virtual warehouse doesnt impact other virtual warehouses
+
+Access to shared data : ALl the virtual warehouses can access the shared data
+Individually managed : Each virtual warehouse can be sized according to the need . They can be suspended and resumed when needed.
+
+
+A virtual warehouse is a temporary computing machine which provides the required resources such as CPU,memory and temporary storage to perform following operation in a snowflake session.
+
+Executing SQL select statements that require compute resources
+
+Performing DML operations  such as 
+a)Updating rows in tables(DELETE,INSERT,UPDATE)
+b)Loading data into tables(COPY into<table>)
+c)Unloading data from tables(COPY into<location>)
+
+To perform all the above warehouse must be running and in use for the session.While a warehouse is running it consumes Snowflake credits.
+
+
+Impact on data loading
+
+Increase on the size of warehouse does not always impact data loading performance
+Data loading performance is influenced more by the number of files being loaded (and the size of each file) than the size pf warehouse
+
+
+Impact on query processing:
+
+The size of the warehouse can impact the amount of time required to execute queries submitted to the warehouse the larger the more complex queries.
+In general query performance scales linearly because additional resources are provisioned with each size increase.
+
+If queries processed by warehouse are running slowly , warewhihouse can be resized to provision more servers
+
+The additional servers do not impact any queries that are aldready running , but they are available to use by any queries that are queued or newly submitted.
+
+cost  = time * size of warehouse
+[when u increase the size the duration of query running will change]
+
+When u double the size of warehouse and query runs at the same speed[same]  then cost might increase
+but if query runs in half the time cost will remain same.
+
+
+Auto-suspemsion and auto-resumption
+------------------------------------
+
+A warehouse can be set to automaticallyresume or suspend based on activity
+
+It ensures that a warehouse is not left running and consuming credits when there is no incoming queries.
+Auto resume ensures that the warehouse start up again as it is needed
+
+Auto resume and auto suspend apply to the entire warehouse and not to clusters 
+
+Query processing and concurrency
+------------------------------------
+
+The numer of queries that a warehouse can concurrently process is determined by the size and complexity of each query.
+If the warehouse does not have enough remaining resources to process a query , the query is queued , pending resources that become available as other running queries 
+complete.
+
+
+Maximized vs Auto Scale
+------------------------
+
+Maximized : This mode is enabled by specifying the same value for both maximum and minimum clusters
+Auto-scale : This mode is enabled by specifying different values for moth maximum and minimum clusters
+
+Scaling Policy : eWhen automatically starting or shutting down additional clusters
+
+Recommended:
+
+Auto scale mode: Minimum of 1 and maximum of 2-3 clusters to begin with
+
+Multi-cluster warehouses are best utilized for scaling resoources to improve concurrency for user/queries.Not beneficial for improving performance of queries or 
+data loading.Resizing the warehouse will help.
+
+Auto suspend will override all the scaling policies like when no query and when auto suspend for 5 mins will run
+2 policies:
+a)Standard: Starts new cluster immediately when queueing takes place. shutdown check after 2-3 mins
+(More emphasis on performance)
+
+b)Economy : Making sure that all the warehouses are loaded rather than starting new clusters. Shutdown check for 5-6 mins of new cluster when added(More emphasis on cost)
+
+Impact of Warehouse Caches on Queries[Storage layer]
+---------------------------------------
+
+Size of the cache is determined by number of servers in the warehouse and therefore larger the size of the cache(with the number of servers like x-large and so on)
+Cache is dropped when the warehouse is suspended which may result in slower initial performance for some queries after the warehouse is resumed.
+Consider the trade-off between saving credits by suspending a warehouse vresus maintaing a cache of data from prev queries to help in performance.
+
+Storage Costs :
+--------
+
+Persistent data stored in permanent tables.
+Data retained to enable data recovery(time travel and fail safe)
+
+Metadata and cache results are not storage costs they are considered under cloud service cost
+
+3 kinds of caching:
+
+Metadata cache:(cloud services layer)
+No of micropartitions in the tables and count of rows in the table.(Min and max values for each partition, cardinality of each column)
+
+Data cache-Disk Cache-Warehouse Cache-SSD:(Storage layer)
+1.Query results are cached in Virtual warehouse memory as well
+2.Only available within the virtual warehouse
+3.Data is partially fed from the cache if not present entirely in the VH Cache.The other part can be retreived from the storage layer.
+4.WH cache gets dropped if the VH is suspended.
+5.VH cache contains the data for the selected MicroPartitions /selected columns 
+Size of the cache is determined by the number of servers in the warehouse
+
+Query results cache:Result cache(Cloud services layer):
+---Stored in S3 but accessed through cloud services layer
+Persisted for 24 hours
+Every time the ccache is used , 24-hour window is reset for a max of 31 days.
+
+
+---Result cache is resused if foll conditions are met
+1.Query syntax is same as pervious cached query
+2.Data in the underlying table has not changed
+3.Results cache is still available (gets purged after 24 hours of no usage)
+4.Role accessing the cached results has the required privileges.
+5.Query doesnt use dynamic values such as CURRENT_TIMESTAMP()
+
+
+--Use of Results cache can be overridden by using USE_CACHED_RESULTS parameter
+
+[even if suspend the same machine is provisioned so cache be returned]
+incrementing the same machine
+                                   
+What happens when query is submitted
+
+After syntax check
+1)Check for result cache(of query)
+2)Check for metadata cache
+3)Check for SSD cache in warehouse
+4)Hit the storage
+
+The query result cache is purged after 24 hours unless another query 
+is run which makes use of the cache. The query result cache is retained for a maximum of 31 days after being generated 
+
+Creating a warehouse for similiar set of tables and queries will benefit from warehouse cache.
+
+Q1)Small warehouse: When do you scaleup
+a)Multiple queries
+b)Concurrent queries
+c)No of users
+d)Complex queries[Ans is d] because others will result in queuing 
+
+Q2)Virtual warehouse features
+a)Auto resume
+b)Auto suspend
+c)Auto shutdown
+d)Auto trigger(Ans is a and b)//U can check in UI								   
+								   
+Q3)What multi-cluster will do?
+a)Scale down when query load is low
+b)Add cluster when load increases
+c)All of the above[Ans is c]
+
+Q4)Will there be any time gap in provisioning servers between 4X Large WH size and x-small warehouse?
+a)True
+b)False[Ans is a]becuause 4X will contain more number of servers so it will contain some time gap
+
+Q5)We need a warehouse to load(fetch data) RESULT CACHE?
+a)True
+b)False[Ans is False]because the main reason of cache is to avoid using compute resources 
+
+Q6)Metadata Cache help to fetch information without Warehouse?
+a)True
+b)False[Ans is true]
+
+Q7)What is the parameter to set the warehouse in a SUSPENDED state?
+a)alter warehouse demo_wh SUSPEND;
+b)alter warehouse demo_wh RESUME if suspended;
+c)alter warehouse demo_wh RESUME IF shutdown;
+d)alter warehouse demo_wh RESUME shutdown;[Ans is a]
+[if auto resume is set then when a query is fired it will automatically resume running]
+if not then we have start a warehouse explicity
+
+
+Q8)Are we allowed to change a warehouse while it is running?
+a)True
+b)False[ans is true]
+
+Q9)which of the following is true for changing the warehouse size from medium to large?
+a)Add to higher storage cost
+b)DOubles the number of servers
+c)More concurrency[Ans is b]In snowflake storage is decoupled from compute so a is ruled out so ans is back
+
+Q10)Warehouse can be resize when a query is running
+a)True
+b)False(Ans is a)
+
+Q11)Cache which is valid for 24 hours?
+a)Metadata
+b)SSD
+c)None of the above[Ans is c]
+
+Q12)Query result cache needs warehouse to fetch the results.
+a)True
+b)False[Ans is b]
+
+Q13)select max(salary) from employee table which type of cache is used for the query.
+a)data
+b)warehouse
+c)Query result {Ans is None of the above as max(salary) u will get from metadata cache}//Remember cardinality and min-max from metadata///VVVIIIII
+
+
+Q14)Which cache requires a warehouse?
+a)Data
+b)Metadata
+c)Query Result[Ans is a]//for b and c will have data in cloud services layer
+
+
+Q15)Which type of cache can be increased by increasing the warehouse size?
+a)Data
+b)Metadata
+c)Query Result[Ans is a]
+
+Q16)SELECT NAME FROM EMPLOYEE;
+SELECT NAME AS EMPLOYEE_NAME FROM EMPLOYEE;
+query result cache can be used for second query?
+a)True
+b)False[Ans is False]Query should be exaclty the same here alias name and hence query will be treated as different 
+
+Q17)Which type of cache contains data from micropartitions?
+a)Warehouse
+b)Metadata
+c)Query result [ans is a]{if data about micropartitions ans would have been b}
+
+Q18)Warehouse cache invalidates when
+a)Warehouse is shut down
+b)Underlying data changes
+c)After 24 hours {only for results cache}
+d)All of the above[Ans is a and b]VVVIIIII
+
+

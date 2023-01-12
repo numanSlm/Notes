@@ -1,0 +1,89 @@
+#Internal Stage
+list @st_lti_int;
+
+
+#User stage
+list @~
+
+#table stage  
+list @%emp;
+
+
+
+show STAGES;
+
+list @~;
+
+list @%emp;
+
+#loading
+put file:///media/num/Hub/LTI/Training/SnowFlake/datasets/employee.csv @~;
+
+
+#user stage
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @~   FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"'
+                                 ON_ERROR = 'CONTINUE' PURGE = TRUE;
+#table stage
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @%emp   FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"'
+                                 ON_ERROR = 'CONTINUE' PURGE = TRUE;
+                                 
+---------------------------------------------------------------------------------------------------
+
+you cannot create stages folders explicitly
+tthey are created at put stage
+
+put file:////media/num/Hub/LTI/Training/SnowFlake/datasets/fileformats/employees.json @st_lti_int/json;
+
+here /json creates new folder
+
+to view stage folders
+
+list @st_lti_int
+
+to view files in fol
+
+list @st_lti_int/json;
+------------------------------------------------------------------------------------------------------                                
+                                 
+# Loading from aws
+
+load into s3 bucket, folder, files and verify by queryin with s3 select
+
+copy the bucket creds 
+
+Come to snowflake
+
+create external stage,s3 via webUI and fill all creds
+
+stage created in snowflake
+
+launch snowsql
+
+use LTIDB;
+use Schema LTISCHEMA;
+show stages;
+-----
+internal- st_lti_int
+external- st_lti_s3
+----
+list @st_lti_s3
+----
+emp.csv
+employee.csv
+-----
+Copy into "LTIDB"."LTISCHEMA"."EMP" FROM @st_lti_s3/employee FILE_FORMAT='"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"' ON_ERROR='CONTINUE' PURGE=FALSE; 
+
+--------------------------------------------------employee here means bucket level
+
+check now
+
+select * from emp;
+
+---
+initially emp table
+1st 5 rows from emp.csv
+last 5 ftom employee,csv
+total 10 rows returned
+
+
+Copy into "LTIDB"."LTISCHEMA"."EMP" FROM @st_lti_s3/superstore.csv FILE_FORMAT='"LTIDB"."LTISCHEMA"."CSVHEAD"' ON_ERROR='CONTINUE' PURGE=FALSE; 

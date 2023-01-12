@@ -1,0 +1,144 @@
+CREATE  TABLE role_name   (
+    iden   NUMBER(20) NOT NULL,
+    nam   VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (  iden  ) )
+  ;
+
+CREATE  TABLE skill   (
+    iden   NUMBER(20) NOT NULL ,
+    description   VARCHAR(255) DEFAULT NULL ,
+    nam   VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (  iden  ) )
+  ;
+  
+CREATE  TABLE  post_type   (
+    iden   NUMBER(20) NOT NULL,
+    nam   VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (  iden  ) )
+  ;
+ 
+CREATE  TABLE department   (
+    iden   NUMBER(20) NOT NULL,
+    nam   VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (  iden  ) )
+  ;
+ 
+
+CREATE  TABLE degree   (
+    iden   NUMBER(20) NOT NULL,
+    department_id   NUMBER(20) NOT NULL ,
+    nam   VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (  iden  ) ,
+   FOREIGN KEY(department_id) references department(iden)
+   ON DELETE CASCADE
+)
+  ;
+ 
+CREATE  TABLE profile_det   (
+    iden   NUMBER(20) NOT NULL,
+    address   VARCHAR(255) NOT NULL ,
+    batch   VARCHAR(255) NOT NULL ,
+    degree_id   NUMBER(20) NOT NULL ,
+    designation   VARCHAR(255) DEFAULT NULL ,
+    gender   VARCHAR(255) NOT NULL ,
+    PRIMARY KEY (  iden  ) ,
+   FOREIGN KEY(degree_id) references degree(iden) 
+   ON DELETE CASCADE
+)
+  ;
+ 
+CREATE  TABLE experience   (
+    iden   NUMBER(20) NOT NULL,
+    company_name   VARCHAR(255) NOT NULL ,
+    current_status   NUMBER(1) NOT NULL ,
+    end_date   DATE DEFAULT NULL ,
+    start_date   DATE NOT NULL ,
+    profile_id   NUMBER(20) NOT NULL ,
+  PRIMARY KEY (  iden  ) ,
+  FOREIGN KEY(profile_id) REFERENCES profile_det(iden) 
+  ON DELETE CASCADE
+)
+  ;
+ 
+CREATE  TABLE project_det   (
+    iden   NUMBER(20) NOT NULL,
+    nam   VARCHAR(255) NOT NULL ,
+    number_of_members   NUMBER(11) NOT NULL ,
+    profile_id   NUMBER(20) NOT NULL ,
+    short_description   VARCHAR(255) DEFAULT NULL ,
+  PRIMARY KEY (  iden  ) ,
+  FOREIGN KEY(profile_id) REFERENCES profile_det(iden)
+  ON DELETE CASCADE
+ )
+  ;
+ 
+CREATE  TABLE profile_skills   (
+    skill_id   NUMBER(20) NOT NULL ,
+    profile_id   NUMBER(20) NOT NULL ,
+  PRIMARY KEY (  profile_id  ,   skill_id  ) ,
+ FOREIGN KEY(profile_id) REFERENCES profile_det(iden)
+ ON DELETE CASCADE,
+  FOREIGN KEY(skill_id) REFERENCES skill(iden)
+  ON DELETE CASCADE
+  
+)
+  ;
+ 
+CREATE  TABLE user_det   (
+    iden   NUMBER(20) NOT NULL,
+    emailid   VARCHAR(255) NOT NULL ,
+    user_name   VARCHAR(255) NOT NULL ,
+    user_password   VARCHAR(255) NOT NULL ,
+    phonenumber   VARCHAR(255) NOT NULL ,
+    profile_id   NUMBER(20) DEFAULT NULL ,
+    role_id   NUMBER(20) NOT NULL ,
+    username   VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (  iden  ) ,
+  FOREIGN KEY(profile_id) REFERENCES profile_det(iden)
+  ON DELETE SET NULL,
+  FOREIGN KEY(role_id) REFERENCES role_name(iden)
+  ON DELETE CASCADE
+ )
+  ;
+ 
+CREATE  TABLE query_det   (
+    iden   NUMBER(20) NOT NULL,
+    content   VARCHAR(255) NOT NULL ,
+    query_date   DATE NOT NULL ,
+    parent_id   NUMBER(20) DEFAULT NULL ,
+    user_id   NUMBER(20) NOT NULL ,
+  PRIMARY KEY (  iden  ) ,
+  FOREIGN KEY(user_id) REFERENCES user_det(iden)
+  ON DELETE CASCADE,
+  FOREIGN KEY(parent_id) REFERENCES query_det(iden)
+  ON DELETE SET NULL )
+  ;
+ 
+CREATE  TABLE event   (
+    iden   NUMBER(20) NOT NULL,
+    event_date   DATE NOT NULL ,
+    description   VARCHAR(255)DEFAULT NULL ,
+    invitation   VARCHAR(255) NOT NULL ,
+    nam   VARCHAR(255) NOT NULL ,
+    organiser_id   NUMBER(20) NOT NULL ,
+  PRIMARY KEY (  iden  ) ,
+   FOREIGN KEY(organiser_id) REFERENCES user_det(iden)
+   ON DELETE CASCADE
+ )
+  ;
+ 
+CREATE  TABLE  post   (
+    iden   NUMBER(20) NOT NULL,
+    content   VARCHAR(255) NOT NULL ,
+    post_date   DATE NOT NULL ,
+    type_id   NUMBER(20) NOT NULL ,
+    user_id   NUMBER(20) NOT NULL ,
+  PRIMARY KEY (  iden  ) ,
+   FOREIGN KEY(type_id) REFERENCES post_type(iden)
+   ON DELETE CASCADE,
+  FOREIGN KEY(user_id) REFERENCES user_det(iden) 
+  ON DELETE CASCADE
+)
+  ;
+  
+  

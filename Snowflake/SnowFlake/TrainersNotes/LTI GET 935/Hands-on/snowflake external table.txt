@@ -1,0 +1,46 @@
+
+create or replace external table patient_ext_variant
+with location = @ST_S3_INFYNI/healthcare
+file_format = csv_fileformat;
+
+select * from patient_ext_variant;
+
+select 
+value:c1::int as ID, 
+value:c2::varchar as pname , 
+value:c3::varchar as drug,
+value:c4::varchar as gender,
+value:c5::int as amt
+from patient_ext_variant;
+
+
+create or replace external table patient_ext 
+(ID INT as  (value:c1::int), 
+PNAME varchar(20) as ( value:c2::varchar), 
+DRUG varchar(20) as ( value:c3::varchar), 
+GENDER varchar(10) as ( value:c4::varchar), 
+AMOUNT int as (value:c5::int))
+with location = @ST_S3_INFYNI/healthcare
+AUTO_REFRESH = true
+file_format = csv_fileformat;
+
+select * from patient_ext;
+
+select id,pname,drug,gender,amount from patient_ext;
+
+
+SELECT distinct metadata$filename FROM @st_s3_infyni/part/;
+
+CREATE or replace EXTERNAL TABLE emp_part(
+  date_part date as to_date(substr(metadata$filename, 6, 10), 'YYYY/MM/DD'),
+  empno int as (value:c1::int),
+  ename varchar AS (value:c2::varchar),
+  salary int as (value:c3::int))
+  PARTITION BY (date_part)
+  LOCATION=@st_s3_infyni/part/
+  AUTO_REFRESH = true
+  FILE_FORMAT = csv_fileformat;
+  
+  ALTER EXTERNAL TABLE emp_part REFRESH;
+  
+  select EMPNO from emp_part where date_part = to_date('04/01/2021');;

@@ -1,0 +1,198 @@
+SESSION 2------------------------------------------------------------------------------
+No users concepts in Snowflake its only roles 
+We have liberty to choose virtual warehouses
+In every database we have 2 schemas by default:PUBLIC SCHEMA(COMES BY DEFAULT) and INFORMATION SCHEMA(all metadata of tables,views) MYSCHEMA : CUSTOM SCHEMA
+
+Storage,Virtual Processing and Metadata
+
+Nodes will share data but virtual warehouse will not share data
+
+Virtual Warehouse
+-----------------
+Can cosist of 1 or more clusters
+
+Multi-cluster warehouse is supported by Enterprise,Enterprise+-Buisness critical and VPS-Virtual Private Snowflake(Check docs)
+
+Unique identifier Account-> Virtual Warehouse(No limit)-> compute consisting of clusters [each cluster of same size] 
+suspend to hibernate[warehouse] autoresume 
+
+Scaling policy[policy for startup and shutdownof clusters]
+
+1 credit = 4 dollars[in enterprise]
+octa core processor 200gb hardisk and 20GB ram -  
+
+Snowflake Architecture uses a Top down Approach -- Sending signals to Virtual Warehouse
+
+
+Snowflake supports ACID properties
+Snapshot , MVCC {Concurrency Control} Locks ===== 
+
+Metadata{Global services},Processing,Storage
+Snowflake enforces null constraint all the other constraints like Primary key , Foreign key are not enforced but it supports them.
+
+Objects at Account Level:
+Users
+Role
+Warehouse
+Shared Objects
+Network Policies
+Reader Account
+Masking Policy Objects
+Account Level parameters
+Integration Objects
+
+Snowflake supports read committed isolation.[ISOLATION LEVEL SUPPORTED IN SNOWFLAKE] - others not supported are dirty read not supported yet
+You will only read committed data 
+
+Q1)Which best describes snowflake table?
+a)Conceptual instance in the storage layer
+b)Logical objects in the storage layer
+c)Cluster key used for optimizing query performance
+d)Logical grouping of columns and rows - underlying physical data [Ans is d]
+
+
+Q2)SF Architecture is designed for which of the following?
+a)Hadoop
+b)Hive
+c)Cloud [Ans is cloud]
+
+Q3)WHat best describes SF?
+a)Concurrent
+b)Performant
+c)Simplicity
+d)All of the above [Ans is d]
+
+Q4)Data migration is not applicable on ?
+a)Databases
+b)SCHEMA
+c)Indexes
+d)Build data pipelines Ans is [INDEXES](because snowflake doesnt support indexes)
+Oracle to snowflake
+
+Q5)What is the largest size of micropartitions?
+a)16MB compressed
+b)32MB compressed
+c)48MB compressed
+d)64MB compressed [Ans is a]
+uncompressed is between 50 to 500 MB
+
+Q6)Warehouse can be resized when warehouse is running?
+a)True
+b)False [ Ans is true]Existing query cannot take any advantage
+
+Q7)Can warehouse be stopped when resizing?
+a)True
+b)False [ans is true]
+
+Q8)Can schema be part of multiple database objects?
+a)true
+b)False[ans is true]
+
+Q9)By what factor does the number of servers increase when scaling up?
+a)1
+b)2
+c)4
+d)8[ans is 2]
+
+Q10)Changing the warehouse size from small to large will help in ?
+a)Concurrency
+b)Performance(Ans is b) [increase the size is performance -- scale up and increase the cluster the scale out --- concurrency]
+
+Remember increase the warehouse size is scale up increasing the warehouse performance and number of cluster is concurrency scale out
+Increase the throughput create bigger clusters[Increase the performance basically][increase the number of actions per time]
+Increase the response time increase the number of clusters [Response time] [concurrency][increase the response time]
+Concurrency = Throughput * latency
+Scale up = Increase size =  Increase throughput = increase query performance[fast] = Increase number of actions per time.
+Scale out = Increase number of clusters = Increase latency = increase response time  = Decrease queueing = Increase concurrency
+
+
+Scale up for performance[Throughput single query will benefit]
+-------------------------
+Scaling up to Add - CPU,RAM,SSD
+- Scale for larger data volumes and complex queries
+- Wont help concurrency
+- Availability of parallel files necessary for parrallelism
+- Match query profile with warehouse size
+
+Scale out for concurrency -[Small small multiple queries]
+- Add multiple compute cluster for concurrency min 1 to max 10
+-Auto scale out and scale in
+- Queries distributed among the clusters
+
+Queue = problem with the concurrency[Multiple users are firing multiple queries]--Solution
+
+
+Q11)WHich of the following cannot be recovered with Time Travel?
+a)Databases
+b)Tables
+c)Schemas
+d)Stages [Ans is stages]
+
+Q12)JDBC and ODBC are drivers present. DO you still need to connect a Snowflake driver to connect to Snowflake?
+a)True
+b)False [Ans is False]
+
+Q13)Virtual warehouse is a part of which layer?
+a)Storage layer
+b)Compute layer
+c)Cloud services layer
+d)Database layer 
+[Ans  is Compute]
+
+Q14)The global services layer has access to all the metadata and statistics stored in it?
+a)True
+b)False
+ [Ans is true]
+ 
+Q15)Hierarchy of tables
+a)Account>>Database>>Schema>>Tables
+b)Database>>Schema>>Table>>Account
+c)Schema>>Database>>Table>>Account
+d)Account>>Schema>>Database>>Table[Ans is a]
+
+Q16)Which of the following are multi-tenant services?
+a)Metadata
+b)Query processing
+c)Storage[Ans is a and c because these services are spread across multiple users]All the customers will have the data in cloud storage or S3.storage and metadata are shared but
+virtual warehosue is not shared
+
+Q17)Which of the following services are ephemeral?[Not long lasting]
+a)Metadata
+b)Query Processing
+c)Storage[Ans is b query processsing u cannot auto suspend storage and metadata but virtual warehouse can be suspended opposite of above question]
+
+
+Q18)Snowflake is a packaged software that can be installed by a user?
+a)True
+b)False[Ans is False]
+
+Q19)A snowflake account can be spanned across multiple regions
+a)True
+b)False[ANs is false]
+
+Q20)A snowflake account can be spanned across multiple cloud vendors
+a)True
+b)False[Ans is False]
+
+Q21)Query Processing happens in Metadata layer
+a)True
+b)False[Ans is False]
+
+Q22)Virtual warehouse share resources among each other
+a)True
+b)False[Ans is false]
+
+Q23)Storage is tightly coupled with Compute in Snowflake
+a)True
+b)False[Ans is false]
+
+Q24)Query parsing and optimization occurs in which layer.
+a)metadata
+b)Virtual Processing
+c)storage[Ans is metadata]
+
+Q25Micro partitions can be accessed directly by the customer(without SQL)
+a)True
+b)False[Ans is False]
+
+MICRO PARTITIONS is a physical files in S3 bucket

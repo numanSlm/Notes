@@ -1,0 +1,31 @@
+create table mytable(col1 number, col2 date) data_retention_time_in_days=90;
+
+alter table mytable set data_retention_time_in_days=30;
+
+select current_time();
+
+create table restored_emp clone my_table
+  at(timestamp => 'Sun, 14 April 2021 17:10:00 -0700'::timestamp_tz);
+
+select * from emp before(statement => '019b978d-0600-8311-0041-9f0300051046');
+
+
+
+select * from patient AT(TIMESTAMP => 'Sun, 11 April 2021 11:10:00 -0700'::timestamp_tz);
+
+select * from my_table at(offset => -60*5);
+alter table superstore set data_retention_time_in_days=30;
+
+
+show databases history;
+
+show tables history like 'pat%' in infyni_db.infy_schema;
+
+show schemas history in infyni_db;
+
+undrop table patient;
+
+undrop schema infy_schema1;
+
+undrop database infyni_db;
+

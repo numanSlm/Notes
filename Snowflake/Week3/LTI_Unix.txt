@@ -1,0 +1,55 @@
+touch LTI_Unix.txt
+
+1.Write a command to List the files & directories in current working directory 
+ls / ls *
+2.Write a command to display the long listing of files and directories of your current working directory
+ls -l
+3.Write a command to list the files and directories of specific directory
+ls -d */
+4.Write a command to list all files in the current working directory with their file types
+ls -l 
+5.Write a command to list files and directories sorted by date & time
+ls -t
+6.Write a command to list all files of current directory with their sizes in human readable format 
+ls -laSh
+7.Write a command to list all files including the hidden files in the current directory
+ls -al
+8.Write a command to list the files sorted by their size
+ls -laS
+9.Write a command to list inode numbers of files & directories
+ls -i
+
+10.Write a command to assign the following permission using numeric notation, the owner has read, write and execute permissions, the group has read and execute permissions and other users have read permissions only.
+chmod 754 LTI_Unix.txt
+7 iwner
+5 grp
+4 other
+
+11.Write a command to recursively assigning permissions to directories use the above to set permission.
+chown -R linuxuser:group3 dir1
+
+
+12.Write a command to assign the following permission using text notation, the owner has read and execute permissions, the group has read and write permissions and other users have read permissions only.
+chmod u=rx,g=rw,o=r LTI_Unix.txt 
+
+13.Write a command to add execute permissions to the owner and the group of the file.
+chmod g+o=x 
+
+14.Write a command to removes all the permissions from the ‘others’
+chmod o-rwx
+15.Write a command to assign execute permission only on directories without touching files.
+chmod +x LTI_Unix.txt
+
+16.Write a command to change the ownership of the file file1.txt  to user abcd and group ADM.
+chown abcd:ADM file1.txt
+
+17.Write a command to prints the number of lines in a file.
+wc -l LTI_Unix.txt 
+18.Write a command to prints the number of words in a file
+wc -w LTI_Unix.txt 
+19.Write a command to display the count of bytes in a file
+wc -c LTI_Unix.txt 
+20.Write a command to  prints the count of characters from a file.
+wc -m LTI_Unix.txt 
+21.Write a command to prints only the length of the longest line in a file.
+wc -L LTI_Unix.txt 

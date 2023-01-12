@@ -1,0 +1,365 @@
+
+Authentication -  Access Snowflake via WebUI or connector - (NATIVE/JDBC/ODBC)
+--------------
+Embedded Multi-factor Authentication, Federated authentication available
+
+Access Control: - Database/Schema/Tables/View/Sequences/FileFormats/Snowpipe/UDF's
+--------------
+Role based access control model
+Granular privileges on all objects and actions
+
+Data encryption:Data at rest/Motion data/Loading/Unloading/Storage
+---------------
+All data encrypted always , end-to-end
+Encyrption keys managed automatically
+
+External validation Network/Policy/Firewall/Password policy/Masking etc
+-------------------
+certified against enterprise client requirements
+
+
+MFA-can be implemented to increase Security
+MFA is provided by Duo Security services.
+Once MFA is installed ,Duo app to be installed by user.
+Each user must enable MFA by themself.
+All user with accountAdmin role should have MFA enabled.
+SSO(SAML 2.0)allows user to access via federated services(IDP identity provider like single sign on)
+As long as IPD session is active,they can access Snowflake
+SSO/IDP is availale enterprise edition +
+MFA can be disabled by Account Admin/Security Admin
+MFA
+a)IT is self enrolled process can not be done for others.
+b)IT can be disabled temporarily or permanently by account admin/Securityadmin.
+c)DISABLE_MFA = true,MINS_TO_BYPASS_MFA = 5(alter command)
+d)Connector also need MFA is enabled by user.
+e)--mfa-password<string>
+f)some-jdbc-url&passcode=<string>
+g)Different user can utilize single number for MFA , but vice versa isnt possible
+
+OBJECT SECURITY
+-----------------
+1.All the objects (warehouse/db/schema/table) can be controlled by DAC/RBAC
+a)DAC-Discretionary Access Control
+b)RBAC - Role based Access control
+2.Snowflake implements hybrid model DAC & RBAC
+3.DAC handles the ownership , each object has a owner and owner has full access to a object.
+4.RBAC - Handle all other access except ownership like object privilege and role access.
+Object privilege assign to role which are intern assign to users.
+
+Authorization Access Control
+-----------------------------
+1.Roles based authorization and not user based authorization.
+2.Authorization for all database objects including future objects.
+3.Authorization for operations in snowflake like create,stop/start virtual warehouse.
+
+Data Security,Access Log & Encryption:
+--------------------------------------
+a.All data is encrypted uses AES-256 strong Encryption.
+b.All files stored in stage area is automatically Encrypted using AES-256 or +
+c.Special edition of SD allowes periodic re-key and customer manage encryption.
+
+2.Connectivity SECURITY
+---------------------
+a.All communication over internet is via HTTPS.
+b.All communication is secure and encrypted via TLS 1.2 or higher.
+
+3.Application Activity Log
+  
+a.History tab provide all historical commands.
+b.All details including session id etc can be viewed.
+c.Each query has query id which helps for troubleshooting(no access to data to even SF users)
+
+4.User Access Audit Log
+a)Login_history family of table function can be used to query login attempts.
+
+5.Query History:
+Query History is available for 14 days , it can be stored in SF table or external system.
+
+6.Infrastructure Monitoring:
+Sf users Threat Stack and sumo logic to monitor production Infrastructure.
+
+
+Network SECURITY
+----------------
+1)Network policy helps to control the SF access.
+2)IP whitelisting-policy can be created to allow or disallow IP's.
+3)Private link - private tunnel between customer and cloud provider(ESD or VPS customer)
+4.)Private Communication between SF & your VPC(Azure link or AWS link)
+5)Only Accountadmin/Securityadmin can create/alter/drop network policy.
+6)Snowflake supports is specifying ranges of IP Address using CIDR notation.
+7)create network policy my_network BLOCKED_IP_LIST=('1.1.1.1','1.1.1.2')BLOCKED_IP_LIST=('1.1.1.3') comment='my policy'
+8)It is possible to temporarily bypass network policy for a set number of minutes by configuring the user object property MINS_TO_BYPASS_NETWORK_POLICY
+9)User-level network policies take precedence over account-level network policies and the user level network policy management can be peformed using SQL.
+10)Network policy to be enaled once created.
+
+Network Security - Network Policies
+^
+|
+Authentication : MFA
+^
+|
+Object Security - RBAC,DAC
+^
+|
+Data Security
+^
+|
+
+
+AccountAdmin will create Network Policies
+
+create network policy mypolicy2 allowed_ip_list = ('','');
+
+desc network policy mypolicy2;
+
+what is the significance of blocked network 
+
+Authentication : MFA-DUO
+
+ Security - Object Access
+
+RBAC -- Every object in Snowflake will be accessed by roles 
+
+DAC - Every object in Snowflake should have an individual owner
+
+All Schema object should have an owner in Discretionay Access Control
+
+SECURITY
+--------
+Data SECURITY
+
+1)All data automatically encryted using AES 256 strong encryption
+2)All files stored in stages for data loading/unloading are automatically encrypted using either AES 128 standard or 256 strong encryption
+3)Periodic rekeying of encrypted data
+4)Support for encrypted data using customer managed keys
+
+Security Validations
+---------------------
+
+1)Soc 1 Type 2 compliance-All
+2)Soc 2 Type 2 compliance-All
+3)Support for HIPAA compliance-Health insurance , portability-Buisness Critical Edition or higher
+4)PCI DISS compliance- Buisness Critical Edition or higher 
+5)HITRUST (CSF compliance) - Buisness Critical Edition or higher 
+ 
+ 
+ACID
+-----
+Atomic
+
+Consistent
+
+Isolation
+1)Read committed isolation:
+
+A statement only sees data that was committed before the statement began.It never sees uncommitted data
+Ensures there are no dirty reads
+
+
+
+2)Resource Looking:
+
+Update,delete and merge statements hold locks that generally prevent them from running in parallel with other UPDATE,DELETE and MERGE
+statements  
+Durable
+ 
+ DDL operations are auto commit but DML operations we can choose
+DML operations will get locked and after commit lock will be released to prevent dirty reads.
+Accountadmin can check for locks in the system and he modify/abort the transactions manually.
+
+
+
+Data Sharing in Snowflake:
+---------------------------------------
+It is a metadata only operation 
+
+Database,schema,tables and secure views can be shared 
+
+Legacy data sharing workflow:
+Extract
+Encrypt
+transmit
+Receive 
+Decrypt [Decompress]
+Load
+
+a)Databases
+b)Schemas
+c)TABLES
+d)Secure Views
+e)UDF's
+Database, Schemas, Tables, Secure views & Secure UDFs can be shared.
+Data sharing will have 2 parties producer and consumer
+
+Producer:Storage Cost
+1)Produces data
+2)A data provider is any Snowflake account that creates shares and makes them available to other snowflake accounts to consume.
+3)Will pay for storage of the data
+4)Can share data from Multiple databases in an account
+
+
+Consumers:Compute Cost
+1)Consumes data
+2)A data consumer is any Snowflake account that chooses to create a database from a share made available by a data provider.
+3)Will pay for compute resources used for querying the shared data. 
+4)Role based access.
+5)Shared data can be used in Complex Queries.
+
+Reader account is the one who doesnt have snowflake account and wants to perform read so seperate account and access for that person
+
+How to create a share ?
+
+1)Use create share to create a share.At this step, the share is simply a container waiting for objects and accounts to be added.
+2)Use the GRANT <privilege> .... TO SHARE command to add a database (and objects in the database) to the share.
+3)Use the ALTER SHARE command to add accounts to the share.
+
+Commands:
+[Producer creates it]
+use role accountadmin;
+
+create share sales_s;
+grant usage on database sales_db to share sales_s;
+grant usage on schema sales_db.aggregates_eula to share sales_s;
+grant select on table sales_db.aggregates_eula.aggregate_1 to share sales_s;
+
+show grants to share sales_s;
+
+alter share sales_s add account=xyz12345,yz12345
+
+show grants of share sales_s;
+
+can drop and revoke any time u want 
+
+If producer makes any changes in the database in the share then automatically it gets reflected for the consumer.
+
+1 share can have only one database
+Shares can have n number of accounts
+Shares cannot be cloned
+
+Can use revoke command to revoke all the grants 
+Compliance Security:
+--------------------
+1.)HIPAA
+2.)PCI(Payment card for Industry for data Security)
+3.)NIST 800-53
+4.)Soc
+5.)Soc-2 type II
+6.)SIG Lite(SIG Assessment)(Standardized Information Gathering-SIG Questionnaire Tools allow org to build,customize , analyze and 
+store vendor questionnaires)
+
+
+1.)Network/site access - Site Access is controlled through IP whitelisting and blacklisting,managed through network policies- All snowflake editions
+2.)Network/site access - Private/direct communication between Snowflake and other VPCs through AWS privateLink - Buisness Critical/ESD
+3.)Account/User authentication - MFA for increased security for account access by users - All
+4.)Account/User authentication - SSO though federated authentication - Enterprise and higher
+5.)Object Security - Controlled access to all objects through account(users,warehouse,db,etc) through a hybrid model of DAC & RBAC - all
+6.)Data Security - All data automatically encryted using AES 256 - All
+7.)Data Security - All data stored in stages automatically encryted using(AES-128 or 256) -All
+8.)Data Security - Periodic rekeying of encrypted data  - Enterprise (and higher)
+9.)Data Security - Support for encrypting data using customer managed keys - ESD
+10.)Security Validations - SOC 2 Type II compliance - All
+11.)Security Validations - Support for HIPAA compliance - Buisness Critical Edition /ESD
+12.)Security Validations - PCI DSS compliance - Buisness Critical Edition /ESD
+13.)TriSecret Key - Buisness Critical Edition
+14.)FedRAMP
+
+KEY ROTATION:
+4 keys
+Root Key
+Account Master Key(auto rotate> 30 days old)
+Table Master Key
+File Keys
+
+Task:
+----
+Tasks when created are suspended state and need ALTER to enter running state.
+When a task tree is created it cannot span multiple schemas and all the task in the task tree must be in the same schema
+
+To execute a task, the role being used must have the global EXECUTE TASK privilege on the Account.
+Additionally, all the privileges that the SQL statement in the task requires must be available to the role.
+
+Stream:
+offset when DML operations are performed
+3 types:
+Standard
+Append only
+Insert only(only this mode for External warehouses)
+
+Resource Monitor
+----------------
+
+Doesnt work for snowflake created warehouses like automatic reclustering and Snowpipes
+Resource monitors can be used to impose limits on the number of credits that are consumed by:
+1)User managed virtual warehouses
+2)Virtual warehouses used by cloud services
+3)Resource monitors can be created by account administrators
+
+Resource monitor support the following actions:
+1)Notify & suspend:send notification to all account admin and suspend all warehouses after all statements executed 
+2)Notify & suspend immediately : send notification to all account admin and suspend all warehouses immediately 
+3)Notify : Perform no action but send an alert notification to all account admin
+
+Each resource monitor can have the following actions:
+1)One suspend action
+2)One suspend immediately action
+3)Up to five notify actions
+
+Resource Monitors have no control over Snowpipe warehouse (credit usage for snowflake provided warehouses like Snowpipe warehouse)
+SnowPipe can be used to load data from external as well as internal stages. 
+The REST API which is used to trigger a SnowPipe applies to SnowPipe created over external stages as well as internal stages.
+Snowpipe doesnt guarantee that the files will be loaded in the same order they arrived in the stage.
+
+Snowpipe uses a server less compute due to which the billing is based on the actual data processed, COPY command uses 
+virtual warehouse resources therefore the billing is based on how long the virtual warehouse was active
+
+
+Resource Monitors can be assigned to account level and resource monitors can be assigned to warehouses 
+
+1)which blocking list takes more precedence?
+a)Allowed IP List
+b)Blocked IP List (Ans is b)
+
+2)MFA is not suggested for AccountAdmin
+1)True
+2)False(Ans is False)
+
+3)Users own objects in snowflake
+1)True
+2)False(Ans is False)Roles own objects in snowflake
+
+4)Data at rest is always encryted on Snowflake
+1)True
+2)False(ANs is true that is by default)
+
+5)Producers are charged for compute
+1)True
+2)False(Ans is False storage)
+
+6)Consumers are charged for compute
+1)True
+2)False(Ans is True)
+
+7)Snowflake account is a mandate for reader account
+1)True
+2)False(Ans is False)
+
+8)You can revoke privileges on Shared objects
+1)True
+2)False(Ans is True)
+
+9)Data sharing involves physical movement of data
+1)True
+2)False(Ans is False)
+
+10)Account admin /roles having required privileges can act on resource monitors
+1)True
+2)False(Ans is True)
+
+11)One warehouse can be assigned to many monitors
+1)True
+2)False(Ans is False)
+
+12)One monitor can be assigned to many warehouses
+1)True
+2)False(Ans is True)
+

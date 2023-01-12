@@ -1,0 +1,181 @@
+
+ create table varia (float1 float, v variant, float2 float);
+insert into varia (float1, v, float2) values (1.23, null, null);
+
+insert into varia (float1, v, float2) values (2.23, 2.33333333333333333333, 4.55555555555555);
+select * from varia;
+update varia set v = to_variant(float1);  -- converts FROM a float TO a variant.
+update varia set float2 = v::float;       -- converts FROM a variant TO a float.
+select * from varia;
+--to load semi structure 
+--create table with single variant column 
+create table employee_json( v variant);
+--write the json file into the internal stage from local
+put file:///home/adwait/employees.json @st_lti_int/jsonfiles/; 
+--create file format for json
+CREATE FILE FORMAT "LTIDB"."LTISCHEMA".jsonff TYPE = 'JSON' COMPRESSION = 'AUTO' ENABLE_OCTAL = FALSE ALLOW_DUPLICATE = TRUE STRIP_OUTER_ARRAY = FALSE STRIP_NULL_VALUES = FALSE IGNORE_UTF8_ERRORS = FALSE;
+--copy json file from stage to employee jsontable 
+COPY INTO "LTIDB"."LTISCHEMA"."EMPLOYEE_JSON" FROM '@"LTIDB"."LTISCHEMA"."ST_LTI_INT"/jsonfiles' FILE_FORMAT = '"LTIDB"."LTISCHEMA"."JSONFF"' ON_ERROR = 'ABORT_STATEMENT' PURGE = FALSE;
+
+
+select * from employee_json where v:salary=3000;
+
+=====================================
+
+--create table to load paquet files
+create or replace table users_parquet(v variant);
+--create parquet file format 
+CREATE FILE FORMAT "LTIDB"."LTISCHEMA".parquetff TYPE = 'PARQUET' COMPRESSION = 'AUTO' BINARY_AS_TEXT = TRUE;
+
+COPY INTO "LTIDB"."LTISCHEMA"."USERS_PARQUET" FROM '@"LTIDB"."LTICLONESCHEMA"."ST_LTI_S3"/semistr/users.parquet' FILE_FORMAT = '"LTIDB"."LTICLONESCHEMA"."PARQUETFF"' ON_ERROR = 'ABORT_STATEMENT' PURGE = FALSE;
+
+   create or replace table car_sales
+(
+  src variant
+)
+as
+select parse_json(column1) as src
+from values
+('{
+    "date" : "2017-04-28",
+    "dealership" : "Valley View Auto Sales",
+    "salesperson" : {
+      "id": "55",
+      "name": "Frank Beasley"
+    },
+    "customer" : [
+      {"name": "Joyce Ridgely", "phone": "16504378889", "address": "San Francisco, CA"}
+    ],
+    "vehicle" : [
+      {"make": "Honda", "model": "Civic", "year": "2017", "price": "20275", "extras":["ext warranty", "paint protection"]}
+    ]
+}'),
+('{
+    "date" : "2017-04-28",
+    "dealership" : "Tindel Toyota",
+    "salesperson" : {
+      "id": "274",
+      "name": "Greg Northrup"
+    },
+    "customer" : [
+      {"name": "Bradley Greenbloom", "phone": "12127593751", "address": "New York, NY"}
+    ],
+    "vehicle" : [
+      {"make": "Toyota", "model": "Camry", "year": "2017", "price": "23500", "extras":["ext warranty", "rust proofing", "fabric protection"]}
+    ]
+}') v;
+
+select * from car_sales;
+  select src from car_sales;
+  desc table car_sales;
+  select src:dealership from car_sales;
+
+----
+
+create or replace table car_sales
+(
+  src variant
+)
+as
+select parse_json(column1) as src
+from values('{}')v;
+
+
+------------------------------------------------
+
+select * from car_sales;
+select src from car_sales;
+desc table car_sales;
+select src:dealership from car_sales;
+
+--only table name insensitive , 
+select src:salesperson.name from car_sales;
+select SRC:salesperson.name from car_sales;
+select SRC:customer.name from car_sales;
+
+--objects are case sensitive
+select SRC:Salesperson.name from car_sales;
+select SRC:SALESPERSON.name from car_sales;
+select SRC:SALESPERSON.Name from car_sales;
+
+
+--for blank space use quotes 
+ select SRC:salesperson."full name" from car_sales;
+ select src['salesperson']['full name'] from car_sales;
+--single obj query 
+select src:customer[0].name from car_sales;
+
+select src:vehicle[0] from car_sales;
+select src:vehicle[0].extras from car_sales;
+select src:vehicle[0].extras[1]from car_sales;
+
+
+--Type casting converting str id to int id
+select src:salesperson.id::int from car_sales where src:salesperson.id='55' ;
+
+--flatten
+--for single object containig multi vals ;eg customer.name
+select
+  value:name::string as "Customer Name",
+  value:address::string as "Address"
+  from
+    car_sales
+  , lateral flatten(input => src:customer);
+--  
+  select
+  vm.value:make::string as make,
+  vm.value:model::string as model,
+  ve.value::string as "Extras Purchased"
+  from
+    car_sales
+  , lateral flatten(input => src:vehicle) vm
+  , lateral flatten(input => vm.value:extras) ve;
+
+select * from users_parquet;
+select v:name,v:favorite_color from "LTIDB"."LTISCHEMA"."USERS_PARQUET"; 
+
+
+--external loading
+create or replace external table patient_ext_variant
+with location = @ST_LTI_S3/health
+file_format = csvfileformat;
+
+show tables;
+select * from patient_ext_variant;
+
+--refresh snow to see new s3 data
+ALTER EXTERNAL TABLE patient_ext_variant REFRESH;
+--
+select * from patient_ext_variant;
+
+SELECT distinct metadata$filename FROM @st_lti_s3/health;
+
+
+--external table via snow with a  struct from unstrucutured data
+create or replace external table patient_ext 
+(ID INT as  (value:c1::int), 
+PNAME varchar(20) as ( value:c2::varchar), 
+DRUG varchar(20) as ( value:c3::varchar), 
+GENDER varchar(10) as ( value:c4::varchar), 
+AMOUNT int as (value:c5::int))
+with location = @ST_lti_s3/health
+AUTO_REFRESH = true
+file_format = csvfileformat;
+
+desc table patient_ext;
+select * from patient_ext;
+--int this table since it is structured we can directly query the table
+select pname from patient_ext where id=121;
+
+
+--flatten patient
+select 
+value:c1::int as ID, 
+value:c2::varchar as pname , 
+value:c3::varchar as drug,
+value:c4::varchar as gender,
+value:c5::int as amt
+from patient_ext_variant;
+
+
+

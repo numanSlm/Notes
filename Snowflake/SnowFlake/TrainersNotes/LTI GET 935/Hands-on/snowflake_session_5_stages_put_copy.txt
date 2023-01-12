@@ -1,0 +1,76 @@
+Session 5: 
+
+Agenda :   creating stage  , file format , put and copy the data from internal stage
+
+#  in snowsql snowsql 
+ use database infyni_db;
+use schema infy_schema;
+
+
+
+
+# Create superstore table 
+
+create table superstore(
+
+	  RowID integer
+	, OrderID integer
+	, OrderDate varchar(50)
+	, ShipDate varchar(50)
+	, ShipMode varchar(50)
+	, CustomerID integer
+	, CustomerName varchar(200)
+	, CustomerSegment varchar(200)
+	, City varchar(200)
+	, State varchar(200)
+	, Country varchar(200)
+	, ZipCode varchar(50)
+	, Market varchar(100)
+	, Region varchar(200)
+	, ProductID varchar(200)
+	, ProductCategory varchar(200)
+	, ProductsubCategory varchar(200)
+	, ProductName varchar(500)
+	, Sales decimal(8,2)
+	, OrderQuantity integer
+	, Discount decimal(8,2)	
+	, Profit decimal(8,2)	
+	, ShippingCost decimal(8,2)	
+        , OrderPriority varchar(50)
+
+);
+
+
+--creating stage
+CREATE STAGE infy_schema.salesstage;
+
+-----put data from local into stage
+
+# windows 
+
+PUT file://d:\superstore.csv @salesstage;
+
+#linux or mac 
+PUT file:///home/geoinsys/datasets/superstore.csv @salesstage;
+Show stages;
+
+==to list files in stage
+
+  list  @salesstage;
+
+==to query stage 
+Select $1 ,$2 from salesstage;
+
+----create file format to load the data from stage to table --
+
+CREATE FILE FORMAT "INFYNI_DB"."INFY_SCHEMA".csv_fileformat TYPE = 'CSV' COMPRESSION = 'AUTO' FIELD_DELIMITER = ',' RECORD_DELIMITER = '\n' SKIP_HEADER = 1 FIELD_OPTIONALLY_ENCLOSED_BY = 'NONE' TRIM_SPACE = FALSE ERROR_ON_COLUMN_COUNT_MISMATCH = TRUE ESCAPE = 'NONE' ESCAPE_UNENCLOSED_FIELD = '\134' DATE_FORMAT = 'AUTO' TIMESTAMP_FORMAT = 'AUTO' NULL_IF = ('');
+
+======to abort on error
+
+COPY INTO infyni_db.infy_schema.superstore FROM @salesstage FILE_FORMAT = ' infyni_db.infy_schema.csv_fileformat' ON_ERROR = 'ABORT_STATEMENT' PURGE = TRUE;
+
+
+==to continue on error 
+
+COPY INTO infyni_db.infy_schema.superstore FROM @salesstage FILE_FORMAT = ' infyni_db.infy_schema.csv_fileformat' ON_ERROR = 'CONTINUE' PURGE = TRUE;
+

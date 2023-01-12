@@ -1,0 +1,141 @@
+File loading
+//////////////////VVVIIIII
+Data loading will be impacted by file size and number of files rather than the warehouse size
+
+a)External Stages
+
+b)Internal Stages
+--User
+--Table
+--Named
+
+c)Bulk vs Continuous loading
+
+Operations in stage
+
+1)Simple transformation During a load
+2)Column reordering
+3)COlumn omission
+4)Casts
+5)Truncating the stings that exceed length
+The "load metadata" (which maintains which files have already been loaded) for a table expires after 64 days
+
+
+Every data file will be compressed and encrypted
+
+File Sizing
+
+100-250 MB
+Trade off between number of files and performance
+Organizing data by path
+
+1)Creating a stage:
+create stage name url = 's3://' credentials = (aws_key_id = '' aws_secret_key = '')
+
+2)Staging a file:
+put file:///odkod/path{location}
+
+3)Bulk loading data from file
+copy into t1 from @%t1/path
+
+4)/Specific file names
+copy into t1 from @%t1/path/foldername/
+files = ('mydata1.csv','mydata.csv')
+
+5)PATTERN SEARCH
+copy into t1 from @%t1/unitedstates/california/2016/06/01/11/
+pattern = '.mydata[^[0-9]{1,3}$$].csv';
+[LOADED]////////////////////
+Structured -- Delimited(CSV,TSV,etc)
+Semi-Structured - (JSON,Avro,ORC,Parquet,XML) 
+
+create pipe mypipe_s3
+auto_ingest = true
+aws_sns_topic = 'arn:aws:sns:us-west-2:dkdofd:s' as
+copy into snowpipe_db.public.tablename
+from @snowpipe_db.public.mystage
+file_format=(type='JSON');
+
+In snowpipe no active warehouse is needed but normal active warehouse is needed
+Snowpipe can be used for streaming data
+
+
+PIPE_USAGE_HISTORY in Account_usage schema and Information Schema.
+Credits for Snowpipe depend on file size and staging frequency(complexity of select statement in stage)
+[UNLOADED]//////////////////
+For data unloading,
+
+Structured : delimited files (CSV,TSV,etc)
+Semi-Structured : JSON,Parquet (ORC and some other file formats are not supported)
+
+----READ THIS FROM NOTES-------------------------QUERYING DATA FROM STAGED FILES-------------------------------
+
+
+Semi-structured data will be in the form of variant col 
+
+
+Q1)Bulk loading is done by 
+a)Insert into
+b)copy into
+c)cluster into
+d)alter into
+Ans is b)
+
+Q2)Files can be uploaded into
+a)User stage
+b)Table stage
+c)Internal Stage
+d)All of the above(Ans is d)
+
+Q3)Continuous loading is done by
+a)Snow pipe
+b)Snow stage
+c)Snow meta
+d)All of the above(Ans is a)
+
+Q4)Which of the following types can be loaded?
+a)JSON
+b)Avro
+c)pdf
+d)All of the above(Ans is a and b)
+
+Q5)Which of the following types can be unloaded?
+a)JSON
+b)Avro
+c)Pdf
+d)All of the above(Ans is a )
+
+Q6)Source system produces frequent incremental data in small batches . Which one would you recommend?
+a)Bulk loading
+b)Snow pipe 
+c)Snow meta
+d)All of the above[Ans is snowpipe]
+
+Q7)Snowpipe needs a user created virtual warehouse
+a)True
+b)False
+[Ans is False]
+
+Q8)Data loading will always increase if we scale up the warehouse.
+a)True
+b)False[Ans is False]
+ 
+Q9)Ideal file size for data loading
+a)1GB
+b)100-250GB
+c)500MB
+d)None of the above[Ans is b]
+
+Q10)Data can be queried in staged file without loading
+a)True
+b)False[Ans is True]
+
+Q11)External stages can be used for data loading
+a)True
+b)False[Ans is true]
+
+Q12)Files can be purged in internal stage after loading is completed
+a)True
+b)False[Ans is a:True]
+
+

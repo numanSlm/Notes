@@ -1,0 +1,240 @@
+SESSION 3--------------------------------------------------------------------------------------------
+Snowflake Web UI consists of Ribbon layer consists of databases,shares,marketplace,warehouse,worksheet,History
+
+5 default roles are created by Snowflake:
+a)Accountadmin
+b)SECURITYADMIN
+c)Systemadmin
+d)Public
+e)Customroles
+f)User admin 
+
+1 user for an account gets Sysadmin role
+
+Context : ROle being used , Db , Schema
+
+The user administrator (USERADMIN) role includes the privileges to create and manage users and roles (assuming ownership of those roles or users has not been transferred to another role).
+
+The security administrator (i.e users with the SECURITYADMIN system role) role includes the global MANAGE GRANTS privilege to grant or revoke privileges on objects in the account. 
+The USERADMIN role is a child of this role in the default access control hierarchy.
+
+The system administrator (SYSADMIN) role includes the privileges to create warehouses, databases, and all database objects (schemas, tables, etc.).
+
+By default, when your account is provisioned, the first user is assigned the ACCOUNTADMIN role. This user should then create one or more
+Additional users who are assigned the USERADMIN role. All remaining users should be created by the user(s) with the USERADMIN role.
+
+Can create custom roles
+1)Accountadmin
+2)Securityadmin
+3)Sysadmin
+
+
+
+Snowflake storage
+Account 
+Database
+Schema can have multiple objects
+
+
+Apart from micropartitions snowflake stores the following contents in the table:
+METADATA CACHE[CLOUD SERVICES LAYER]-Help in Query Optimization
+---------------------------------------------------------------
+1)Number of Micropartitions
+2)Max-Minvalue of each Micropartitions-Zone maps
+3)Number of rows
+4)Cardinality of each columns
+5)Number of Null values
+
+Pruning means cutting unwanted stuff
+Horizontal Pruning -- WHERE CLAUSE(Slicing)
+------------------
+which micropartitioning satisfying the query[where condition or predicate]
+The processing of reading the micropartitions satisfying the query is called as Horizontal Pruning
+[ELiminatiing the micropartitions not satisfying the queries is known as Horizontal Pruning]
+
+NO specific distribution keys but can sort while using copy into command 
+
+Vertical Pruning -- (SELECT (Slicing))
+-----------------
+This Pruning happens inside a micropartition
+
+Snowflake stores data in columnar fashion so its not row oriented 
+Process of getting only cols required for the query like (select statement inside partition)
+
+
+In a row oriented row level lot of overhead through each row.
+
+Q1)Does Snowflake store any other type of data apart from the warehouse data?
+a)True
+b)False[Ans is false]Metadata is also stored moslty in cloud services layer
+
+What micropartitions need to be picked up is done through the metadata cache
+
+Storage
+--------
+reorganizes data in internal,columnar,compressed format storing in cloud storage.
+
+SF manages all aspects of how data is stored:
+the organization
+file structure
+size,compression,metadata,statistics
+
+a)Micropartitions are immutable
+b)Compressed size 16MB(uncompressed range from 50-500mb)
+c)Data at rest is encrypted
+d)Storage cost - $23/TB/Month in compressed data[Depemds on accoun ttype like on demand or no]
+e)Horizontal pruning - Micro Partitions
+f)Continuous availability - 99.99% data availability and 99.99999999% durability
+
+Snowflake Storage
+------------------
+
+Tables ------ a)Permanent Tables - Time travel = 0/90{defa or fail safe is for a week[7 days] -- enterprise but 0/1 timetravel[Retention period]
+				For permanent tables fail safe is 7 days irrespective of any edition
+			  b)Temporary Tables-Session oriented-time travel{0/1} and no fail safe-can be used for moving permanent data from one permanent table
+				to another with some transformation within the table-No storage costs 
+			  c)Transient Tables-Permanent type -timetravel{0/1} no FailSafe for transient(Comprehensive Data Protection)
+			  d)External Tables-No time travel and fail safe- stored in external stages-are read only and great for semi-structured type-no cloning
+					DDL:SQL works : select,agregations,Joins
+			  
+Views --------- a)Standard Views
+				b)Secure Views
+				c)Materialized Views
+				
+Stages -------- a)Table stage
+				b)User Stage
+				c)Named Stage   - named Internal stage
+								  named External stage
+	
+CDP -Comprehensive Data Protection
+----------------------------------
+How well we have our data protected
+Features
+a)Time-Travel-Enables instant rollback to any point in time during chosen retention window.
+Snowflake stores snapshot of data in the table 
+(select * from table_name at(timestamp=> "Mon :: timestamp_tz)
+select * from table_name at(offset=> 60*5)[seconds]
+select * from table_name before(statement=> "sdopsodpspspsp")---Every query has a statement identifier.
+
+Default time travel for any table is 1.
+
+How much can we go back is called Data retention period.
+								 ------------------------
+Higher the retention cost higher the cost so it consumes more time.
+
+
+								 
+Permanent Enterprise account = 90 days(3 months)--Time travel
+Here max is 90 and it can vary from table to tables.
+Here u can define when you create the tables.
+Standard account = 1 day								 
+								 
+								 
+b)FailSafe	{Used in case of disaster}
+Only snowflake can do it users cannot do manually employers will do for us				
+-Protection against infrastructure and failures
+-Protection against corruption and user errors
+-Long-term data protection
+				
+File Formats
+
+Sequences
+
+Stored Procedure
+
+user defined functions
+
+Streams 
+
+tasks								  
+
+Q 1)All data in Snowflake tables is automatically divided into micro-partitions
+a)TRUE
+b)FALSE(Ans is true)
+
+Q 2)Micro partitions are mutually exclusive--(Non contiguous)//related to each other 
+a)TRUE
+b)FALSE(Ans is False)
+
+Q 3)Data at rest is encrypted in snowflake
+a)True
+b)False(Ans is true)
+
+Q 4)Default time travel retention period in Snowflake
+a)1
+b)0
+c)7
+d)90(Ans is 1)
+
+Q 5)Maximum time travel retention period in snowflake for a standard edition
+a)1
+b)0
+c)7
+d)90(Ans is 1)
+
+Q 6)Horizontal Pruning is achieved by
+a)Caching
+b)Micro partitions
+c)l
+d)Clustering[Ans is Micro Partitions]
+
+Q 7)Vertical Pruning is achieved by
+a)Caching
+b)Micro Parttions
+c)Columnar fashioned data
+d)Clustering[Ans is columnar fashioned data]
+
+Q 8)Accidental update on a table can be recovered by fail safe
+a)True
+b)False[Ans is False] Meant only for disaster management can be recovered through time travel
+
+Q 9)Snowflake users can set Fail Safe to 0
+a)True
+b)False[Ans is False]
+
+Q 10)Fail safe can be disabled
+a)True
+b)False[Ans is False]
+
+Q 11)Fail safe can be performed by
+a)Users
+b)Snowflake employees
+c)None of the above[Ans is Snowflake Employees]
+
+Q 12)Metadata cache is maintained in which layer
+a) Storage layer
+b) Query processing layer
+c) None of the above[Ans is none of the above]
+
+Q 13)Caching is intended to improve the performance of the query
+a)True
+b)False[Ans is True]
+
+Q 14)Default table type in Snowflake
+a)Permanent
+b)Transient
+c)Persistent
+d)Temporary[Ans is Permanent]
+
+Q 15)There is need to store ETL or transitory data which needs to be stored outside a session.Which table type is recommended
+a)permanent
+b)Transient
+c)Persistent
+d)Temporary[Ans is Transient]//since outside the session
+
+Q 16)Temporary tables - Which of the following are true
+a) Valid for a session
+b)Default time travel is 1
+c)Fit for storing tempoarary data
+d)All of the above[Ans is all of the above]
+
+Q 17)Temporary tables can be changed to transient if required
+a)True
+b)False[Ans is false]Same for other table types
+
+Q 18)Not a type of View in SNowflake
+a)Secure
+b)Standard
+c)Materialised
+d)None of the above[Ans is d]
+

@@ -1,0 +1,33 @@
+
+
+show pipes;
+
+desc pipe aks3pipe;
+
+use role accountadmin;
+use role sysadmin;
+
+create storage integration s3_int
+  type = external_stage
+  storage_provider = s3
+  enabled = true
+  storage_aws_role_arn = 'arn:aws:iam::574997813424:role/ak916snowpipe'
+  storage_allowed_locations = ('s3://geoinsyssnow/anand/snow');
+  
+  select count(*) from patient;
+  desc integration s3_int;
+ 
+  show pipes;
+  
+create stage st_ak_s3_pipe
+  storage_integration = s3_int
+  url = 's3://geoinsyssnowflake'
+  file_format = csv_ff;
+  
+  CREATE FILE FORMAT "INFYNI_DB"."INFY_SCHEMA".csv_ff TYPE = 'CSV' COMPRESSION = 'AUTO' FIELD_DELIMITER = ',' RECORD_DELIMITER = '\n' SKIP_HEADER = 0 FIELD_OPTIONALLY_ENCLOSED_BY = 'NONE' TRIM_SPACE = FALSE ERROR_ON_COLUMN_COUNT_MISMATCH = TRUE ESCAPE = 'NONE' ESCAPE_UNENCLOSED_FIELD = '\134' DATE_FORMAT = 'AUTO' TIMESTAMP_FORMAT = 'AUTO' NULL_IF = ('\\N');
+  
+  
+CREATE PIPE "INFYNI_DB"."INFY_SCHEMA".PIPE_ak_PATIENT AS COPY INTO "INFYNI_DB"."INFY_SCHEMA"."PATIENT" FROM @"INFYNI_DB"."INFY_SCHEMA".st_ak_s3_pipe FILE_FORMAT = ( FORMAT_NAME = "INFYNI_DB"."INFY_SCHEMA"."CSV_FF");
+
+  
+  

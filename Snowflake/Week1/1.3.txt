@@ -1,0 +1,210 @@
+select * from hr.employees; select first_name,phone_number,salary,salary+100
+
+from hr.employees; select salary,salary*1.5 as new_sal from hr.employees; select salary e_salary,sum(salary) as new_sal,salary*2 "up_sal" from hr.employees; select e_salary,new_sal from hr.employees; select * from hr.employee; select first_name||'-'||last_name "emp_name",email||'-'||phone_number as contact_details from hr.employees; 
+
+select distinct department_id from hr.employees; select * from hr.employees;
+
+select first_name,email,job_id from hr.employees where job_id in ('IT_PROG','PU_CLERK','FI_ACCOUNT'); select salary from hr.employees where salary between 10000 and 20000; 
+
+select first_name,salary from hr.employees where first_name like '%s';  select first_name,salary from hr.employees where first_name like 'S%'; select first_name,salary from hr.employees where first_name like '_a%';--second character starts with 'a' 
+
+select first_name,salary from hr.employees where first_name like '__s%';--third character starts with 's' select first_name,salary,job_id from hr.employees where job_id like '%PROG%';--continous string prog 
+
+select first_name,commission_pct from hr.employees where commission_pct is null; select first_name,commission_pct from hr.employees where commission_pct is not null;
+
+--'null'--string select first_name,commission_pct from hr.employees where commission_pct=null;  select first_name,commission_pct,salary from hr.employees where salary !=10000; select first_name,job_id,salary from hr.employees where (job_id='AD_PRES' or job_id='SA_REP') and salary>10000; select * from hr.employees; select first_name,last_name from hr.employees order by first_name,last_name desc; select first_name,last_name from hr.employees order by first_name,last_name; 
+
+select first_name,commission_pct from hr.employees where commission_pct is null;
+
+[03:41 pm] Poornamathi (Guest)
+CREATE  TABLE IF NOT EXISTS role   (
+
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+
+    name   VARCHAR(255) NOT NULL ,
+
+  PRIMARY KEY (  id  ) )
+
+  ; CREATE  TABLE IF NOT EXISTS skill   (
+
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+
+    description   VARCHAR(255) NULL DEFAULT NULL ,
+
+    name   VARCHAR(255) NOT NULL ,
+
+  PRIMARY KEY (  id  ) )
+
+  ; CREATE  TABLE IF NOT EXISTS  post_type   (
+
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+
+    name   VARCHAR(255) NOT NULL ,
+
+  PRIMARY KEY (  id  ) )
+
+  ; CREATE  TABLE IF NOT EXISTS department   (
+
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+
+    name   VARCHAR(255) NOT NULL ,
+
+  PRIMARY KEY (  id  ) )
+
+  ; 
+
+CREATE  TABLE IF NOT EXISTS degree   (
+
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+
+    department_id   BIGINT(20) NOT NULL ,
+
+    name   VARCHAR(255) NOT NULL ,
+
+  PRIMARY KEY (  id  ) ,
+
+   FOREIGN KEY(department_id) references department(id))
+
+  ; CREATE  TABLE IF NOT EXISTS profile   (
+
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+
+    address   VARCHAR(255) NOT NULL ,
+
+    batch   VARCHAR(255) NOT NULL ,
+
+    degree_id   BIGINT(20) NOT NULL ,
+
+    designation   VARCHAR(255) NULL DEFAULT NULL ,
+
+    gender   VARCHAR(255) NOT NULL ,
+
+    PRIMARY KEY (  id  ) ,
+
+   FOREIGN KEY(degree_id) references degree(id) )
+
+  ; CREATE  TABLE IF NOT EXISTS experience   (
+
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+
+    company_name   VARCHAR(255) NOT NULL ,
+
+    current   BIT(1) NOT NULL ,
+
+    end   DATETIME NULL DEFAULT NULL ,
+
+    start   DATETIME NOT NULL ,
+
+    profile_id   BIGINT(20) NOT NULL ,
+
+  PRIMARY KEY (  id  ) ,
+
+  FOREIGN KEY(profile_id) references profile(id) )
+
+  ; CREATE  TABLE IF NOT EXISTS project   (
+
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+
+    name   VARCHAR(255) NOT NULL ,
+
+    number_of_members   INT(11) NOT NULL ,
+
+    profile_id   BIGINT(20) NOT NULL ,
+
+    short_description   VARCHAR(255) NULL DEFAULT NULL ,
+
+  PRIMARY KEY (  id  ) ,
+
+  FOREIGN KEY(profile_id) references profile(id) )
+
+  ; CREATE  TABLE IF NOT EXISTS profile_skills   (
+
+    skill_id   BIGINT(20) NOT NULL ,
+
+    profile_id   BIGINT(20) NOT NULL ,
+
+  PRIMARY KEY (  profile_id  ,   skill_id  ) ,
+
+ FOREIGN KEY(profile_id) references profile(id),
+
+  FOREIGN KEY(skill_id) references skill(id) )
+
+  ; CREATE  TABLE IF NOT EXISTS user   (
+
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+
+    emailid   VARCHAR(255) NOT NULL ,
+
+    name   VARCHAR(255) NOT NULL ,
+
+    password   VARCHAR(255) NOT NULL ,
+
+    phonenumber   VARCHAR(255) NOT NULL ,
+
+    profile_id   BIGINT(20) NULL DEFAULT NULL ,
+
+    role_id   BIGINT(20) NOT NULL ,
+
+    username   VARCHAR(255) NOT NULL ,
+
+  PRIMARY KEY (  id  ) ,
+
+  FOREIGN KEY(profile_id) references profile(id),
+
+  FOREIGN KEY(role_id) references role(id) )
+
+  ; CREATE  TABLE IF NOT EXISTS query   (
+
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+
+    content   VARCHAR(255) NOT NULL ,
+
+    date   DATETIME NOT NULL ,
+
+    parent_id   BIGINT(20) NULL DEFAULT NULL ,
+
+    user_id   BIGINT(20) NOT NULL ,
+
+  PRIMARY KEY (  id  ) ,
+
+  FOREIGN KEY(user_id) references user(id),
+
+  FOREIGN KEY(parent_id) references query(id) )
+
+  ; CREATE  TABLE IF NOT EXISTS event   (
+
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+
+    date   DATETIME NOT NULL ,
+
+    description   VARCHAR(255) NULL DEFAULT NULL ,
+
+    invitation   VARCHAR(255) NOT NULL ,
+
+    name   VARCHAR(255) NOT NULL ,
+
+    organiser_id   BIGINT(20) NOT NULL ,
+
+  PRIMARY KEY (  id  ) ,
+
+   FOREIGN KEY(organiser_id) references user(id) )
+
+  ; CREATE  TABLE IF NOT EXISTS  post   (
+
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT ,
+
+    content   VARCHAR(255) NOT NULL ,
+
+    date   DATETIME NOT NULL ,
+
+    type_id   BIGINT(20) NOT NULL ,
+
+    user_id   BIGINT(20) NOT NULL ,
+
+  PRIMARY KEY (  id  ) ,
+
+   FOREIGN KEY(type_id) references post_type(id),
+
+  FOREIGN KEY(user_id) references user(id) )
+
+  ;

@@ -1,0 +1,128 @@
+Day- 1 SnowFlake 10683782
+
+SnowFlake - BI, BigData
+
+DB
+
+--1
+CREATE TABLE role(
+id Number(10),
+name varchar(20)
+);
+--2
+CREATE TABLE skill(
+id Number(10),
+description varchar(255),
+name varchar(20)
+);
+
+desc role;
+
+desc skill;
+
+--3
+CREATE TABLE post_type(
+id Number(20),
+name Varchar(255)
+);
+--4
+CREATE TABLE department(
+id Number(10),
+name Varchar(255)
+);
+--5
+CREATE TABLE degree(
+id Number(10),
+department_id Number(20),
+name Varchar(255)
+);
+
+--6
+CREATE TABLE profile(
+id Number(10),
+address Varchar(255),
+batch Varchar(255),
+degree_id number(10),
+designation varchar(255) NULL,
+gender varchar(255)
+);
+
+--7
+CREATE TABLE higher_degree(
+id Number(10),
+degree_name varchar(255),
+university_name varchar(255),
+profile_id number(10)
+);
+
+--8
+Create TABLE experience(
+id number(10),
+company_name varchar(255),
+currentC number(10),
+end_date DATE,
+start_date DATE,
+profile_id number(10)
+);
+
+--9
+CREATE TABLE project(
+id Number(10),
+name varchar(255),
+number_of_members number(10),
+profile_id number(10),
+short_description varchar(255)
+);
+
+--10
+CREATE TABLE profile_skills(
+skill_id number(10),
+profile_id number(10)
+);
+
+--11
+CREATE TABLE user1(
+id Number(10),
+emailid Varchar(255),
+name Varchar(255),
+password varchar(10),
+phonenumber varchar(255),
+profile_id number(10),
+role_id number(10),
+username varchar(255)
+);
+
+--12
+CREATE TABLE query1(
+id number(10),
+content varchar(255),
+Qdate DATE,
+parent_id number(10),
+user_id number(10)
+);
+
+--13
+CREATE TABLE EVENT(
+id number(10),
+Edate DATE,
+description varchar(255),
+invitation varchar (255),
+name varchar(255),
+organiser_id number(10)
+);
+
+--14
+
+CREATE TABLE post(
+id Number(10),
+content varchar(255),
+pdate DATE,
+type_id number(10),
+user_id number (10)
+);
+
+
+--15
+Alter Table role Add Description varchar(255);
+
+desc role;

@@ -1,0 +1,28 @@
+day 4
+use LTIDB;
+use schema LTISCHEMA;
+alter table superstore set data_retention_time_in_days=10;
+--apply like
+create table saleslike like superstore;
+
+desc table saleslike;
+-- only structure is copied
+select * from saleslike;
+
+--zero copy clone
+--no retention is copied while any cloning i.e table, db , schema
+create table clonesales clone superstore;
+desc table clonesales;
+select * from clonesales;
+
+--modifying base tables
+select * from superstore where rowid=32298;
+show stages;
+
+
+show stages;
+
+--unload data to local
+
+get @~ file:///media/num/Hub/LTI/Training/SnowFlake/backup;
+

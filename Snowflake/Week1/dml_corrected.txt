@@ -1,0 +1,230 @@
+
+insert into role_name(iden,nam) values(1,'Admin');
+insert into role_name(iden,nam) values(2,'Student');
+insert into role_name(iden,nam) values(3,'Alumni');
+insert into role_name(iden,nam) values(4,'Faculty');
+insert into role_name(iden,nam) values(5,'Alumni Coordinator');
+insert into role_name(iden,nam) values(6,'Management');
+insert into role_name(iden,nam) values(7,'Guest');
+
+
+insert into skill(iden,nam, description) values(1,'Programming', 'C/C++/Java');
+insert into skill(iden,nam, description) values(2,'Verilog', 'Hardware Description Language');
+insert into skill(iden,nam) values(3,'CAD');
+insert into skill(iden,nam) values(4,'CATIA');
+insert into skill(iden,nam) values(5,'Web Design');
+insert into skill(iden,nam, description) values(6,'SQL', 'Query Language');
+insert into skill(iden,nam) values(7,'MATLAB');
+insert into skill(iden,nam) values(8,'J2EE');
+insert into skill(iden,nam) values(9,'ProE');
+
+
+
+insert into department(iden,nam) values(1,'IT');
+insert into department(iden,nam) values(2,'CSE');
+insert into department(iden,nam) values(3,'ECE');
+insert into department(iden,nam) values(4,'EEE');
+insert into department(iden,nam) values(5,'Applied Sciences');
+insert into department(iden,nam) values(6,'MECH');
+insert into department(iden,nam) values(7,'CIVIL');
+insert into department(iden,nam) values(8,'Textile Engg');
+
+
+insert into degree(iden,department_id, nam) values(1,2, 'BE_CSE');
+insert into degree(iden,department_id, nam) values(2,2, 'ME_CSE');
+insert into degree(iden,department_id, nam) values(3,2, 'BE_SE');
+insert into degree(iden,department_id, nam) values(4,5, 'BSC_CT');
+insert into degree(iden,department_id, nam) values(5,1, 'BTECH_IT');
+insert into degree(iden,department_id, nam) values(6,1, 'MTECH_IT');
+insert into degree(iden,department_id, nam) values(7,5, 'BSC_IT');
+insert into degree(iden,department_id, nam) values(8,3, 'BE_ECE');
+insert into degree(iden,department_id, nam) values(9,3, 'ME_ECE');
+insert into degree(iden,department_id, nam) values(10,3, 'ME_VLSI');
+insert into degree(iden,department_id, nam) values(11,4, 'BE_EEE');
+insert into degree(iden,department_id, nam) values(12,4, 'ME_EEE');
+insert into degree(iden,department_id, nam) values(13,6, 'BE_MECH');
+insert into degree(iden,department_id, nam) values(14,6, 'ME_EnggDesign');
+insert into degree(iden,department_id, nam) values(15,7, 'ME_AppliedMech');
+
+
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (1,'Female', 'Project Manager', '2008', '1, AMC, PN Palayam, Coimbatore-37', 1);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (2,'Female', 'Project Manager', '2008', '8, LMC, KK Pudhur, Coimbatore-48', 2);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (3,'Male', 'Project Manager', '2005', '88, 1st cross, MG Road, Bangalore-57', 3);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (4,'Female', 'Project Leader', '2000', '98, 1st cross, Annai Theresa Road, Kolkata-77', 3);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (5,'Male', 'Software Engineer', '2012', '100, 11st cross, Gandhi Nagar, Chennai-77', 4);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (6,'Male', 'Trainee Engineer', '2013', '81, 9th cross lane, Gangothri, Mysore-77', 8);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (7,'Female', 'VLSI Engineer', '2008', '99, KK Street, Amphi Nagar, Chennai-28', 9);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (8,'Male', 'Senior Software Engineer', '2012', '1, AMC, PN Palayam, Coimbatore-37', 1);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (9,'Female', 'Project Manager', '2009', '8, MMC, PK Pudhur, Coimbatore-48', 2);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (10,'Female', 'Project Leader', '2008', '76, 11th Street, Lakshmi Nagar, Trichy-57', 3);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (11,'Male', 'Project Manager', '2002', '8, AMC, PN Palayam, Coimbatore-37', 1);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (12,'Female', 'Project Manager', '2004', '18, LMC, KK Pudhur, Coimbatore-48', 5);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (13,'Male', 'Project Manager', '2008', '48, 1st cross, MG Road, Bangalore-57', 4);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (14,'Female', 'Project Leader', '2008', '78, 1st cross, Annai Theresa Road, Kolkata-77', 3);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (15,'Female', 'Software Engineer', '2013', '105, 11st cross, Gandhi Nagar, Chennai-77', 4);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (16,'Female', 'Trainee Engineer', '2013', '11, 9th cross lane, Gangothri, Mysore-77', 5);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (17,'Female', 'VLSI Engineer', '2011', '98, KK Street, Amphi Nagar, Chennai-28', 10);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (18,'Male', 'Senior Software Engineer', '2010', '101, AMC, PN Palayam, Coimbatore-37', 1);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (19,'Female', 'Project Manager', '2009', '80, MMC, PK Pudhur, Coimbatore-48', 2);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (20,'Male', 'Project Leader', '2002', '761, 11th Street, Lakshmi Nagar, Trichy-57', 3);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (21,'Male', 'Senior Software Engineer', '2008', '19, AMC, PN Palayam, Coimbatore-37', 1);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (22,'Male', 'Project Manager', '2008', '61, AMC, PN Palayam, Coimbatore-37', 4);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (23,'Male', 'Project Manager', '1999', '610, AMC, PNP Nagar, Coimbatore-37', 1);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (24,'Male', 'Senior CAD Engineer', '2008', '24, AMC, PN Palayam, Coimbatore-37', 13);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (25,'Male', 'Site Engineer', '2010', '25, AMC, PN Palayam, Coimbatore-37', 14);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (26,'Male', 'Regional Manager', '1999', '26, AMC, PNP Nagar, Coimbatore-37', 15);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (27,'Male', 'System Manager', '2008', '27, AMC, PNP Nagar, Coimbatore-37', 4);
+insert into profile_det(iden,gender, designation, batch, address, degree_id) values (28,'Female', 'Secretary', '1998', '28, AMC, PNP Nagar, Coimbatore-37', 4);
+
+
+
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(1,'Ram', 'user101', 'amphi1123', '1987023456', 'ram@yahoo.in',3,5); 
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(2,'Ramaa', 'user102', 'amphi1231', '1887023456', 'rama@hotmail.com',3,4); 
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(3,'Samuel', 'user103', 'amphi1321', '1234569800', 'sam@gmail.com',3,3); 
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(4,'Kavithaa', 'user104', 'amphi1567', '1111193459', 'kavitha@lycos.com',3,2); 
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(5,'Anithaa', 'user105', 'amphi1777', '1708912345', 'anitha@gmail.com',3,1); 
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(6,'Jaya', 'user106', 'amphi1482', '1887023451', 'jayaa@yahoo.in',3,10); 
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(7,'Priyaa', 'user107', 'amphi1111', '1234561234', 'priya123@gmail.com',3,9);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(8,'Jeyan', 'user108', 'amphi1489', '1887023451', 'jayan@yahoo.in',3,8);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(9,'Jeyanthi', 'user109', 'amphi19', '1887023451', 'jayanthi@yahoo.in',3,7);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(10,'Manian', 'user110', 'amphi110', '1883423451', 'mani@gmail.com',3,6);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(11,'Navin', 'user111', 'amphi111', '1113423451', 'naveen@gmail.com',3,20);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(12,'Oviiya', 'user112', 'amphi112', '1123423451', 'oviya@gmail.com',3,19);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(13,'Pratheep', 'user113', 'amphi113', '1133423451', 'pradeep@gmail.com',3,18);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(14,'Reeta', 'user114', 'amphi114', '1143423451', 'rita@gmail.com',3,17);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(15,'Siindhu', 'user115', 'amphi115', '1153423451', 'sindhu@gmail.com',3,16);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(16,'Teena', 'user116', 'amphi116', '1163423451', 'tina@gmail.com',3,15);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(17,'Umaa', 'user117', 'amphi117', '1173423451', 'uma@gmail.com',3,14);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(18,'Vineth', 'user118', 'amphi118', '1183423451', 'vinith@gmail.com',3,13);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(19,'Veenaa', 'user119', 'amphi119', '1193423451', 'veena@gmail.com',3,12);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(20,'Yasar', 'user120', 'amphi120', '1203423451', 'yazar@gmail.com',3,11);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(21,'Baalaji', 'user121', 'amphi121', '1213423451', 'balaji@gmail.com',3,26);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(22,'Clinton', 'user122', 'amphi122', '1223423451', 'clinton@gmail.com',3,25);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(23,'Deepan', 'user123', 'amphi123', '1233423451', 'dheepan@gmail.com',3,24);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(24,'Loganath', 'user124', 'amphi124', '1243423451', 'balaji@gmail.com',3,23);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(25,'Pravin', 'user125', 'amphi125', '1253423451', 'praveen@gmail.com',3,22);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(26,'Rameesh', 'user126', 'amphi126', '1263423451', 'ramesh@gmail.com',3,21);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id) values(27,'Rathesh', 'user127', 'amphi127', '1273423451', 'rathish@gmail.com',2);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id) values(28,'Radhaa', 'user128', 'amphi128', '1283423451', 'balaji@gmail.com',2);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id) values(29,'Thaamarai', 'user129', 'amphi129', '1293423451', 'thamarai@gmail.com',1);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id) values(30,'Vegnesh', 'user130', 'amphi130', '1233423451', 'vignesh@gmail.com',4);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id) values(31,'Yokesh', 'user131', 'amphi131', '1313423451', 'yogesh@gmail.com',4);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id) values(32,'Premaa', 'user132', 'amphi132', '1323423451', 'prema@gmail.com',4);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id) values(33,'Ramyaa', 'user133', 'amphi133', '1333423451', 'ramya@gmail.com',5);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id) values(34,'Pravithaa', 'user134', 'amphi134', '1343423451', 'pravitha@gmail.com',5);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(35,'Mala', 'user135', 'amphi135', '1353423451', 'malini@gmail.com',6,28);
+insert into user_det(iden,user_name, username, user_password, phonenumber, emailid, role_id, profile_id) values(36,'Sendhil', 'user136', 'amphi136', '1363423451', 'senthil@gmail.com',1,27);
+
+
+DROP TABLE experience;
+CREATE  TABLE experience   (
+    iden   NUMBER(20) NOT NULL,
+    company_name   VARCHAR(255) NOT NULL ,
+    current_status   NUMBER(1) NOT NULL ,
+    end_date   DATE DEFAULT NULL ,
+    start_date   DATE NOT NULL ,
+    profile_id   NUMBER(20) NOT NULL ,
+  PRIMARY KEY (  iden  ) ,
+  FOREIGN KEY(profile_id) REFERENCES profile_det(iden) )
+  ;
+
+
+    
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (1,'TCS', 0, TO_DATE('2012-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2010-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 1);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (2,'CTS', 1, TO_DATE('2012-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 1);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (3,'CTS', 0, TO_DATE('2012-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2010-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 2);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (4,'TCS', 1, TO_DATE('2012-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 2);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (5,'IBM', 0, TO_DATE('2008-06-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2007-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 3);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (6,'MPhasis', 0, TO_DATE('2010-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2008-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 3);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (7,'Amphisoft', 1, TO_DATE('2010-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 3);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (8,'Wipro', 0, TO_DATE('2008-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2002-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 4);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (9,'HCL', 1, TO_DATE('2008-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 4);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (10,'HCL', 1, TO_DATE('2013-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 5);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (11,'Payoda Technologies', 1, TO_DATE('2013-07-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 6);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (12,'Texas Instruments', 1, TO_DATE('2010-07-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 7);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (13,'Hexaware Technologies', 1, TO_DATE('2012-07-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 8);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (14,'iGate Solutions', 1, TO_DATE('2009-07-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 9);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (15,'Seimens', 0, TO_DATE('2009-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2006-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 10);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (16,'Google', 1, TO_DATE('2009-07-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 10);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (17,'TCS', 0, TO_DATE('2008-06-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2004-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 11);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (18,'IBM', 0, TO_DATE('2010-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2008-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'),11);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (19,'Amphisoft', 1, TO_DATE('2010-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 11);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (20,'Accenture', 0, TO_DATE('2008-06-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2004-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 12);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (21,'Wipro', 0, TO_DATE('2011-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2008-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 12);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (22,'Infosys', 1, TO_DATE('2011-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 12);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (23,'Infosys', 0, TO_DATE('2011-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2006-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 13);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (24,'Wipro', 1, TO_DATE('2011-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 13);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (25,'TCS', 0, TO_DATE('2011-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2008-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 14);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (26,'Amphisoft', 1, TO_DATE('2011-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 14);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (27,'CTS', 1, TO_DATE('2013-07-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 15);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (28,'CTS', 1, TO_DATE('2013-07-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 16);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (29,'CTS', 1, TO_DATE('2010-07-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 18);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (30,'TCS', 0, TO_DATE('2010-06-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2009-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 19);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (31,'CTS', 0, TO_DATE('2011-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2010-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'),19);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (32,'Infosys', 0, TO_DATE('2013-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2011-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'),19);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (33,'IBM', 1, TO_DATE('2013-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 19);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (34,'IBM', 0, TO_DATE('2011-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2004-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'),20);
+insert into experience(iden,company_name, current_status, end_date, start_date, profile_id) values (35,'TCS', 0, TO_DATE('2013-05-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), TO_DATE('2011-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'),20);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (36,'CTS', 1, TO_DATE('2013-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 20);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (37,'CTS', 1, TO_DATE('2010-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 21);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (38,'Infosys', 1, TO_DATE('2010-07-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 22);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (39,'TCS', 1, TO_DATE('2001-05-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 23);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (40,'TCS', 1, TO_DATE('2010-07-01 00:00:00','yyyy/mm/dd hh24:mi:ss'), 24);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (41,'ABT', 1, TO_DATE('2012-07-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 25);
+insert into experience(iden,company_name, current_status, start_date, profile_id) values (42,'TCS', 1, TO_DATE('2005-07-10 00:00:00','yyyy/mm/dd hh24:mi:ss'), 26);
+
+
+
+
+insert into post_type(iden,nam) values (1,'Oppurtunities');
+insert into post_type(iden,nam) values (2,'Higher Studies');
+insert into post_type(iden,nam) values (3,'Sharing Experiences');
+insert into post_type(iden,nam) values (4,'Personal Accomplishments');
+insert into post_type(iden,nam) values (5,'Technology');
+
+
+insert into event(iden,nam, invitation, event_date, organiser_id) values (1,'Alumni Meet 2008', 'All are Welcome', TO_DATE('2008-05-01 17:00:00','yyyy/mm/dd hh24:mi:ss'), 34);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (2,'Alumni Meet 2009', 'All are Welcome', TO_DATE('2009-05-01 17:00:00','yyyy/mm/dd hh24:mi:ss'), 34);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (3,'Alumni Meet 2010', 'All are Welcome', TO_DATE('2010-05-01 17:00:00','yyyy/mm/dd hh24:mi:ss'), 34);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (4,'Alumni Meet 2011', 'All are Welcome', TO_DATE('2011-05-01 17:00:00','yyyy/mm/dd hh24:mi:ss'), 34);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (5,'Alumni Meet 2012', 'All are Welcome', TO_DATE('2012-05-01 17:00:00','yyyy/mm/dd hh24:mi:ss'), 34);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (6,'Alumni Meet 2013', 'All are Welcome', TO_DATE('2013-05-01 17:00:00','yyyy/mm/dd hh24:mi:ss'), 33);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (7,'Alumni Meet 2014', 'All are Welcome', TO_DATE('2014-01-27 17:00:00','yyyy/mm/dd hh24:mi:ss'), 33);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (8,'ICSIP 2008', 'All are Welcome', TO_DATE('2008-06-01 09:00:00','yyyy/mm/dd hh24:mi:ss'), 31);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (9,'ICSIP 2010', 'All are Welcome', TO_DATE('2010-06-01 09:00:00','yyyy/mm/dd hh24:mi:ss'), 31);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (10,'ICSIP 2012', 'All are Welcome', TO_DATE('2012-06-01 09:00:00','yyyy/mm/dd hh24:mi:ss'), 32);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (11,'ACM ICPC 2013', 'Inter-Collegiate Programming Contest', TO_DATE('2013-12-05 09:00:00','yyyy/mm/dd hh24:mi:ss'), 1);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (12,'Entrepreneurship Development Programme', 'All are Welcome', TO_DATE('2014-01-27 15:00:00','yyyy/mm/dd hh24:mi:ss'), 32);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (13,'Freshers Induction Programme', 'All are Welcome', TO_DATE('2013-08-27 15:00:00','yyyy/mm/dd hh24:mi:ss'), 35);
+insert into event(iden,nam, invitation, event_date, organiser_id) values (14,'Literary Meet', 'All are Welcome', TO_DATE('2014-01-27 16:00:00','yyyy/mm/dd hh24:mi:ss'), 5);
+
+
+INSERT INTO query_det(iden,content, query_date, user_id) values (1,'What are the options after MS?', TO_DATE('2012-01-05 01:00:00','yyyy/mm/dd hh24:mi:ss'), 1);
+INSERT INTO query_det(iden,content, query_date, user_id) values (2,'Any one working on PHP?', TO_DATE('2013-06-01 09:00:00','yyyy/mm/dd hh24:mi:ss'), 2);
+INSERT INTO query_det(iden,content, query_date, user_id) values (3,'Is there any one working in TCS?', TO_DATE('2014-01-02 04:00:00','yyyy/mm/dd hh24:mi:ss'), 3);
+INSERT INTO query_det(iden,content, query_date, user_id) values (4,'Any one working on Grails?', TO_DATE('2013-09-10 13:00:00','yyyy/mm/dd hh24:mi:ss'), 2);
+INSERT INTO query_det(iden,content, query_date, user_id) values (5,'After MS you can opt for PhD or you can apply for research organisations', TO_DATE('2012-01-05 14:00:00','yyyy/mm/dd hh24:mi:ss'), 5);
+INSERT INTO query_det(iden,content, query_date, user_id, parent_id) values (6,'I am working in PHP domain for the past 3 years.  How can I help you?', TO_DATE('2013-06-01 19:00:00','yyyy/mm/dd hh24:mi:ss'), 5, 2);
+INSERT INTO query_det(iden,content, query_date, user_id, parent_id) values (7,'I am currently working in TCS. What can I do for you?', TO_DATE('2014-01-02 14:00:00','yyyy/mm/dd hh24:mi:ss'), 2,3);
+INSERT INTO query_det(iden,content, query_date, user_id) values (8,'Any one working on Ruby on Rails?', TO_DATE('2014-09-10 13:00:00','yyyy/mm/dd hh24:mi:ss'), 2);
+INSERT INTO query_det(iden,content, query_date, user_id, parent_id) values (9,'I am working in PHP domain for the past 4 years.  How can I help you?', TO_DATE('2013-06-02 04:30:00','yyyy/mm/dd hh24:mi:ss'), 8, 2);
+
+
+
+
+INSERT INTO post(iden,content, post_date, user_id, type_id) values (1,'Openings for MS graduates in Computer Science', TO_DATE('2013-01-05 00:00:01','yyyy/mm/dd hh24:mi:ss'), 1,1);
+INSERT INTO post(iden,content, post_date, user_id, type_id) values (2,'New Features in PHP', TO_DATE('2012-06-01 00:00:09','yyyy/mm/dd hh24:mi:ss'), 2,5);
+INSERT INTO post(iden,content, post_date, user_id, type_id) values (3,'Attention - TCS Ex-Employees', TO_DATE('2014-01-02 00:00:04','yyyy/mm/dd hh24:mi:ss'), 3,1);
+INSERT INTO post(iden,content, post_date, user_id, type_id) values (4,'Grails - Technology for the future', TO_DATE('2013-09-10 00:00:13','yyyy/mm/dd hh24:mi:ss'), 2,5);
+INSERT INTO post(iden,content, post_date, user_id, type_id) values (5,'Research Grants - Automobile Engineering', TO_DATE('2012-01-05 00:00:14','yyyy/mm/dd hh24:mi:ss'), 5,5);
+INSERT INTO post(iden,content, post_date, user_id, type_id) values (6,'Happy to announce that I have been honoured with the the Outstanding Indian Employee Award', TO_DATE('2013-06-01 00:00:19','yyyy/mm/dd hh24:mi:ss'), 5, 4);
+INSERT INTO post(iden,content, post_date, user_id, type_id) values (7,'New Year Greetings', TO_DATE('2014-01-01 00:00:14','yyyy/mm/dd hh24:mi:ss'), 3,4);
+INSERT INTO post(iden,content, post_date, user_id, type_id) values (8,'Good Coding Practices', TO_DATE('2013-09-10 00:00:13','yyyy/mm/dd hh24:mi:ss'), 2,5);
+INSERT INTO post(iden,content, post_date, user_id, type_id) values (9,'Attention - TCS Ex-Employees...cont', TO_DATE('2014-01-02 00:00:07','yyyy/mm/dd hh24:mi:ss'), 3,1);
+
+
+
+
+
+
+ 

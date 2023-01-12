@@ -1,0 +1,85 @@
+create or replace table cdc_tbl (
+  empno int	,
+  ename  varchar,
+  sal   int	
+);
+--insert & select and see the data (we are loading 1st time)
+insert into cdc_tbl values 
+  (1,'aaa',9000),
+  (2,'bbb',8000),
+  (3,'ccc',7000);
+select * from cdc_tbl;
+
+--the final table where post cdc, data will 
+
+create or replace table final_aktbl (
+  final_empno int	,
+  final_ename  varchar,
+  final_sal   int
+);
+-- 1st time data load from cdc_table to final table, we can assume history load or onetime load
+insert into final_aktbl select * from cdc_tbl;
+
+select * from final_tbl;
+
+
+--merge stream data (insert/update) into target table 
+
+merge into infyni_db.public.final_aktbl as t 
+using (select * 
+         from infyni_db.public.ak_stream) as s
+on t.empno=s.empno
+when matched 
+        and s.metadata$action = 'INSERT'
+	and s.metadata$isupdate then
+  update set t.ename=s.ename ,  t.sal =s.sal 
+when not matched 
+         and s.metadata$action = 'INSERT' then
+   insert (empno, ename,sal ) values (s.empno,s.ename,s.sal);
+
+--merge stream (insert/update/delete) 
+
+merge into infyni_db.public.final_emp as t 
+using (select * 
+         from infyni_db.public.ak_stream) as s
+on t.empno=s.empno
+when matched 
+        and s.metadata$action = 'INSERT'
+	and s.metadata$update then
+  update set t.ename=s.ename ,
+         t.sal =s.sal 
+when matched 
+         and s.metadata$action = 'DELETE' THEN DELETE
+when not matched 
+         and s.metadata$action = 'INSERT' then
+   insert (empno, ename,sal ) values (s.empno,s.ename,s.sal);
+
+
+
+select system$stream_has_data('ak_stream');
+  
+  select * from ak_stream;
+ --create task 
+ 
+   create or replace task ak_task
+    warehouse = compute_wh 
+    schedule  = '3 minute'
+  when
+    system$stream_has_data('ak_stream')
+  as
+    insert into final_aktbl select empno,ename,sal from ak_stream;
+
+
+  alter task ak_task resume;
+
+
+-Now check if stream is running in every 10min
+
+-- how to see how it works
+select * from table(information_schema.task_history()) 
+  order by scheduled_time;
+-- you can see only the schedule items
+select * from table(information_schema.task_history())  
+  where state ='SCHEDULED' order by scheduled_time;
+ 
+  

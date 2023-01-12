@@ -1,0 +1,103 @@
+create or replace table cdc_tbl (
+  empno int	,
+  ename  varchar,
+  sal   int	
+);
+--insert & select and see the data (we are loading 1st time)
+insert into cdc_tbl values 
+  (1,'aaa',9000),
+  (2,'bbb',8000),
+  (3,'ccc',7000);
+select * from cdc_tbl;
+
+--the final table where post cdc, data will 
+
+create or replace table final_aktbl (
+  final_empno int	,
+  final_ename  varchar,
+  final_sal   int
+);
+-- 1st time data load from cdc_table to final table, we can assume history load or onetime load
+insert into final_aktbl select * from cdc_tbl;
+
+select * from final_tbl;
+
+--create stream on cdc tbl
+
+create or replace stream   
+cdc_stream on table cdc_tbl
+append_only=true;
+
+--Lets load these new CDC data to final table
+show streams;
+desc stream cdc_stream;
+select system$stream_has_data('cdc_stream');
+
+select current_time();
+
+select * from cdc_stream;
+
+--task
+  create or replace task cdc_task
+    warehouse = compute_wh 
+    schedule  = '2 minute'
+  when
+    system$stream_has_data('cdc_stream')
+  as
+    insert into final_aktbl select empno,ename,sal from cdc_stream;
+    
+    show tasks;
+    desc task cdc_task;
+    
+--Now stream and task are created, we need to activate the task to start consuming it
+
+use role accountadmin;
+alter task cdc_task resume;
+
+GRANT ownership on task ak_task to role sysadmin;
+
+insert into cdc_tbl values 
+  (4,'ddd',9000),
+  (5,'eee',8000),
+  (6,'fff',7000);
+  
+  --update
+
+  update cdc_tbl set sal=9999 where empno=1;
+
+  delete from cdc_tbl where empno=2;
+  
+--Now check if stream is running in every 10min
+
+-- how to see how it works
+select * from table(information_schema.task_history())  
+  order by scheduled_time;
+-- you can see only the schedule items
+select * from table(information_schema.task_history())  
+  where state ='SCHEDULED' order by scheduled_time;
+  
+ ====================================================================== 
+    create or replace stream lti_db.public.ak_stream
+  on table lti_db.public.cdc_tbl 
+  comment = 'insert and update';
+  
+  select system$stream_has_data('ak_stream');
+  
+  select * from ak_stream;
+  
+   create or replace task ak_task
+    warehouse = compute_wh 
+    schedule  = '2 minute'
+  when
+    system$stream_has_data('ak_stream')
+  as
+    insert into final_aktbl select cdc_col_1,cdc_col_2,cdc_col_3 from ak_stream;
+    
+    insert into cdc_tbl values (
+  'cdc-val-71', 'cdc-val-72', 'cdc-val-73');
+  ('cdc-val-81', 'cdc-val-82', 'cdc-val-83'),
+  ('cdc-val-91', 'cdc-val-92', 'cdc-val-93');
+  
+  alter task ak_task resume;
+  
+  select * from final_aktbl;

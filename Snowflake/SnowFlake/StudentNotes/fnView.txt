@@ -1,0 +1,84 @@
+--Create the table and data to use:
+
+create or replace table purchases (number_sold integer, wholesale_price number(7,2), retail_price number(7,2));
+insert into purchases (number_sold, wholesale_price, retail_price) values 
+   (3,  10.00,  20.00),
+   (5, 100.00, 200.00);
+   
+--Create the UDF:
+
+create or replace function profit()
+  returns numeric(11, 2)
+  as
+  $$
+    select sum((retail_price - wholesale_price) * number_sold) from purchases 
+  $$
+  ;
+  
+--Call the UDF in a query:
+
+select profit();
+
+-------------------------------------------------------
+--materialized views(pre computed data is stored)
+use LTIDB;
+use schema LTISCHEMA;
+
+create table inventory (product_id integer, price float,desc varchar);
+
+create or replace materialized view wholesale_mv as
+  select product_id, price from inventory;
+ 
+insert into inventory (product_id, price, desc) values
+  (1, 1.00, 'JD');
+  
+insert into inventory (product_id, price, desc) values
+  (2, 3.00, 'MH');
+
+select * from inventory;
+--if main table is dropped , view gon too
+drop table inventory;
+update inventory set price =36.0 where product_id=1;
+
+-- whatever yu do on main table is reflected in og table
+select * from wholesale_mv;
+update wholesale_mv set price =36.0 where product_id=1;--cant execute this on mat views
+
+
+SHOW MATERIALIZED VIEWS;
+
+
+--view 2 normal view
+
+create table sales (product_id integer, quantity integer, price float);
+ 
+insert into sales (product_id, quantity, price) values 
+   (1,  1, 1.99);
+ 
+create or replace view profits as
+  select m.product_id, sum(ifnull(s.quantity, 0)) as quantity,
+      sum(ifnull(quantity * (s.price - m.price), 0)) as profit
+    from wholesale_mv as m left outer join sales as s on s.product_id = m.product_id
+    group by m.product_id;
+
+select * from profits;
+
+
+grant create materialized view on schema ltischema to role sysadmin;
+
+alter materialized view wholesale_mv suspend;
+alter materialized view wholesale_mv resume;
+    
+insert into inventory (product_id, price, desc) values 
+    (3, 2.00, 'sprocket');
+
+insert into sales (product_id, quantity, price) values 
+   (2, 10, 2.99),
+   (2,  1, 2.99);
+   
+Select * from wholesale_mv;
+
+select * from profits order by product_id;
+
+SHOW MATERIALIZED VIEWS;
+--not possible to create another material view from mat view 

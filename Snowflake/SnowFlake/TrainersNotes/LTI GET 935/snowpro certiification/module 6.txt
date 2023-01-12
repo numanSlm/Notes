@@ -1,0 +1,126 @@
+SESSION 6---------------------------------------------------------------------------------------
+
+Clustering(Horizontal Pruning)--where -- Micropartitions--to enable horizontal pruning effeciently
+----------
+Logical grouping of Physical data to fetch only required micropartitions
+
+-For micropartitions we have to do a cluster by(col) data of the col will be kept in one micropartition--based on 
+key identifies-Physical moment of data
+
+We need clustering for efficient pruning of micropartitioning
+
+Fetching off only the micropartitions that are required 
+
+Each update is like an insert because micropartitions are immutable
+DML operations results in recluster the data(autoclustering)
+
+1)nO CONTROL on cluters
+2)SHOW TABLES;to check clustering
+3)Snowflake will decide the clustering only if beneficial (It will charge appropriately)
+show clustering --
+
+Eligibility for clustering
+
+1)Query performance
+2)multi-terabyte range table
+3)Clustering depth for table is large
+
+
+Depth = number of micropartitions to read (Data spread across all micropartitions so depth will be high)
+(number of micropartitions should always be low that is low cardinality)
+
+METADATA LAYER	  output
+						^	
+						|
+VP LAYER		  M1,M2,M3,M4		
+						^
+						|
+S3 LAYER - T1     M1,M2,M3,M4
+
+(here depth is high)
+
+IF reclustering takes place delinking of micropartitions with the table will take place and linking of new micropartitions will take place with 
+the table . Can retrieve the old partitions through fail safe and later 
+
+First time travel-1 day or 30 days(permanent) failsafe period automatically older micropartitions will get purged.
+
+If the table size is in TB then only clustering is beneficial or else smaller tables not needed
+
+Groupby should be done on the cols coming in the where condition or filter predicates
+
+Clustering keys can be done on composite keys(3-4 columns)
+
+If composite one with medium  cardinality
+
+Clustering key will decide the ingestion order
+
+Constant micropartitions means table is well clustered and hence query only one micropartition.
+
+If multiple DML operations occur then the order is disturbed and then the updated row is spread across multiple micropartitions
+
+Command:
+
+Alter table name cluster by |options|
+
+
+SUSPEND:
+ 
+ alter table name suspend recluster;
+ 
+ Drop cluster:
+ 
+ alter table name drop clustering by
+ 
+ Clustering information:
+ 
+ systemclustering_information('<table_name>','col')
+ systemclustering_depth('<table_name>','col')
+ 
+ Clustering has both compute and storage cost
+ 
+ PERFORMANCE
+ ---------------
+ 
+ Snowflake recommends to segregate workloads to maximise throughput and minimise latency
+ -Snowflake has high elasticity and scalability 
+ -Creation of dedicated warehouses will allow optimal parameter for Auto resume and Auto suspend
+ -Discreate warehouses on the basis of Buisness domain and functionality.
+ 
+ 
+ In ETL auto resume and auto suspend is beneficial because small amount of time
+ but in buisness queries caching will be more beneficial
+ Justified use of secure Views
+ 
+ Q1)Clustering must be enabled for all tables.
+ a)True
+ b)False[ans is false]
+ 
+ Q2)What determines if a table needs to be clustered?
+ a)Clustering Depth
+ b)Warehouse performance
+ c)Query performance[ANs is a and c ]---snowflake decouples compute and storage and hence no relation for improving query performance.
+ 
+ Q3)Maximum number of cols allowed as a cluster key is 1?
+ a)True
+ b)False[Ans is False]//Max number is 3-4
+ 
+ Q4)Basing on cardinality which of the following makes a decent cluster Key?
+ a)Primary Key Column
+ b)Timestamp with seconds
+ c)Gender
+ d)None of the above[Ans is d]In gender cardinality is minimum which shoudnt be the case
+ 
+ Q5)Clustering happens on a weekly basis.
+ a)True
+ b)False[Ans is false]
+ 
+ Q6)User have to spin up a warehouse for clustering process(AS IT IS AUTOMATIC RECLUSTERING)
+ a)True
+ b)False[Ans is false]
+ 
+ Q7)Order of cardinality snowflake recommends for a cluster key.
+ a)Maximum-minimum
+ b)Minimum-Maximum
+ c)Only Maximum
+ d)Only Minimum[Ans is b]left-right
+ 

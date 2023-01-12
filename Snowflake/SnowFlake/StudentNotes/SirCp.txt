@@ -1,0 +1,913 @@
+use ltidb;
+use schema ltischema; 
+use role sysadmin;
+use WAREHOUSE COMPUTE_WH;
+show stages;
+list @st_lti_int;
+list @~;
+list @%emp;
+
+put file:///home/ak/datasets/employee.csv @~;
+
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @~   FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"'
+ON_ERROR = 'CONTINUE' PURGE = TRUE;
+
+put file:///home/ak/datasets/empext/employee.csv @st_lti_int/sales/2021/jul/28/;
+
+put file:///home/ak/datasets/empext/employee.csv @st_lti_int/emp/;
+
+=========================aws url
+
+https://ltiaws.signin.aws.amazon.com/console
+
+show stages; 
+
+list @st_lti_s3;
+
+----loading data from external s3 stage to snow table
+
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @st_lti_s3/employee  FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"'
+ON_ERROR = 'CONTINUE' PURGE = FALSE ;
+
+
+
+CREATE STAGE "LTIDB"."LTISCHEMA".st_lti_s3 URL = 's3://lti935' CREDENTIALS = (AWS_KEY_ID = 'AKIAYLYEKLCYDJ3QWUUE' AWS_SECRET_KEY = '****************************************');
+
+alter STAGE "LTIDB"."LTISCHEMA".st_lti_s3 SET URL = 's3://lti935' CREDENTIALS = (AWS_KEY_ID = 'AKIAYLYEKLCYDJ3QWUUE' AWS_SECRET_KEY = '****************************************');
+
+--temp table available in the created session /user
+create temporary table mytemptable (id number, creation_date date);
+
+--transient table like permanent table except time travel >1 day and failsafe
+create transient table mytranstable (id number, creation_date date);
+
+-- normal table are permanent table has time travel for 90 days and fail safe
+create  table mypermtable (id number, creation_date date);
+
+-----------------------time travel 
+
+
+create or replace table superstore(
+
+	  RowID integer
+	, OrderID varchar(100)
+	, OrderDate varchar(50)
+	, ShipDate varchar(50)
+	, ShipMode varchar(50)
+	, CustomerID varchar(50)
+	, CustomerName varchar(200)
+	, CustomerSegment varchar(200)
+	, City varchar(200)
+	, State varchar(200)
+	, Country varchar(200)
+	, ZipCode varchar(50)
+	, Market varchar(100)
+	, Region varchar(200)
+	, ProductID varchar(200)
+	, ProductCategory varchar(200)
+	, ProductsubCategory varchar(200)
+	, ProductName varchar(500)
+	, Sales decimal(8,2)
+	, OrderQuantity integer
+	, Discount decimal(8,2)	
+	, Profit decimal(8,2)	
+	, ShippingCost decimal(8,2)	
+        , OrderPriority varchar(50)
+
+);
+
+COPY INTO "LTIDB"."LTISCHEMA"."SUPERSTORE" FROM @st_lti_s3/sales  FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORM"'
+ON_ERROR = 'CONTINUE' PURGE = false;
+
+alter table superstore set data_retention_time_in_days=10;
+
+select * from superstore where rowid=32298;
+delete from superstore where rowid=40155;
+
+update superstore set sales=3333 where rowid=32298; 
+
+ 
+ select current_date(),current_time();
+ 
+ select * from superstore before (TIMESTAMP => 'Mon, 26 Jul 2021 05:00:00 +0530'::timestamp_tz);
+ 
+ select * from emp at(offset => -3600);
+
+ select * from superstore before (TIMESTAMP => 'Mon, 26 Jul 2021 17:45:00 +0530'::timestamp_tz);
+  select * from superstore before (offset => -300); 
+  
+   select * from superstore before(statement => '019dd81b-0600-eae6-0049-a383000161a2');
+
+ 
+ show tables ;
+  select * from emp;
+ 
+ select * from restored_emp ;
+ 
+ delete from emp where empno=555;
+ 
+ select * from emp before(statement => '019dd81b-0600-eae6-0049-a383000161a2');
+
+show databases history;
+create database p_database01;
+show tables history like 'pat%' in ltidb.ltischema;
+
+drop table superstore;
+
+
+drop database p_database01;
+select * from orders;
+
+alter database p_database01 rename to  p_database02;
+
+delete from orders where o_orderkey=1611841;
+===========================================day 4 
+
+--apply like 
+create table saleslike like superstore;
+desc table saleslike;
+select * from saleslike;
+
+--zero copy cloning
+
+create table clonesales clone superstore;
+desc table clonesales;
+select * from clonesales;
+--second clone 
+create table clonesales2 clone superstore;
+desc table clonesales2;
+select * from clonesales2;
+
+
+show tables;
+
+---modifying base table
+
+select * from superstore where rowid=32298;
+
+delete from superstore where rowid=40936;
+
+update superstore set sales=6666 where rowid=32298;
+
+--creating clone restore table
+
+create table restored_table clone superstore 
+  at (TIMESTAMP => 'Tue, 27 Jul 2021 10:30:00 +0530'::timestamp_tz);
+
+create or replace table restored_table clone superstore
+  before (offset => -5600);
+  
+  show stages;
+  show tables;
+show schemas;
+
+alter database ltidb set data_retention_time_in_days=5;
+
+--retention time at database level apply to all child objects
+
+alter database ltidb set data_retention_time_in_days=5;
+
+alter table superstore set data_retention_time_in_days=10;
+
+===============backup worksheet
+get @~ file:///home/ak/data;
+
+get @~ file://c:\datasets; 
+=========================
+
+  
+show databases;
+desc table emp;
+show schemas;
+show tables;
+select * from emp;
+insert into emp values(1,'Arjun',9000);
+insert into emp values(2,'Arjuna',92000);
+
+update emp set sal =9999 where empno=1;
+
+delete from emp where empno=2;
+
+======================================
+
+select * from "SNOWFLAKE_SAMPLE_DATA"."TPCH_SF1"."LINEITEM";
+
+select * from "SNOWFLAKE_SAMPLE_DATA"."TPCH_SF1".lineitem where L_LINENUMBER=1;
+
+Create table "LTIDB"."LTISCHEMA".lineitem as select * from "SNOWFLAKE_SAMPLE_DATA"."TPCH_SF1".lineitem;
+
+alter table lineitem cluster by (l_linenumber);
+
+select * from lineitem;
+describe table lineitem;
+select * from "SNOWFLAKE_SAMPLE_DATA"."TPCDS_SF100TCL"."STORE_SALES" where ss_store_sk=140;
+
+show tables like 'lineitem';
+
+
+
+show stages;
+
+list @st_lti_int;
+
+put file://C:\emp.csv @st_lti_int;
+
+=========================================
+
+snowsql -c apoorva
+use LTIDB;
+use SCHEMA LTISCHEMA;
+use role SYSADMIN;
+use WAREHOUSE COMPUTE_WH;
+show stages;
+list @st_lti_int;
+list @~;
+list @%emp;
+put file://C:\employee.csv @~;
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @~ FILE_F
+                                         ORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"' ON_E
+                                         RROR = 'CONTINUE' PURGE = True;
+
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @%emp FIL
+                                         E_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"' O
+                                         N_ERROR = 'CONTINUE' PURGE = false;
+
+
+
+create table emp1 like emp;
+select * from emp1;
+
+
+--AWS S3
+show stages;
+list @st_lti_s3;
+
+COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @st_lti_s3/employee FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"' ON_ERROR = 'CONTINUE' PURGE = false;
+
+--temp
+
+show tables;
+
+--temp table available in the created session /user
+create temporary table mytemptable (id number, creation_date date);
+
+--transient table like permanent table except time travel >1 day and failsafe
+create transient table mytranstable (id number, creation_date date);
+
+-- normal table are permanent table has time travel for 90 days and fail safe
+create  table mypermtable (id number, creation_date date);
+select current_date(),current_time(); 
+
+
+create or replace table superstore(
+
+	  RowID integer
+	, OrderID varchar(100)
+	, OrderDate varchar(50)
+	, ShipDate varchar(50)
+	, ShipMode varchar(50)
+	, CustomerID varchar(50)
+	, CustomerName varchar(200)
+	, CustomerSegment varchar(200)
+	, City varchar(200)
+	, State varchar(200)
+	, Country varchar(200)
+	, ZipCode varchar(50)
+	, Market varchar(100)
+	, Region varchar(200)
+	, ProductID varchar(200)
+	, ProductCategory varchar(200)
+	, ProductsubCategory varchar(200)
+	, ProductName varchar(500)
+	, Sales decimal(8,2)
+	, OrderQuantity integer
+	, Discount decimal(8,2)	
+	, Profit decimal(8,2)	
+	, ShippingCost decimal(8,2)	
+        , OrderPriority varchar(50)
+
+);
+
+select * from superstore;
+
+select * from superstore where rowid=32298;
+delete from superstore where rowid=40155;
+update superstore set sales=3333 where rowid=32298;
+
+COPY INTO "LTIDB"."LTISCHEMA"."SUPERSTORE" FROM @st_lti_s3 FILE_FORMAT = '"LTIDB"."LTISCHEMA"."CSVFILEFORMAT"' ON_ERROR = 'CONTINUE' PURGE = false;
+
+SHOW tables;
+
+alter table superstore set data_retention_time_in_days=90;
+ 
+ 
+--timestamp
+select * from superstore before (TIMESTAMP => 'Mon, 26 Jul 2021 17:46:00 +0530'::timestamp_tz);
+select * from superstore before(offset => -600);
+select * from superstore before(statement => '019dd81b-0600-eae6-0049-a383000161a2');
+
+drop table emp;
+undrop table emp;
+
+
+=====================================
+
+--apply like
+create table saleslike like superstore;
+desc table saleslike;
+select * from saleslike;
+
+--zero copy cloning
+
+create table clonesales clone superstore;
+desc table clonesales;
+select * from clonesales;
+
+--second clone
+create table clonesales2 clone superstore;
+desc table clonesales2;
+select * from clonesales2;
+
+show tables;
+
+--modifying base table
+select * from superstore where rowid=32298;
+
+delete from superstore where rowid=40936;
+
+update superstore set sales=6666 where rowid=32298;
+
+--check clone tables
+select * from clonesales where rowid=32298;
+update clonesales set sales=7777 where rowid=32298;
+
+create table restored_table clone superstore
+before(TIMESTAMP => 'Tue, 27 Jul 2021 10:30:00 +0530'::timestamp_tz);
+
+create or replace table restored_table clone superstore 
+before (offset => -5600);
+
+show stages;
+show schemas;
+show tables;
+
+--retention time at db level apply to all child objects
+
+alter database ltidb set data_retention_time_in_days=5;
+
+alter table superstore set data_retention_time_in_days=10;
+
+--create new warehouse for complex query processing
+
+CREATE WAREHOUSE complex_AK_WH WITH WAREHOUSE_SIZE = 'LARGE' WAREHOUSE_TYPE = 'STANDARD' AUTO_SUSPEND = 600 AUTO_RESUME = TRUE MIN_CLUSTER_COUNT = 1 MAX_CLUSTER_COUNT = 10 SCALING_POLICY = 'STANDARD';
+
+--to  create new warehouse for data loading 
+
+
+CREATE WAREHOUSE dataload_WH WITH WAREHOUSE_SIZE = 'SMALL' WAREHOUSE_TYPE = 'STANDARD' AUTO_SUSPEND = 600 AUTO_RESUME = TRUE MIN_CLUSTER_COUNT = 1 MAX_CLUSTER_COUNT = 10 SCALING_POLICY = 'STANDARD';
+
+---to list warehouses 
+show WAREHOUSES;
+
+
+--to change or select the warehouse 
+
+use warehouse dataload_wh;
+
+ALTER WAREHOUSE "DATALOAD_WH" SUSPEND;
+ALTER WAREHOUSE "DATALOAD_WH" resume;
+
+--to check -remote read 
+
+select * from lineitem;
+
+select * from lineitem where l_linenumber=1;
+
+
+--to check -remote read 
+--remote 14 partition  moved to 14 local cache (first )
+select * from lineitem;
+
+select * from lineitem where l_linenumber=1;
+
+---after warehouse 
+select * from lineitem where l_linenumber=3;
+
+update lineitem set l_discount=2.00 where l_orderkey =1208324;
+
+select min(l_discount) from lineitem;
+
+select current_date();
+show tables;
+
+https://sonra.io/snowflake/deep-dive-on-caching-in-snowflake/ 
+=================================================================
+Day5 
+
+ create table varia (float1 float, v variant, float2 float);
+insert into varia (float1, v, float2) values (1.23, null, null);
+
+insert into varia (float1, v, float2) values (2.23, 2.33333333333333333333, 4.55555555555555);
+select * from varia;
+update varia set v = to_variant(float1);  -- converts FROM a float TO a variant.
+update varia set float2 = v::float;       -- converts FROM a variant TO a float.
+select * from varia;
+--to load semi structure 
+--create table with single variant column 
+create table employee_json( v variant);
+--write the json file into the internal stage from local
+put file:///home/adwait/employees.json @st_lti_int/jsonfiles/; 
+--create file format for json
+CREATE FILE FORMAT "LTIDB"."LTISCHEMA".jsonff TYPE = 'JSON' COMPRESSION = 'AUTO' ENABLE_OCTAL = FALSE ALLOW_DUPLICATE = TRUE STRIP_OUTER_ARRAY = FALSE STRIP_NULL_VALUES = FALSE IGNORE_UTF8_ERRORS = FALSE;
+--copy json file from stage to employee jsontable 
+COPY INTO "LTIDB"."LTISCHEMA"."EMPLOYEE_JSON" FROM '@"LTIDB"."LTISCHEMA"."ST_LTI_INT"/jsonfiles' FILE_FORMAT = '"LTIDB"."LTISCHEMA"."JSONFF"' ON_ERROR = 'ABORT_STATEMENT' PURGE = FALSE;
+
+
+select * from employee_json where v:salary=3000;
+
+=====================================
+
+--create table to load paquet files
+create or replace table users_parquet(v variant);
+
+
+--create parquet file format 
+CREATE FILE FORMAT "LTIDB"."LTISCHEMA".parquetff TYPE = 'PARQUET' COMPRESSION = 'AUTO' BINARY_AS_TEXT = TRUE;
+
+COPY INTO "LTIDB"."LTISCHEMA"."USERS_PARQUET" FROM '@"LTIDB"."LTICLONESCHEMA"."ST_LTI_S3"/semistr/users.parquet' FILE_FORMAT = '"LTIDB"."LTICLONESCHEMA"."PARQUETFF"' ON_ERROR = 'ABORT_STATEMENT' PURGE = FALSE;
+
+
+
+===============================query nested semistructured data  
+   create or replace table car_sales
+(
+  src variant
+)
+as
+select parse_json(column1) as src
+from values
+('{
+    "date" : "2017-04-28",
+    "dealership" : "Valley View Auto Sales",
+    "salesperson" : {
+      "id": "55",
+      "name": "Frank Beasley"
+    },
+    "customer" : [
+      {"name": "Joyce Ridgely", "phone": "16504378889", "address": "San Francisco, CA"}
+    ],
+    "vehicle" : [
+      {"make": "Honda", "model": "Civic", "year": "2017", "price": "20275", "extras":["ext warranty", "paint protection"]}
+    ]
+}'),
+('{
+    "date" : "2017-04-28",
+    "dealership" : "Tindel Toyota",
+    "salesperson" : {
+      "id": "274",
+      "name": "Greg Northrup"
+    },
+    "customer" : [
+      {"name": "Bradley Greenbloom", "phone": "12127593751", "address": "New York, NY"}
+    ],
+    "vehicle" : [
+      {"make": "Toyota", "model": "Camry", "year": "2017", "price": "23500", "extras":["ext warranty", "rust proofing", "fabric protection"]}
+    ]
+}') v;
+
+select * from car_sales;
+  select src from car_sales;
+  desc table car_sales;
+  select src:dealership from car_sales;
+
+https://docs.snowflake.com/en/user-guide/querying-semistructured.html 
+
+  select src:salesperson.name from car_sales;
+   select SRC:Salesperson.name from car_sales;
+   select SRC:SALESPERSON.name from car_sales;
+  select SRC:SALESPERSON.Name from car_sales;
+---to query element with blank 
+ select SRC:salesperson."full name" from car_sales;
+
+select src['salesperson']['name'] from car_sales;
+
+ select src['salesperson']['full name'] from car_sales;
+
+select src:vehicle[0] from car_sales;
+
+  select src:vehicle[0].model from car_sales;
+
+ select src:vehicle[0].extras[1] from car_sales;
+
+ select src:salesperson.id::int from car_sales where src:salesperson.id='55' ;
+
+--flatten single element 
+select
+  value:name::string as "Customer Name",
+  value:address::string as "Address"
+  from
+    car_sales
+  , lateral flatten(input => src:customer);
+
+--flatten nested 
+select
+  vm.value:make::string as make,
+  vm.value:model::string as model,
+  ve.value::string as "Extras Purchased"
+  from
+    car_sales
+  , lateral flatten(input => src:vehicle) vm
+  , lateral flatten(input => vm.value:extras) ve;
+
+
+====================External table 
+create or replace external table patient_ext_variant
+with location = @ST_LTI_S3/healthcare
+file_format = csvfileformat;
+
+select * from patient_ext_variant;
+
+select 
+value:c1::int as ID, 
+value:c2::varchar as pname , 
+value:c3::varchar as drug,
+value:c4::varchar as gender,
+value:c5::int as amt
+from patient_ext_variant;
+
+
+create or replace external table patient_ext 
+(ID INT as  (value:c1::int), 
+PNAME varchar(20) as ( value:c2::varchar), 
+DRUG varchar(20) as ( value:c3::varchar), 
+GENDER varchar(10) as ( value:c4::varchar), 
+AMOUNT int as (value:c5::int))
+with location = @ST_S3_TIAA/healthcare
+AUTO_REFRESH = true
+file_format = csv_fileformat;
+
+select * from patient_ext;
+
+ ALTER EXTERNAL TABLE patient_ext REFRESH;
+
+SELECT metadata$filename FROM @st_s3_tiaa;
+
+select id,pname,drug,gender,amount from patient_ext;
+
+ ALTER EXTERNAL TABLE emp_part REFRESH;
+
+SELECT metadata$filename FROM @st_s3_tiaa/part/;
+
+CREATE or replace EXTERNAL TABLE emp_part(
+  date_part date as to_date(substr(metadata$filename, 6, 10), 'YYYY/MM/DD'),
+  empno int as (value:c1::int),
+  ename varchar AS (value:c2::varchar),
+  salary int as (value:c3::int))
+  PARTITION BY (date_part)
+  LOCATION=@st_s3_tiaa/part/
+  AUTO_REFRESH = true
+  FILE_FORMAT = csv_fileformat;
+  
+  select * from emp_part;
+  
+  desc  table emp_part;
+  ALTER EXTERNAL TABLE emp_part REFRESH;
+  
+  select * from emp_part where date_part = to_date('04/02/2021');;
+
+
+================================Day 6
+snowpipes 
+
+use role accountadmin;
+
+create storage integration s3_intg
+  type = external_stage
+  storage_provider = s3
+  enabled = true
+  storage_aws_role_arn = 'arn:aws:iam::574997813424:role/lti_anand_935'
+  storage_allowed_locations = ('s3://lti935/healthcare');
+
+--desc storage int
+Desc integration s3_int;
+
+--to give trusted relationship with AWS IAM role 
+syntax 
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "<snowflake_user_arn>"
+      },
+      "Action": "sts:AssumeRole",
+      "Condition": {
+        "StringEquals": {
+          "sts:ExternalId": "<snowflake_external_id>"
+        }
+      }
+    }
+  ]
+}
+
+--create snow pipe in your database
+
+CREATE PIPE "LTIDB"."LTISCHEMA".S3_SNOWPIPE_AK AUTO_INGEST = TRUE AS COPY INTO "LTIDB"."LTISCHEMA"."EMP" FROM @"LTIDB"."LTICLONESCHEMA"."ST_LTI_S3" FILE_FORMAT = ( FORMAT_NAME = "LTIDB"."LTICLONESCHEMA"."CSVFILEFORM");
+
+
+========================
+use role accountadmin;
+use database ltidb;
+use schema ltischema;
+
+create or replace storage integration s3_int
+  type = external_stage
+  storage_provider = s3
+  enabled = true
+  storage_aws_role_arn = 'arn:aws:iam::574997813424:role/lti_anand_935'
+  storage_allowed_locations = ('s3://lti935/healthcare');
+  
+ -- grant usage on integration s3_int to role sysadmin;
+desc integration s3_int;
+
+ CREATE FILE FORMAT "LTIDB"."LTISCHEMA".csv_pipe TYPE = 'CSV' COMPRESSION = 'AUTO' FIELD_DELIMITER = ',' RECORD_DELIMITER = '\n' SKIP_HEADER = 0 FIELD_OPTIONALLY_ENCLOSED_BY = 'NONE' TRIM_SPACE = FALSE ERROR_ON_COLUMN_COUNT_MISMATCH = TRUE ESCAPE = 'NONE' ESCAPE_UNENCLOSED_FIELD = '\134' DATE_FORMAT = 'AUTO' TIMESTAMP_FORMAT = 'AUTO' NULL_IF = ('\\N');
+  
+create or replace  stage st_ak_s3_pipe
+  storage_integration = s3_int
+  url = 's3://lti935/healthcare'
+  file_format = csv_pipe;
+  
+  show stages;
+ 
+  list @st_ak_s3_pipe;
+  
+ create table ltidb.ltischema.emp_pipe (empno int  , 
+  ename  varchar(20)  ,
+  sal int );
+  
+--grant create stage on schema  to role accountadmin;
+
+desc pipe s3_pipe_emp ;
+
+select system$pipe_status('s3_snowpipe_ak');
+========================stage using storage integration 
+
+ desc integration s3_int;
+ 
+ grant create stage on schema ltischema to role accountadmin;
+
+grant usage on integration s3_int to role accountadmin;
+
+use schema ltidb.ltischema;
+drop stage st_lti_store;
+
+create stage st_lti_store
+  storage_integration = s3_int
+  url = 's3://lti935/healthcare'
+  file_format = csvfileformat;
+
+desc stage st_lti_store
+
+=========================================
+---start the execution 
+ 
+select system$pipe_force_resume('s3_snowpipe_ak');
+--to pause the pipe execution  
+ ALTER PIPE s3_snowpipe_ak SET PIPE_EXECUTION_PAUSED=TRUE;
+ --to check the status of the pipe 
+ select system$pipe_status('s3_snowpipe_ak');
+
+===================================================
+
+Anand - vka00283
+qfa05944 shivani
+bea39117 nidhi
+bha76428 Preetam
+hea38069 Pooja
+mta21003 Atharva
+ofa91449 Anas
+uva08402 vatsal
+zaa47921 Shrey
+xsa94918 Mansid
+loa06678 Abhipreet
+jba05536 Apoorva
+oba19346 Vishal
+zla36440 Mukesh
+fwa57649 deepti
+fra96340 nikhil
+nya13130 Soumya
+ xqa81602 Neetisha
+qaa75167 garima
+ova97255 Veer
+cca37697 Ruchir
+NKA15659 Advait
+nea11568 arjun
+hya52514 Janak
+ica50701 - Sneha
+fra96340 -nikhil
+
+xua72002- benedict
+miadwait
+NLA77504 Numan
+uwa17602- mansip
+
+https://eya45372.us-east-1.snowflakecomputing.com/
+
+username : riasapra
+
+password : Pa55word
+
+
+https://oxa15960.us-east-1.snowflakecomputing.com/
+
+username ;tester
+password: Pa55word
+================================Day 7
+
+select count(*) from "SNOWFLAKE_SAMPLE_DATA"."TPCDS_SF100TCL"."STORE_SALES"  where ss_store_sk=1042 ;  
+
+=====================streams and task
+
+--stream and task
+
+
+use role sysadmin;
+use ltidb;
+use schema public;
+
+create or replace table cdc_tbl (
+  empno int	,
+  ename  varchar,
+  sal   int	
+);
+
+
+insert into cdc_tbl values 
+  (1,'aaa',9000),
+  (2,'bbb',8000),
+  (3,'ccc',7000);
+
+select * from cdc_tbl;
+
+--the final table where post cdc, data will 
+
+create or replace table final_aktbl (
+  final_empno int	,
+  final_ename  varchar ,
+  final_sal   int
+);
+-- 1st time data load from cdc_table to final table, we can assume history load or onetime load
+
+insert into final_aktbl select * from cdc_tbl;
+
+insert into final_aktbl select * from cdc_tbl;
+
+select * from final_aktbl;
+
+create or replace stream 
+cdc_stream on table cdc_tbl
+append_only=true;
+
+create or replace stream 
+ak_stream on table cdc_tbl;
+
+show streams;
+
+select * from cdc_stream;
+
+select * from ak_stream;
+
+insert into cdc_tbl values 
+  (4,'ddd',9000),
+  (5,'eee',8000),
+  (6,'fff',7000);
+  
+  update cdc_tbl set sal =8989 where empno=4;
+  delete from cdc_tbl where empno=1;
+  
+  insert into final_aktbl select empno,ename,sal from ak_stream;
+
+
+
+--stream with merge 
+
+use role sysadmin;
+use ltidb;
+use schema public;
+
+create or replace table cdc_tbl (
+  empno int	,
+  ename  varchar,
+  sal   int	
+);
+
+
+insert into cdc_tbl values 
+  (1,'aaa',9000),
+  (2,'bbb',8000),
+  (3,'ccc',7000);
+
+select * from cdc_tbl;
+
+--the final table where post cdc, data will 
+
+create or replace table final_aktbl (
+  empno int	,
+  ename  varchar ,
+  sal   int
+);
+-- 1st time data load from cdc_table to final table, we can assume history load or onetime load
+
+insert into final_aktbl select * from cdc_tbl;
+
+create or replace stream 
+ak_stream on table cdc_tbl;
+
+show streams;
+
+select * from ak_stream;
+
+insert into cdc_tbl values 
+  (7,'dtt',9000);
+  (5,'eee',8000),
+  (6,'fff',7000);
+  
+ update cdc_tbl set sal =1111 where empno=7;
+ 
+ delete from cdc_tbl where empno=1;
+
+
+
+alter session set  ERROR_ON_NONDETERMINISTIC_MERGE=false;
+
+merge into ltidb.public.final_aktbl as t 
+using (select * 
+         from ltidb.public.ak_stream) as s
+on t.empno=s.empno
+when matched 
+        and s.metadata$action = 'INSERT'
+	and s.metadata$isupdate then
+  update set t.ename=s.ename ,  t.sal =s.sal 
+when not matched 
+         and s.metadata$action = 'INSERT' then
+   insert (empno, ename,sal ) values (s.empno,s.ename,s.sal);
+
+
+merge into ltidb.public.final_aktbl as t 
+using (select  * 
+         from ltidb.public.ak_stream) as s
+on t.empno=s.empno
+when matched 
+        and s.metadata$action = 'INSERT'
+	    and s.metadata$isupdate  then update set t.ename=s.ename ,t.sal =s.sal 
+   when matched 
+         and s.metadata$action = 'DELETE' THEN DELETE
+
+when not matched 
+         and s.metadata$action = 'INSERT' then
+   insert (t.empno, t.ename,t.sal ) values (s.empno,s.ename,s.sal);
+   
+   select * from final_aktbl;
+   
+   delete from final_aktbl where empno=3;
+   
+   select system$stream_has_data('ak_stream');
+
+select current_time();
+
+select * from ak_stream;
+
+--task
+  create or replace task cdc_task
+    warehouse = compute_wh 
+    schedule  = '5 minute'
+  when
+    system$stream_has_data('ak_stream')
+  as
+    insert into final_aktbl select empno,ename,sal from ak_stream;
+    
+    show tasks;
+    desc task cdc_task;
+   
+   use role accountadmin;
+alter task cdc_task resume;
+alter task cdc_task suspend;
+
+select * from table(information_schema.task_history())  
+  order by scheduled_time;
+-- you can see only the schedule items
+select * from table(information_schema.task_history())  
+  where state ='SCHEDULED' order by scheduled_time;
+   
+   
+
+
+
+
+ 
+
+
+
+

@@ -1,0 +1,27 @@
+select system$clustering_information('superstore', '(country, city)');
+
+===To list table properties to check automatic clustering is ON or OFF
+
+show tables like 'superstore';
+
+
+select table_schema,sum(bytes)
+    from infyni_db.information_schema.tables
+    group by table_schema;
+
+==To resume reclustering 
+    alter table superstore resume recluster;
+=== To stop reclustering     
+    alter table superstore suspend recluster;
+
+=========cluster key can be defined at the time of table creation or using alter
+
+
+alter table superstore cluster by (orderid,country);
+
+===To check last week automatic recluster
+
+select *
+  from table(information_schema.automatic_clustering_history(
+    date_range_start=>dateadd(d, -7, current_date),
+    date_range_end=>current_date));

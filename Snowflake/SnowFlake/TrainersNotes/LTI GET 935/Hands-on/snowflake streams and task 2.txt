@@ -1,0 +1,124 @@
+-- Sales Transaction Table
+insert into lti_db.public.sales_raw values (101,'2020-01-01',10001,1,111.11 );
+insert into lti_db.public.sales_raw values (102,'2020-01-02',10002,2,222.22 );
+insert into lti_db.public.sales_raw values (103,'2020-01-03',10003,3,333.33 );
+insert into lti_db.public.sales_raw values (104,'2020-01-04',10004,4,444.44 ); 
+
+insert into lti_db.public.sales_raw values (155,'2020-01-25',10005,0,555.55 ); -- will be modified later
+insert into lti_db.public.sales_raw values (166,'2020-01-26',10006,0,600.06 ); -- will be modified later
+insert into lti_db.public.sales_raw values (177,'2020-01-27',10007,0,777.77 ); -- will be modidfied later
+
+insert into lti_db.public.sales_raw values (200,'2020-01-28',10008,3,0.11 );   -- will be deleted later
+insert into lti_db.public.sales_raw values (200,'2020-01-29',10009,3,0.11 );   -- will be deleted later
+insert into lti_db.public.sales_raw values (200,'2020-01-30',10010,3,0.11 );   -- will be deleted later
+
+-- Product Master Data
+insert into lti_db.public.sales_raw values (101,'PN-01','Mi','AS','1','AB');
+insert into lti_db.public.sales_raw values (102,'FA-85','UB','AE','1','FA');
+insert into lti_db.public.sales_raw values (103,'PN-03','Mi','AS','1','AB');
+insert into lti_db.public.sales_raw values (104,'PN-04','Mi','AS','1','AB');
+insert into lti_db.public.sales_raw values (105,'PN-05','Mi','AS','1','AB');
+insert into lti_db.public.sales_raw values (106,'PN-06','Mi','AS','1','AB');
+insert into lti_db.public.sales_raw values (107,'PN-07','Mi','AS','1','AB');
+insert into lti_db.public.sales_raw values (108,'PN-08','Mi','AS','1','AB');
+insert into lti_db.public.sales_raw values (109,'PN-09','Mi','AS','1','AB');
+
+
+
+
+use role sysadmin;
+use warehouse compute_wh;
+use schema lti_db.public;
+
+create or replace table lti_db.public.sales_ext(
+  product_id string,
+  purchase_date string,
+  zip string,
+  units string,
+  revenue string
+);
+
+create or replace table lti_db.public.product_master(
+  product_id int,
+  product_desc varchar(),
+  category varchar(10),
+  segment varchar(20),
+  manufacture_id int,
+  manufacture varchar(50)
+);
+
+create or replace table lti_db.public.sales_raw(
+  product_id int,
+  purchase_date date,
+  zip varchar(),
+  units int,
+  revenue decimal(10,2)
+);
+
+create or replace sequence lti_db.public.sales_sequence start = 1 increment = 1;
+create or replace table lti_db.public.sales_consumption(
+  tx_key number  default lti_db.public.sales_sequence.nextval,
+  product_id int ,
+  product_desc varchar(),
+  category varchar(10),
+  segment varchar(20),
+  manufacture varchar(50),
+  purchase_date date,
+  zip varchar(),
+  units int,
+  revenue decimal(10,2)
+);
+
+- Stage Object
+create or replace stage lti_db.public.sales_ext_stage 
+comment = 'This is my internal stage for loading data to sales external table ';
+
+-- insert as select sql
+insert into lti_db.public.sales_consumption 
+(product_id,product_desc,category,segment,manufacture,purchase_date, zip, units, revenue)
+select 
+  s.product_id, 
+  pm.product_desc, 
+  pm.category, 
+  pm.segment, 
+  pm.manufacture, 
+  s.purchase_date, 
+  s.zip, 
+  s.units, 
+  s.revenue
+from lti_db.public.sales_raw s join lti_db.public.product_master pm
+on s.product_id  = pm.product_id;
+
+
+-- insert only stream
+  create or replace stream lti_db.public.sales_raw_stream
+  on table lti_db.public.sales_raw 
+  append_only=true
+  comment = 'Insert only stream on sales raw  table';
+
+   insert into lti_db.public.sales_raw 
+        select product_id,purchase_date,zip,units,revenue
+        from lti_db.public.sales_ext 
+        where purchase_date in  ('2003-06-01','2003-05-31');
+
+create or replace task lti_db.public.sales_task
+    warehouse = compute_wh 
+    schedule  = '1 minute'
+  when
+    system$stream_has_data('lti_db.public.sales_raw_stream')
+  as
+    insert into lti_db.public.sales_consumption 
+    (product_id,product_desc,category,segment,manufacture,purchase_date, zip, units, revenue)
+    select 
+      s.product_id, 
+      pm.product_desc, 
+      pm.category, 
+      pm.segment, 
+      pm.manufacture, 
+      s.purchase_date, 
+      s.zip, s.units, s.revenue
+    from lti_db.public.sales_raw_stream s join lti_db.public.product_master pm
+    on s.product_id  = pm.product_id;
+
+
+

@@ -1,0 +1,234 @@
+show functions;
+show external functions;
+
+--user defined function udf
+
+create function pi_udf()
+  returns float
+  as '3.141592654::FLOAT'
+  ;
+
+SHOW USER FUNCTIONS;
+select  pi_udf();
+desc function pi_udf();
+
+--function with arguements
+create or replace function prodnum(v1 number , v2 number)
+returns number
+as '
+     case 
+         when v2 is null then 0
+         else
+         v1*v2
+         end '
+         ;
+         
+  select prodnum(3,4);
+
+--float return type
+
+create or replace function prodnumf(v1 float, v2 float)
+returns float
+as '
+     case 
+         when v2 is null then 0
+         else
+         v1*v2
+         end '
+         ;
+         
+  select prodnumf(1.2,4.8888);
+
+
+
+
+--function with parameter
+create or replace  function area_of_circle(radius float)
+  returns float
+  as
+  $$
+    pi_udf() * radius * radius
+  $$
+  ;
+
+select area_of_circle(2.0);
+
+
+create function simple_table_function ()
+  returns table (x integer, y integer)
+  as
+  $$
+    select 1, 2
+    union all
+    select 3, 4
+  $$
+  ;
+
+
+select * from table(simple_table_function());
+
+
+--Create the table and data to use:
+
+create or replace table purchases (number_sold integer, wholesale_price number(7,2), retail_price number(7,2));
+insert into purchases (number_sold, wholesale_price, retail_price) values 
+   (3,  10.00,  20.00),
+   (5, 100.00, 200.00)
+   ;
+   
+--Create the UDF:
+
+create or replace function profit()
+  returns numeric(11, 2)
+  as
+  $$
+    select sum((retail_price - wholesale_price) * number_sold) from purchases
+  $$
+  ;
+  
+--Call the UDF in a query:
+
+select profit();
+  
+
+
+CREATE OR REPLACE TABLE stproc_test_table1 ("col1" float);
+
+create or replace procedure stproc1(FLOAT_PARAM1 FLOAT)
+    returns string
+    language javascript
+    strict
+    execute as owner
+    as
+    $$
+    var sql_command = 
+     "INSERT INTO stproc_test_table1 (num_col1) VALUES (" + FLOAT_PARAM1 + ")";
+    try {
+        snowflake.execute (
+            {sqlText: sql_command}
+            );
+        return "Succeeded.";   // Return a success/error indicator.
+        }
+    catch (err)  {
+        return "Failed: " + err;   // Return a success/error indicator.
+        }
+    $$
+    ;
+
+
+call stproc1(1.0);
+create or replace function get_loc_for_emp(empno number )
+  returns table (dname varchar, location varchar)
+  as 'select distinct d.dname, d.location
+      from dept d, emp e
+      where e.empno = empno
+      and d.deptno = e.deptno';
+ 
+ show functions;   
+      
+  select  get_loc_for_emp(1);
+      
+      
+      
+ create or replace function js_factorial(d double)
+  returns double
+  language javascript
+  strict
+  as '
+  if (D <= 0) {
+    return 1;
+  } else {
+    var result = 1;
+    for (var i = 2; i <= D; i++) {
+      result = result * i;
+    }
+    return result;
+  }
+  ';     
+  
+  select * from table (js_factorial(4));
+  
+  
+  CREATE OR REPLACE TABLE table1 ("column 1" VARCHAR);
+  
+CREATE or replace PROCEDURE proc1()
+  RETURNS VARCHAR
+  LANGUAGE javascript
+  AS
+  $$
+  var rs = snowflake.execute( { sqlText: 
+      `INSERT INTO table1 ("column 1") 
+           SELECT 'value 1' AS "column 1" ;`
+       } );
+  return 'Done.';
+  $$;
+  
+  call proc1();
+  
+  select * from table1;
+  
+  create or replace procedure sp_pi()
+    returns float not null
+    language javascript
+    as
+    $$
+    return 3.1415926;
+    $$
+    ;
+    
+    call sp_pi();
+    
+--procedure with return 
+
+CREATE or replace PROCEDURE procret()
+  RETURNS string
+  LANGUAGE javascript
+  AS
+  $$
+  var a=10;
+  return a;
+  $$;
+  
+  call procret();
+
+--proc with arguement 
+ CREATE OR REPLACE TABLE procarg ( num_col1 number);
+ 
+USE ROLE ACCOUNTADMIN; 
+CREATE or replace PROCEDURE proc1(param1 float)
+  RETURNS VARCHAR
+  LANGUAGE javascript
+  AS
+  $$
+  var sql_cmd = "insert into procarg (num_col1 ) values (" + PARAM1 + ")";
+    snowflake.execute( { sqlText: sql_cmd } );
+  
+  // var rs = snowflake.execute( { sqlText: 
+   //   `INSERT INTO PROCARG ("column 1") 
+     //      SELECT 'value 1' AS "column 1" ;`
+      // } );
+      
+     return 'Done.';
+  $$;
+  
+  call proc1(9);
+  
+ 
+  CALL PROC1(SELECT COUNT(*) FROM TABLE1 );
+  CALL PROC1(2), PROC1(8)
+  SELECT * FROM (CALL PROC1(1));
+  
+  SHOW PROCEDURES;
+  SHOW PROCEDURES LIKE %PROC%;
+  
+  DESC PROCEDURE PROC1();
+  SELECT * FROM INFORMATION_SCHEMA.PROCEDURES;
+  ALTER PROCEDURE IF EXISTS PROC1() EXECUTE AS  CALLER;
+  ALTER PROCEDURE IF EXISTS PROC1() RENAME TO PROC2;
+  
+  
+  SELECT GET_DDL('PROCEDURE','PROC1()');
+  SELECT GET_DDL('TABLE','SALES');
+  
+  
+  

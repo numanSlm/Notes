@@ -1,0 +1,107 @@
+
+    
+task 4
+------------
+1) select count(*) as 'role_count' from role;
+
+
+2) select count(*) as 'skill_count' from skill;
+
+
+3) select count(*) as user_count from user where profile_id is null;
+
+
+4) select count(*) as 'alumni_2008_count' from profile where batch='2008';
+
+
+5) select count(*) as 'alumni_male_2008_count' from profile where gender='male' and batch='2008';
+
+
+6) select batch,count(*) as 'alumni_count'from profile group by batch;
+
+
+7) select batch,count(*) as 'male_alumni_count'from profile where gender='male' group by batch;
+
+
+8) select batch,count(*) as 'female_alumni_count'from profile where gender='female'group by batch;
+
+
+9) select count(distinct(designation)) as designation_count from profile;
+
+
+10) select count(designation) as PM_Count from profile where designation='Project Manager';
+
+
+11) select Min(batch) as Senior_PM_Batch from profile where designation='Project Manager';
+
+
+12) select Max(batch) as Junior_PM_Batch from profile where designation='Project Manager';
+
+
+13) select designation,count(*) as designation_count from profile group by designation;
+
+
+14) select count(*) as company_count from experience where current=1;
+
+
+15) select company_name, count(*) as alumni_count from experience where current=1 group by company_name;
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+​[10:39 AM] Poornamathi (Guest)
+    
+16) select count(*) as project_count from project where number_of_members>10;
+
+
+17) select count(*) as number_of_events from event where year(date)=2013;
+
+
+18) select year(date),count(*) as number_of_events from event group by year(date);
+
+
+19) SELECT count(*) as number_of_posts FROM post WHERE date>'2014-01';
+
+
+20) select count(*) as number_of_queries from query where time(date) between '01:00' and '05:00';
+
+
+21) select count(*) as number_of_events from event where date(date)='2014-01-27';
+
+
+22) select count(*) as number_of_posts from post where date(date)<'2013-12-01';
+
+
+23) select count(*) as number_of_posts from post where date(date)>'2013-12-01';
+
+
+24) select year(date),count(*) as number_of_events from event group by year(date) ;
+
+
+25) select monthname(date)as month_name,count(*) as number_of_events from event where year(date)='2013' group by month(date);
+ 
+
+
+
+
+
+
+
+
+
+
+
+

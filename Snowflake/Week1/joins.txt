@@ -1,0 +1,205 @@
+select * from hr.employees;
+select * from hr.departments;
+--inner join
+select e.first_name,e.job_id,e.salary,d.department_id from hr.employees e join hr.departments d
+on e.department_id=d.department_id
+where e.salary>15000;
+
+ 
+
+--left outer join
+select e.first_name,e.job_id,e.salary,d.department_id from hr.employees e left outer join hr.departments d
+on e.department_id=d.department_id;
+
+ 
+
+--right outer join
+select e.first_name,e.job_id,e.salary,d.department_id from hr.employees e right outer join hr.departments d
+on e.department_id=d.department_id;
+
+ 
+
+--cross join (p+r)(10+5=15 columns) columns,(n*m) rows(100*50=5000)
+select e.first_name,d.manager_id  from hr.employees e cross join hr.departments d;
+--self join
+select e.first_name,e.job_id,e1.manager_id from hr.employees e join hr.employees e1
+on e.employee_id=e1.manager_id;
+
+ 
+
+select * from hr.departments;
+
+ 
+
+select e.first_name,e.job_id,e.salary,d.department_id from hr.employees e join hr.departments d
+on e.first_name=d.department_name;
+
+ 
+
+create table emp(eid number(4) primary key,ename varchar2(10),salary number(4),deptid number(4));
+
+ 
+
+insert into emp values(100,'a',2000,1);
+insert into emp values(200,'b',4000,3);
+insert into emp values(300,'c',2000,2);
+insert into emp values(400,'d',2000,null);
+insert into emp values(500,'e',2000,null);
+
+ 
+
+create table dept(deptid number(4) primary key,dname varchar2(4),loc varchar2(4));
+
+ 
+
+insert into dept values(1,'hr','chn');
+insert into dept values(2,'tra','coi');
+insert into dept values(3,'adm','kol');
+insert into dept values(4,'ord','blr');
+insert into dept values(5,'sale','hyd');
+
+ 
+
+select * from dept;
+select * from emp;
+
+ 
+
+select e.eid,e.ename,d.deptid,d.dname from dept d right outer join emp e 
+on e.deptid=d.deptid;
+
+
+
+
+
+select * from hr.employees;
+select * from hr.departments;
+--inner join
+select e.first_name,e.job_id,e.salary,d.department_id from hr.employees e join hr.departments d
+on e.department_id=d.department_id
+where e.salary>15000;
+
+ 
+
+--left outer join
+select e.first_name,e.job_id,e.salary,d.department_id from hr.employees e left outer join hr.departments d
+on e.department_id=d.department_id;
+
+ 
+
+--right outer join
+select e.first_name,e.job_id,e.salary,d.department_id from hr.employees e right outer join hr.departments d
+on e.department_id=d.department_id;
+
+ 
+
+--cross join (p+r)(10+5=15 columns) columns,(n*m) rows(100*50=5000)
+select e.first_name,d.manager_id  from hr.employees e cross join hr.departments d;
+--self join
+select e.first_name,e.job_id,e1.manager_id from hr.employees e join hr.employees e1
+on e.employee_id=e1.manager_id;
+
+ 
+
+select * from hr.departments;
+
+ 
+
+select e.first_name,e.job_id,e.salary,d.department_id from hr.employees e join hr.departments d
+on e.first_name=d.department_name;
+
+ 
+
+create table emp(eid number(4) primary key,ename varchar2(10),salary number(4),deptid number(4));
+
+ 
+
+insert into emp values(100,'a',2000,1);
+insert into emp values(200,'b',4000,3);
+insert into emp values(300,'c',2000,2);
+insert into emp values(400,'d',2000,null);
+insert into emp values(500,'e',2000,null);
+
+ 
+
+create table dept(deptid number(4) primary key,dname varchar2(4),loc varchar2(4));
+
+ 
+
+insert into dept values(1,'hr','chn');
+insert into dept values(2,'tra','coi');
+insert into dept values(3,'adm','kol');
+insert into dept values(4,'ord','blr');
+insert into dept values(5,'sale','hyd');
+
+ 
+
+select * from dept;
+select * from emp;
+
+ 
+
+select e.eid,e.ename,d.deptid,d.dname from dept d left outer join emp e 
+on e.deptid=d.deptid;
+----------------------------------------------------------------------------
+
+select ename,eid,salray from emp where train_name='unknown';
+
+ 
+
+emp-
+
+ 
+
+trainer-
+select ......... from emp join trainer on <condn>
+where salary=??????
+
+ 
+
+select eid,ename,salary from emp where salary =any
+(
+select  salary from
+trainer where
+ dname='DWH' 
+where salary between10000 and 15000 
+group by <column>
+order by<column>
+);
+
+eid,ename,salary
+
+ 
+
+1.()
+2.single-row/multi-row
+3.or.by clause in sub query
+
+ 
+
+>=any is equal to in {......}
+
+ 
+
+WAQ to display name of the users from
+mech dept and who is currently working in TCS
+
+ 
+
+select name from user where 
+profile_id in(
+select profile_id from
+expereince where profile_id 
+in(select id from profile where degree_id in
+(select id from degree where department_id 
+in(select id from departmenet where name='mech')) 
+and companyname='TCS' and current=1;
+
+ 
+
+ 
+
+select ........
+from user join profile on<condn>
+join deg on<condn>
+join dept on<condn>

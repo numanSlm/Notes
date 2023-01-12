@@ -1,0 +1,21 @@
+go to->s3-> emp folder
+goto iam-> role->iam full acces-> copy arn
+
+use admin
+create integration
+put role arn n s3 addr in integration
+verify integration 
+
+create pipe
+link with s3
+specify file form
+emp1 folder link
+
+goto iam-> trust relationships
+add user arn
+add external id
+
+goto s3-> properties-> sqs ->
+edit notification channel(copied from pipe)
+
+add files in s3 and wait

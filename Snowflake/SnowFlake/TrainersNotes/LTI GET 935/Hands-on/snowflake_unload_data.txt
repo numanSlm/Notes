@@ -1,0 +1,16 @@
+
+create or replace stage unload_stage file_format = CSVFILEFORMAT;
+
+copy into @UNLOAD_STAGE from
+SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.CUSTOMER;
+
+use role accountadmin;
+list @unload_stage;
+
+--run from snowsql / webui not support get command
+-----to download data from stage to local-------
+-----make sure you give existing directory path-------
+get @unload_stage/data_0_0_0.csv.gz file://F:\data;
+
+
+snowsql -a acc -u username  -p password -d database -s schemaname 
