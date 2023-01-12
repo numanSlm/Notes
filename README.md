@@ -1,2 +1,2 @@
 # Notes
-Random CS notes
+Collection of my notes
