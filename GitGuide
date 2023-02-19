@@ -28,3 +28,6 @@ cat ~/.ssh/id_ed25519.pub
 #verify connection details
 
 ssh -T git@github.com
+
+#add mail to global conf
+git config --global user.email "email@email.com"
