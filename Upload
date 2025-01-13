@@ -1,0 +1,122 @@
+-- Step 1: Define the CCL Data
+WITH CCL_POLICY_TRANS AS (
+    SELECT
+        POLICY_ID,
+        TRANS_ID,
+        EFFECTIVE_DT,
+        ORIGINCEPTION_DT,
+        BOUND_DT,
+        VERSION_NBR,
+        VERSION_STATUS_ID,
+        ROW_NUMBER() OVER (
+            PARTITION BY POLICY_ID, TRANS_ID 
+            ORDER BY VERSION_NBR DESC
+        ) AS PD_RNK
+    FROM
+        CCL.POLICY_DETAIL
+    WHERE
+        BOUND_DT IS NOT NULL
+        AND VERSION_STATUS_ID = 3
+    QUALIFY PD_RNK = 1
+),
+CCL_FINAL AS (
+    SELECT
+        CPT.POLICY_ID,
+        CPT.EFFECTIVE_DT,
+        CPT.TRANS_ID,
+        CP.ORIGINCEPTION_DT,
+        CD.BOUND_DT
+    FROM
+        CCL_POLICY_TRANS CPT
+    JOIN
+        CCL.POLICY CP
+    ON
+        CPT.POLICY_ID = CP.POLICY_ID
+    JOIN
+        CCL_POLICY_TRANS CD
+    ON
+        CD.TRANS_ID = CPT.TRANS_ID
+),
+
+-- Step 2: Define the CLPSS Data
+CLPSS_POLICY AS (
+    SELECT
+        POLICYID AS POLICY_ID,
+        EFFECTIVE_DATE,
+        SEQUENCE_NUMBER,
+        TXN_DATE,
+        TXN_TYPE,
+        ORIG_INCEPT_DATE
+    FROM
+        CLPSS.POLICY
+    GROUP BY
+        POLICYID,
+        EFFECTIVE_DATE,
+        SEQUENCE_NUMBER,
+        TXN_DATE,
+        TXN_TYPE,
+        ORIG_INCEPT_DATE
+),
+CLPSS_TRANS_HISTORY AS (
+    SELECT
+        POLICYID AS POLICY_ID,
+        EFFECTIVE_DATE,
+        SEQUENCE_NUMBER,
+        APPLICATION
+    FROM
+        CLPSS.CCL_TRANSACTION_HISTORY
+    WHERE
+        APPLICATION NOT LIKE 'CCL2'
+        AND APPLICATION NOT LIKE 'REVIVAL'
+    GROUP BY
+        POLICYID,
+        EFFECTIVE_DATE,
+        SEQUENCE_NUMBER,
+        APPLICATION
+),
+CLPSS_FINAL AS (
+    SELECT
+        CP.POLICY_ID,
+        CP.EFFECTIVE_DATE,
+        CP.TXN_DATE,
+        CP.TXN_TYPE,
+        CP.ORIG_INCEPT_DATE
+    FROM
+        CLPSS_POLICY CP
+    JOIN
+        CLPSS_TRANS_HISTORY CTH
+    ON
+        CP.POLICY_ID = CTH.POLICY_ID
+        AND CP.EFFECTIVE_DATE = CTH.EFFECTIVE_DATE
+        AND CP.SEQUENCE_NUMBER = CTH.SEQUENCE_NUMBER
+),
+
+-- Step 3: Combine CLPSS and CCL Data Without Duplicates
+UNIFIED_POLICY AS (
+    SELECT DISTINCT
+        POLICY_ID,
+        EFFECTIVE_DATE,
+        TXN_DATE,
+        TXN_TYPE,
+        ORIG_INCEPT_DATE,
+        BOUND_DT
+    FROM
+        CLPSS_FINAL
+
+    UNION ALL
+
+    SELECT DISTINCT
+        POLICY_ID,
+        EFFECTIVE_DT AS EFFECTIVE_DATE,
+        NULL AS TXN_DATE, -- Placeholder for CLPSS-only fields
+        NULL AS TXN_TYPE, -- Placeholder for CLPSS-only fields
+        ORIGINCEPTION_DT AS ORIG_INCEPT_DATE,
+        BOUND_DT
+    FROM
+        CCL_FINAL
+)
+
+-- Step 4: Query Unified Data
+SELECT *
+FROM UNIFIED_POLICY
+ORDER BY POLICY_ID, EFFECTIVE_DATE;
