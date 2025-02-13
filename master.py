@@ -5,8 +5,8 @@ from pyspark.sql import SparkSession
 spark = SparkSession.builder.appName("MasterTable").getOrCreate()
 
 # Unity Catalog Schema
-catalog_name = "your_catalog"  # Change to your Unity Catalog name
-schema_name = "your_schema"  # Change to your schema name
+catalog_name = "your_catalog"  # Update with actual catalog
+schema_name = "your_schema"  # Update with actual schema
 
 # Get all tables in the catalog/schema
 tables_df = spark.sql(f"SHOW TABLES IN {catalog_name}.{schema_name}")
@@ -15,17 +15,16 @@ table_list = [row.tableName for row in tables_df.collect()]
 relations = []
 
 for table in table_list:
-    # Describe table to find foreign keys
-    describe_df = spark.sql(f"DESCRIBE TABLE EXTENDED {catalog_name}.{schema_name}.{table}")
-    describe_text = "\n".join([row.col_name for row in describe_df.collect()])
+    query = f"""
+    SELECT constraint_name, table_name, column_name, referenced_table_name
+    FROM {catalog_name}.information_schema.referential_constraints 
+    WHERE table_schema = '{schema_name}' AND table_name = '{table}'
+    """
+    
+    fk_df = spark.sql(query)
 
-    for line in describe_text.split("\n"):
-        if "Foreign Key" in line:  
-            parts = line.split()
-            key_name = parts[0]  # Extract key name
-            related_table = parts[-1]  # Extract related table
-
-            relations.append((table, key_name, related_table))
+    for row in fk_df.collect():
+        relations.append((table, row.column_name, row.referenced_table_name))
 
 # Create a DataFrame
 relations_df = spark.createDataFrame(relations, ["table_name", "key_name", "related_table"])
