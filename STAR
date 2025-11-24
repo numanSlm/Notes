@@ -1,0 +1,12 @@
+Key Job Accountability: Deliver High-Quality Engineering Solutions
+SITUATION OR TASK
+
+I was responsible for developing a new Structured Streaming application in Scala to ingest Pega logs for both Commercial Lines and Personal Lines. This initiative was critically mandated because the existing ingestion solution must be fully decommissioned before Q1 2026. The project is the largest within my team, and after two senior developers left, I became the sole developer accountable for delivering it end-to-end.
+
+ACTION
+
+I independently designed, developed, and implemented the full streaming ingestion pipeline using Scala, ensuring resilience, scalability, and adherence to architectural standards. I collaborated closely with platform, QA, and business stakeholders, aligned requirements, and proactively identified risks and technical gaps. I completed development for both lines of business, placing Personal Lines into production and preparing Commercial Lines for production deployment in December.
+
+RESULT
+
+The new streaming application successfully replaces a legacy system that is mandated for retirement, ensuring continuity of a critical enterprise workflow. Personal Lines is already operating in production with stable performance, and Commercial Lines is fully developed and on track for production by year-end. Delivering this entire initiative as the sole developer ensured that the organization will meet its 2026 decommissioning deadline, reduced operational risk, and showcased my ability to exceed expectations on a high-impact, multi-team project.
