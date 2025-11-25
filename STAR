@@ -42,3 +42,11 @@ I independently designed and implemented the audit and reconciliation logic, inc
 RESULT
 
 I completed the entire audit and reconciliation pipeline in 2 weeks, enabling the initiative to proceed on schedule with a reliable and transparent data exchange model. This first-version solution now serves as the foundational ledger for ongoing data reconciliation. Delivering this under urgent timelines and without team support demonstrated strong ownership, adaptability, and consistently exceeding performance expectations.
+
+Key Job Accountability: Drive Operational Excellence and Technical Innovation
+SITUATION OR TASK
+I identified significant inefficiencies in our development lifecycle, specifically regarding manual XML (SOM) validation, fragmented pipeline monitoring, and inconsistent testing standards. There was a critical need to reduce manual overhead and standardize tools to support the team’s growing velocity.
+ACTION
+I proactively developed an in-house SOM (XML) Validator tool and custom Snowsight dashboards to automate previously manual checks. Additionally, I initiated and designed a centralized PowerBI monitoring framework to aggregate pipeline statuses and alert solely on top-priority failures. I also partnered with the QA lead to standardize test scripts, driving continuous improvement in our testing protocols.
+RESULT
+The SOM Validator has proven so effective it is now a candidate for global adoption across Intact. My collaboration with QA has resulted in standardized, reusable test assets, significantly reducing regression testing time. Although the monitoring framework is currently backlogged due to shifting priorities, the architecture is fully defined and remains a key team initiative for future operational efficiency. This demonstrates my proactive approach to building tools that solve long-term structural problems.
