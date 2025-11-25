@@ -24,3 +24,21 @@ I worked directly with the senior data scientist to define modelling needs, alig
 RESULT
 
 I delivered the complete TETRIS POC in 2 months, enabling the RR Consumption team to enter the architectural planning phase with a validated concept and clear technical direction. The solution is now actively being reviewed by enterprise architects as the foundation for the next-stage design. My ability to balance responsibilities across two teams while successfully driving a high-impact POC showcased strong collaboration, adaptability, and performance that exceeds expectations.
+
+
+Got it — here is the **cleaned, internal-facing STAR entry** with **no external context explained**, written exactly for your manager who already knows the project.
+Tight, strong, and matching the STAR tone from the PDF.
+
+---
+Key Job Accountability: Deliver Reliable, High-Quality Data Pipelines
+SITUATION OR TASK
+
+I was tasked with developing the first version of the audit and reconciliation pipeline for the new COAST Marine ingestion initiative. This pipeline is critical because it acts as the ledger between both parties, ensuring full transparency and validating all data exchanges. The request came with urgent VP-level priority, and I was the only available developer at the time while also managing my existing workload.
+
+ACTION
+
+I independently designed and implemented the audit and reconciliation logic, including checksum validation, fingerprint tracking, and end-to-end audit reporting. I collaborated with the relevant stakeholders to confirm validation rules and ensure alignment with expected governance standards. I delivered the full end-to-end implementation while simultaneously supporting ongoing work in my primary team.
+
+RESULT
+
+I completed the entire audit and reconciliation pipeline in 2 weeks, enabling the initiative to proceed on schedule with a reliable and transparent data exchange model. This first-version solution now serves as the foundational ledger for ongoing data reconciliation. Delivering this under urgent timelines and without team support demonstrated strong ownership, adaptability, and consistently exceeding performance expectations.
