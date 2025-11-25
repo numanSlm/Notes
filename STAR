@@ -50,3 +50,47 @@ ACTION
 I proactively developed an in-house SOM (XML) Validator tool and custom Snowsight dashboards to automate previously manual checks. Additionally, I initiated and designed a centralized PowerBI monitoring framework to aggregate pipeline statuses and alert solely on top-priority failures. I also partnered with the QA lead to standardize test scripts, driving continuous improvement in our testing protocols.
 RESULT
 The SOM Validator has proven so effective it is now a candidate for global adoption across Intact. My collaboration with QA has resulted in standardized, reusable test assets, significantly reducing regression testing time. Although the monitoring framework is currently backlogged due to shifting priorities, the architecture is fully defined and remains a key team initiative for future operational efficiency. This demonstrates my proactive approach to building tools that solve long-term structural problems.
+
+
+
+Here are the Living Our Values entries, concise and formatted exactly as requested: 3 statements per value, mixing your specific project wins with general behaviors, and removing the sub-headers.
+
+Integrity
+
+I prioritized data governance over speed during the Coast Marine project, insisting on rigorous audit trails to protect the company's data integrity despite urgent VP-level pressure.
+
+I maintain full transparency with leadership regarding technical risks, proactively flagging where internal testing is insufficient rather than hiding potential gaps just to meet a deadline.
+
+I hold myself to the highest quality standards, refusing to merge technical debt that would burden the DevOps team later, ensuring our production pipelines remain stable and reliable.
+
+Respect
+
+While leading the Tetris POC, I actively integrated the perspectives of actuaries and data scientists, treating their analytical needs as equal to engineering requirements to build a truly shared solution.
+
+I ensure that QA and DevOps team members have an equal voice in design discussions, actively inviting their feedback to catch operational risks that developers might overlook.
+
+I approach code reviews and technical debates as opportunities for mentorship and mutual growth, ensuring my feedback empowers peers to improve rather than discouraging them.
+
+Customer-Driven
+
+I proactively built the SOM Validator tool and Snowsight dashboards to remove friction for internal developers, significantly reducing the manual effort required for their daily workflows.
+
+I approach every ticket by first understanding the user's ultimate business goal, ensuring I deliver a solution that solves their actual pain point rather than just meeting the technical specifications.
+
+I treat my internal colleagues as premium customers, ensuring that every tool I build—like the SOM validator—is robust and documented well enough to be considered for global adoption across Intact.
+
+Excellence
+
+When two senior developers left, I took sole ownership of the massive Pega Streaming initiative, driving myself to master the architecture and deliver the decommissioning mandate a year ahead of schedule.
+
+I continuously expand my technical expertise beyond my core role—mastering Scala, Snowflake, and DevOps configurations—to solve complex, cross-functional problems for the team.
+
+I maintain a disciplined focus on stability even during high-velocity sprints, ensuring that my drive to outperform timelines never compromises the resilience of production systems.
+
+Generosity
+
+I act as a go-to troubleshooter for the entire squad, consistently making time to unblock QA with scripting or assist DevOps with pipeline failures regardless of my own backlog.
+
+I initiated the design of a centralized PowerBI monitoring pipeline specifically to help my peers reduce "alert fatigue" and focus their mental energy on high-priority issues.
+
+I actively share my code and tools globally rather than hoarding knowledge, ensuring that improvements I make—like the test script standardization—benefit the wider engineering community.
