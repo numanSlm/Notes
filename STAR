@@ -10,3 +10,17 @@ I independently designed, developed, and implemented the full streaming ingestio
 RESULT
 
 The new streaming application successfully replaces a legacy system that is mandated for retirement, ensuring continuity of a critical enterprise workflow. Personal Lines is already operating in production with stable performance, and Commercial Lines is fully developed and on track for production by year-end. Delivering this entire initiative as the sole developer ensured that the organization will meet its 2026 decommissioning deadline, reduced operational risk, and showcased my ability to exceed expectations on a high-impact, multi-team project.
+
+
+Key Job Accountability: Collaborate and Deliver High-Impact Solutions Across Teams
+SITUATION OR TASK
+
+I was temporarily loaned to the RR Consumption team to build the Proof of Concept for TETRIS, a future application intended for actuaries and data modellers across the Data Lab. The project required close collaboration with senior stakeholders—including actuaries, the senior data scientist, database architects, and the manager, Jonah—while continuing to support my original team when needed.
+
+ACTION
+
+I worked directly with the senior data scientist to define modelling needs, aligned with actuaries to understand business and analytical requirements, and coordinated with database architects to validate the technical feasibility of different design options. I independently built the full POC within a short timeline, ensuring it met the functional expectations needed for architectural review. Throughout this period, I also continued to provide support to my home team without impacting their deliverables.
+
+RESULT
+
+I delivered the complete TETRIS POC in 2 months, enabling the RR Consumption team to enter the architectural planning phase with a validated concept and clear technical direction. The solution is now actively being reviewed by enterprise architects as the foundation for the next-stage design. My ability to balance responsibilities across two teams while successfully driving a high-impact POC showcased strong collaboration, adaptability, and performance that exceeds expectations.
