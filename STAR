@@ -94,3 +94,6 @@ I act as a go-to troubleshooter for the entire squad, consistently making time t
 I initiated the design of a centralized PowerBI monitoring pipeline specifically to help my peers reduce "alert fatigue" and focus their mental energy on high-priority issues.
 
 I actively share my code and tools globally rather than hoarding knowledge, ensuring that improvements I make—like the test script standardization—benefit the wider engineering community.
+
+
+Treat RR Consumption and Contact PL as strategic partners by proactively aligning data delivery with their critical reporting cycles and resolving quality issues upstream to ensure their downstream operations remain seamless
