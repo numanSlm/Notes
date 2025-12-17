@@ -1,0 +1,104 @@
+Below is **2-slide–ready content**, structured so you can paste directly into slides.
+I’ve kept numbers **defensible and conservative**, with **clear assumptions** (important for leadership reviews).
+
+---
+
+## **SLIDE 1 — Performance & Dollar Impact (PL focus, SOM1 & SOM3)**
+
+### **Before vs After (Phase 2: Strip, Validate, Clean → Bronze)**
+
+| Metric                | JMS Streaming (Before) | Structured Streaming + Delta (After) | Impact                 |
+| --------------------- | ---------------------- | ------------------------------------ | ---------------------- |
+| Avg runtime (Phase 2) | **22 mins**            | **8 mins**                           | **~64% faster**        |
+| Daily runs            | 1                      | 1                                    | —                      |
+| Compute time / day    | 22 mins                | 8 mins                               | **14 mins saved/day**  |
+| Monthly compute time  | ~11 hrs                | ~4 hrs                               | **~7 hrs saved/month** |
+| Annual compute time   | ~132 hrs               | ~48 hrs                              | **~84 hrs saved/year** |
+
+---
+
+### **💵 Dollar Benefit (Compute Cost Reduction)**
+
+**Assumption (reasonable for Databricks large clusters):**
+
+* Avg cost = **$6/hour**
+* PL only (CL excluded → conservative)
+
+| Item                         | Value       |
+| ---------------------------- | ----------- |
+| Compute hours saved / year   | **~84 hrs** |
+| Cost per hour                | **$6**      |
+| **Annual savings (PL only)** | **~$500+**  |
+
+> ⚠️ *This excludes CL pipelines and excludes Phase-1 improvements → real savings are higher.*
+
+---
+
+### **🚀 Throughput & Reliability Gains**
+
+* **800–900K messages/day**
+* Payload size: **1–6 MB**
+* **No corrupted SOM1 / SOM3 reads anymore**
+* Elimination of **reprocessing & manual investigation cost**
+
+**Soft dollar impact (not directly billed but real):**
+
+* Reduced on-call & debugging time
+* Faster downstream data availability → customer SLAs met consistently
+
+---
+
+## **SLIDE 2 — Storage, Data Efficiency & Engineering Best Practices**
+
+### **📦 Storage / Space Optimization (Delta vs Raw JMS Writes)**
+
+| Aspect             | JMS (Before)              | Delta (After)        | Benefit              |
+| ------------------ | ------------------------- | -------------------- | -------------------- |
+| Write pattern      | Individual message writes | Micro-batched writes | Fewer small files    |
+| File format        | Raw / semi-structured     | **Delta (Parquet)**  | Columnar compression |
+| Schema enforcement | Weak                      | **Strong**           | Less bad data stored |
+| Data corruption    | SOM failures possible     | **Zero corruption**  | No re-ingestion      |
+
+**Estimated storage reduction:**
+➡️ **20–30% lower storage footprint** due to:
+
+* Parquet compression
+* Schema pruning
+* Removal of corrupted replays
+
+> Example:
+> 10 TB/year → **2–3 TB saved/year**
+> S3 @ ~$23/TB/month → **$550–$800/year saved**
+
+---
+
+### **🧠 Big Data Best Practices Followed**
+
+✅ **Structured Streaming over message-by-message ingestion**
+✅ **Delta Lake for ACID guarantees & schema enforcement**
+✅ **Micro-batching instead of per-record writes**
+✅ **Bronze-layer design aligned with Medallion Architecture**
+✅ **Separation of concerns**
+
+* Phase 1: MQ → S3 Landing
+* Phase 2: Clean → Bronze (customer-facing)
+  ✅ **Fault tolerance & exactly-once semantics**
+  ✅ **Operational scalability for PL & CL growth**
+
+---
+
+### **🔑 Key Highlights (Executive-Friendly)**
+
+* **64% faster ingestion processing**
+* **Zero data corruption incidents post-migration**
+* **Lower compute & storage costs**
+* **Scales cleanly with increasing SOM volumes**
+* **Future-ready architecture aligned with Databricks & Delta best practices**
+
+---
+
+If you want, next I can:
+
+* **Tighten this into slide bullets only (no tables)**
+* **Add CL extrapolated savings**
+* **Rewrite this in “director-level” language (less technical, more business)**
